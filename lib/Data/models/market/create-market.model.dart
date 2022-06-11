@@ -1,3 +1,7 @@
+import 'package:json_annotation/json_annotation.dart';
+part 'create-market.model.g.dart';
+
+@JsonSerializable()
 class CreateMarketDTO {
   final String title;
   final String? logo;
@@ -14,4 +18,9 @@ class CreateMarketDTO {
     required this.phoneNumber,
     this.ownerName,
   });
+
+  factory CreateMarketDTO.fromJson(Map<String, dynamic> json) =>
+      _$CreateMarketDTOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CreateMarketDTOToJson(this);
 }

@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:admin_v2/Data/models/market/create-market.model.dart';
+import 'package:admin_v2/Data/models/brand/create-brand.model.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
@@ -17,18 +16,16 @@ class CreateMarketPage extends StatefulWidget {
 class _CreateMarketPageState extends State<CreateMarketPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
-  final addressController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final phoneNumberController = TextEditingController();
-  final ownerNameController = TextEditingController();
   FilePickerResult? _selectedLogoImage;
+  FilePickerResult? _selectedImage;
+  bool _isSelected = false;
 
-  Future<void> pickImage() async {
+  Future<void> pickImage(FilePickerResult? selectedImage) async {
     try {
       FilePickerResult? result =
           await FilePicker.platform.pickFiles(withData: true);
       if (result == null) return;
-      setState(() => _selectedLogoImage = result);
+      setState(() => selectedImage = result);
     } on PlatformException catch (e) {
       print('failed to pick image $e');
     }
@@ -46,7 +43,7 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Market döret".toUpperCase(),
+                "Brand döret".toUpperCase(),
                 style: Theme.of(context).textTheme.headline4,
               ),
               SizedBox(height: 20),
@@ -70,16 +67,20 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                   ),
                 ),
                 child: ListTile(
-                  onTap: _selectedLogoImage == null ? this.pickImage : null,
+                  onTap: () => _selectedLogoImage == null
+                      ? this.pickImage(_selectedLogoImage)
+                      : null,
                   trailing: _selectedLogoImage == null
                       ? null
                       : OutlinedButton(
-                          onPressed: this.pickImage,
-                          child: Text("Täzele",
-                              style:
-                                  Theme.of(context).textTheme.caption!.copyWith(
-                                        color: Theme.of(context).primaryColor,
-                                      )),
+                          onPressed: () => this.pickImage(_selectedLogoImage),
+                          child: Text(
+                            "Täzele",
+                            style:
+                                Theme.of(context).textTheme.caption!.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
                         ),
                   title: Text(
                     _selectedLogoImage == null
@@ -96,40 +97,71 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 ),
               ),
               SizedBox(height: 14),
+              Card(
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: Colors.black38,
+                    width: 0.0,
+                  ),
+                ),
+                child: ListTile(
+                  onTap: () => _selectedImage == null
+                      ? this.pickImage(_selectedImage)
+                      : null,
+                  trailing: _selectedImage == null
+                      ? null
+                      : OutlinedButton(
+                          onPressed: () => this.pickImage(_selectedImage),
+                          child: Text(
+                            "Täzele",
+                            style:
+                                Theme.of(context).textTheme.caption!.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
+                        ),
+                  title: Text(
+                    _selectedImage == null
+                        ? "Surat saýla"
+                        : _selectedImage!.names
+                            .map((e) => e)
+                            .toList()
+                            .join(', '),
+                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 14),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Vip',
+                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                          color: Colors.black54, fontWeight: FontWeight.w500)),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  Checkbox(
+                      value: this._isSelected,
+                      onChanged: (val) {
+                        setState(
+                          () {
+                            _isSelected = val!;
+                          },
+                        );
+                      })
+                ],
+              ),
+              SizedBox(height: 14),
               TextFormField(
                 controller: titleController,
                 validator: emptyField,
                 decoration: InputDecoration(
-                  labelText: "Markediň ady *",
-                ),
-              ),
-              SizedBox(height: 14),
-              TextFormField(
-                controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: "Barada",
-                ),
-              ),
-              SizedBox(height: 14),
-              TextFormField(
-                controller: addressController,
-                decoration: InputDecoration(
-                  labelText: "Salgysy",
-                ),
-              ),
-              SizedBox(height: 14),
-              TextFormField(
-                controller: phoneNumberController,
-                validator: emptyField,
-                decoration: InputDecoration(
-                  labelText: "Telefon *",
-                ),
-              ),
-              SizedBox(height: 14),
-              TextFormField(
-                controller: ownerNameController,
-                decoration: InputDecoration(
-                  labelText: "Eýesiniň ady",
+                  labelText: "Brendiň ady *",
                 ),
               ),
               SizedBox(height: 24),
@@ -151,18 +183,21 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
                         String? logo64String;
-                        if (_selectedLogoImage != null) {
+                        String? image64String;
+                        if (_selectedLogoImage != null ||
+                            _selectedImage != null) {
                           logo64String =
                               '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
                           ;
+                          image64String =
+                              '${base64.encode(_selectedImage!.files[0].bytes as List<int>)}-ext-${_selectedImage!.files[0].extension}';
+                          ;
                         }
-                        CreateMarketDTO data = CreateMarketDTO(
-                          title: titleController.text,
-                          logo: logo64String,
-                          address: addressController.text,
-                          description: descriptionController.text,
-                          phoneNumber: phoneNumberController.text,
-                          ownerName: ownerNameController.text,
+                        CreateBrandDTO data = CreateBrandDTO(
+                          name: titleController.text,
+                          logo: logo64String!,
+                          image: image64String,
+                          vip: this._isSelected,
                         );
                       }
                     },
