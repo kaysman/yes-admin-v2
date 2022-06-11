@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:admin_v2/Data/models/market/create-market.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
@@ -151,15 +150,15 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                     text: "Save",
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        String? base64String;
+                        String? logo64String;
                         if (_selectedLogoImage != null) {
-                          base64String =
+                          logo64String =
                               '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
                           ;
                         }
                         CreateMarketDTO data = CreateMarketDTO(
                           title: titleController.text,
-                          logo: base64String,
+                          logo: logo64String,
                           address: addressController.text,
                           description: descriptionController.text,
                           phoneNumber: phoneNumberController.text,
