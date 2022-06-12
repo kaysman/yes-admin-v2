@@ -1,3 +1,5 @@
+import 'package:admin_v2/Presentation/screens/brands/brand-table.dart';
+import 'package:admin_v2/Presentation/screens/products/product-table.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,27 +32,7 @@ class IndexState {
 
 List<SidebarItem> sidebars = [
   getMarketSidebarItem(),
-  SidebarItem(
-      title: "Brendlar",
-      view: Container(),
-      getActions: (context) {
-        return [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                onSurface: Colors.white,
-                primary: Colors.transparent,
-              ),
-              onPressed: () {},
-              child: Text(
-                'Brend döret',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ];
-      }),
+  getBrandSidebarItem(),
   SidebarItem(
       title: "Aksiýalar",
       view: Container(),
@@ -80,25 +62,5 @@ List<SidebarItem> sidebars = [
     title: "Programmanyň Esasy Sahypasy",
     view: Container(),
   ),
-  SidebarItem(
-      title: "Harytlar",
-      view: Container(),
-      getActions: (context) {
-        return [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                onSurface: Colors.white,
-                primary: Colors.transparent,
-              ),
-              onPressed: () {},
-              child: Text(
-                'Haryt döret',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ];
-      }),
+  getProductSidebarItem(),
 ];

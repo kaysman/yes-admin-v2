@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:admin_v2/Data/models/market/create-market.model.dart';
+import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
+import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateMarketPage extends StatefulWidget {
   const CreateMarketPage({Key? key}) : super(key: key);
@@ -16,6 +19,8 @@ class CreateMarketPage extends StatefulWidget {
 
 class _CreateMarketPageState extends State<CreateMarketPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  late MarketBloc marketBloc;
+
   final titleController = TextEditingController();
   final addressController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -32,6 +37,18 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
     } on PlatformException catch (e) {
       print('failed to pick image $e');
     }
+  }
+
+  @override
+  void initState() {
+    marketBloc = BlocProvider.of<MarketBloc>(context);
+
+    titleController.text = "MB Shoes";
+    addressController.text = "Berkarar";
+    descriptionController.text = "Ayakgaplar";
+    phoneNumberController.text = "123123";
+    ownerNameController.text = "MB";
+    super.initState();
   }
 
   @override
@@ -146,25 +163,40 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                     ),
                   ),
                   SizedBox(width: 16),
-                  Button(
-                    text: "Save",
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        String? logo64String;
-                        if (_selectedLogoImage != null) {
-                          logo64String =
-                              '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
-                          ;
-                        }
-                        CreateMarketDTO data = CreateMarketDTO(
-                          title: titleController.text,
-                          logo: logo64String,
-                          address: addressController.text,
-                          description: descriptionController.text,
-                          phoneNumber: phoneNumberController.text,
-                          ownerName: ownerNameController.text,
-                        );
+                  BlocConsumer<MarketBloc, MarketState>(
+                    bloc: marketBloc,
+                    listener: (context, state) {
+                      if (state.createStatus == MarketCreateStatus.success) {
+                        Navigator.of(context).pop();
                       }
+                    },
+                    builder: (context, state) {
+                      return Button(
+                        text: "Save",
+                        isLoading:
+                            state.createStatus == MarketCreateStatus.loading,
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            String? logo64String;
+                            if (_selectedLogoImage != null) {
+                              logo64String =
+                                  '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
+                              ;
+                            }
+
+                            CreateMarketDTO data = CreateMarketDTO(
+                              title: titleController.text,
+                              logo: logo64String,
+                              address: addressController.text,
+                              description: descriptionController.text,
+                              phoneNumber: phoneNumberController.text,
+                              ownerName: ownerNameController.text,
+                            );
+
+                            await marketBloc.createMarket(data);
+                          }
+                        },
+                      );
                     },
                   ),
                 ],

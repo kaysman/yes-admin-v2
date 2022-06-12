@@ -6,26 +6,34 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CreateMarketPage extends StatefulWidget {
-  const CreateMarketPage({Key? key}) : super(key: key);
+enum ImageType { BRAND_LOGO, BRAND_IMAGE }
+
+class CreateBrandPage extends StatefulWidget {
+  const CreateBrandPage({Key? key}) : super(key: key);
 
   @override
-  State<CreateMarketPage> createState() => _CreateMarketPageState();
+  State<CreateBrandPage> createState() => _CreateBrandPageState();
 }
 
-class _CreateMarketPageState extends State<CreateMarketPage> {
+class _CreateBrandPageState extends State<CreateBrandPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   FilePickerResult? _selectedLogoImage;
   FilePickerResult? _selectedImage;
   bool _isSelected = false;
 
-  Future<void> pickImage(FilePickerResult? selectedImage) async {
+  Future<void> pickImage(ImageType type) async {
     try {
       FilePickerResult? result =
           await FilePicker.platform.pickFiles(withData: true);
       if (result == null) return;
-      setState(() => selectedImage = result);
+      setState(() {
+        if (type == ImageType.BRAND_LOGO) {
+          _selectedLogoImage = result;
+        } else {
+          _selectedImage = result;
+        }
+      });
     } on PlatformException catch (e) {
       print('failed to pick image $e');
     }
@@ -86,13 +94,13 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                   ),
                 ),
                 child: ListTile(
-                  onTap: () => _selectedLogoImage == null
-                      ? this.pickImage(_selectedLogoImage)
+                  onTap: _selectedLogoImage == null
+                      ? () => this.pickImage(ImageType.BRAND_LOGO)
                       : null,
                   trailing: _selectedLogoImage == null
                       ? null
                       : OutlinedButton(
-                          onPressed: () => this.pickImage(_selectedLogoImage),
+                          onPressed: () => this.pickImage(ImageType.BRAND_LOGO),
                           child: Text(
                             "Täzele",
                             style:
@@ -125,13 +133,14 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                   ),
                 ),
                 child: ListTile(
-                  onTap: () => _selectedImage == null
-                      ? this.pickImage(_selectedImage)
+                  onTap: _selectedImage == null
+                      ? () => this.pickImage(ImageType.BRAND_IMAGE)
                       : null,
                   trailing: _selectedImage == null
                       ? null
                       : OutlinedButton(
-                          onPressed: () => this.pickImage(_selectedImage),
+                          onPressed: () =>
+                              this.pickImage(ImageType.BRAND_IMAGE),
                           child: Text(
                             "Täzele",
                             style:
@@ -155,25 +164,22 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 ),
               ),
               SizedBox(height: 14),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Vip',
-                      style: Theme.of(context).textTheme.subtitle1?.copyWith(
-                          color: Colors.black54, fontWeight: FontWeight.w500)),
-                  SizedBox(
-                    width: 24,
-                  ),
-                  Checkbox(
-                      value: this._isSelected,
-                      onChanged: (val) {
-                        setState(
-                          () {
-                            _isSelected = val!;
-                          },
-                        );
-                      })
-                ],
+              Card(
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black38, width: 0.0),
+                ),
+                child: CheckboxListTile(
+                  title: Text("VIP",
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w500,
+                          )),
+                  value: this._isSelected,
+                  onChanged: (val) {
+                    setState(() => _isSelected = val!);
+                  },
+                ),
               ),
               SizedBox(height: 14),
               TextFormField(

@@ -16,6 +16,8 @@ import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
+const baseUrl = 'http://192.168.1.33:3333';
+
 class ApiClient {
   static Client? http;
   static PackageInfo? packageInfo;
@@ -23,22 +25,19 @@ class ApiClient {
 
   static interceptorClient() {
     return InterceptedClient.build(
-      interceptors: [
-        BearerTokenApiInterceptor(),
-      ],
+      interceptors: [],
       retryPolicy: ExpiredTokenRetryPolicy(),
-      client: IOClient(
-        HttpClient()..badCertificateCallback = (cert, host, port) => true,
-      ),
+      requestTimeout: const Duration(seconds: 30),
+      client: Client(),
     );
   }
 
-  // resets client connection
-  static reset() {
-    AppService.httpRequests!.clear();
-    http!.close();
-    http = interceptorClient();
-  }
+  // // resets client connection
+  // static reset() {
+  //   AppService.httpRequests!.clear();
+  //   http!.close();
+  //   http = interceptorClient();
+  // }
 
   // lazy-load client
   ApiClient._setInstance() {
@@ -74,13 +73,12 @@ class ApiClient {
   ///
 
   Future<ApiResponse> put(Uri uri,
-      {required Map<String, String> headers,
+      {Map<String, String>? headers,
       dynamic data,
       bool anonymous = false}) async {
     try {
-      headers['anonymous'] = '$anonymous';
       return await sendWithRetry(
-        ClientRequest(http, 'PUT', uri, data: data, headers: headers),
+        ClientRequest(http!, 'PUT', uri, data: data, headers: headers),
       );
     } catch (_) {
       throw _;
@@ -88,13 +86,12 @@ class ApiClient {
   }
 
   Future<ApiResponse> post(Uri uri,
-      {required Map<String, String> headers,
+      {Map<String, String>? headers,
       dynamic data,
       bool anonymous = false}) async {
     try {
-      headers['anonymous'] = '$anonymous';
       return await sendWithRetry(
-        ClientRequest(http, 'POST', uri, data: data, headers: headers),
+        ClientRequest(http!, 'POST', uri, data: data, headers: headers),
       );
     } catch (_) {
       throw _;
@@ -103,12 +100,11 @@ class ApiClient {
 
   Future<ApiResponse> get(Uri uri,
       {dynamic data,
-      required Map<String, String> headers,
+      Map<String, String>? headers,
       bool anonymous = false}) async {
     try {
-      headers['anonymous'] = '$anonymous';
       return await sendWithRetry(
-        ClientRequest(http, 'GET', uri, headers: headers),
+        ClientRequest(http!, 'GET', uri, headers: headers),
       );
     } catch (_) {
       throw _;
@@ -116,13 +112,12 @@ class ApiClient {
   }
 
   Future<ApiResponse> delete(Uri uri,
-      {required Map<String, String> headers,
+      {Map<String, String>? headers,
       int apiVersion = 1,
       bool anonymous = false}) async {
     try {
-      headers['anonymous'] = '$anonymous';
       return await sendWithRetry(
-        ClientRequest(http, 'DELETE', uri, headers: headers),
+        ClientRequest(http!, 'DELETE', uri, headers: headers),
       );
     } catch (_) {
       throw _;
@@ -164,62 +159,58 @@ class ApiClient {
   /// [RETRY]
   ///
   Future<ApiResponse> sendWithRetry(ClientRequest req,
-      {int maxRetries = 5}) async {
-    AppService.httpRequests!.add(req.uri.path);
+      {int maxRetries = 1}) async {
+    AppService.httpRequests?.add(req.uri.path);
 
     DateTime start = DateTime.now();
     int retries = 0;
 
-    final response = await req.send();
-    print(response.statusCode);
-    print(response.body);
+    print('send it');
+    try {
+      final response = await req.send();
 
-    while (DateTime.now().difference(start).abs() < Duration(seconds: 10) &&
-        retries < maxRetries) {
-      try {
-        print('send it');
-        final response = await req.send();
-
-        var data = ApiResponse.fromJson(jsonDecode(response.body));
-        if (data != null && data.success!) {
-          AppService.httpRequests!.remove(req.uri.path);
-          return data;
-        } else {
-          // logAttempt(response, retries);
-          throw HttpException(
-              '${response.statusCode} | ${response.reasonPhrase} | ${response.body}');
-        }
-      } on SocketException catch (e) {
-        print('No Internet connection 😑');
-        handleException(req, 'SocketException', e.toString(), retries);
-      } on HttpException catch (e) {
-        print("Couldn't find the post 😱");
-        handleException(req, 'HttpException', e.toString(), retries);
-      } on FormatException catch (e) {
-        print("Bad response format 👎");
-        handleException(req, 'FormatException', e.toString(), retries);
-      } on HandshakeException catch (e) {
-        print("Bad handshake 👎");
-        handleException(req, 'HandshakeException', e.toString(), retries);
-      } on ClientException catch (e) {
-        print("Client was reset");
-        AppService.httpRequests!.remove(req.uri.path);
-        throw ClientException("Client was reset");
-      } catch (_) {
-        print("👎👎👎👎👎👎");
-        handleException(req, 'Exception', _.toString(), retries);
-      } finally {
-        retries++;
-        await Future.delayed(
-            Duration(milliseconds: 100 * (pow(2, retries) as int)));
+      var data = ApiResponse.fromJson(jsonDecode(response.body));
+      if (data != null && data.success == true) {
+        AppService.httpRequests?.remove(req.uri.path);
+        return data;
+      } else {
+        // logAttempt(response, retries);
+        throw HttpException(
+          '${response.statusCode} | ${response.reasonPhrase} | ${response.body}',
+        );
       }
+    } on SocketException catch (e) {
+      print('No Internet connection 😑');
+      handleException(req, 'SocketException', e.toString(), retries);
+    } on HttpException catch (e) {
+      print("Couldn't find the post 😱");
+      handleException(req, 'HttpException', e.toString(), retries);
+    } on FormatException catch (e) {
+      print("Bad response format 👎");
+      handleException(req, 'FormatException', e.toString(), retries);
+    } on HandshakeException catch (e) {
+      print("Bad handshake 👎");
+      handleException(req, 'HandshakeException', e.toString(), retries);
+    } on ClientException catch (e) {
+      print("Client was reset");
+      AppService.httpRequests?.remove(req.uri.path);
+      throw ClientException("Client was reset");
+    } catch (_) {
+      print("👎👎👎👎👎👎");
+      print(_);
+      handleException(req, 'Exception', _.toString(), retries);
+    } finally {
+      retries++;
+      await Future.delayed(
+          Duration(milliseconds: 100 * (pow(2, retries) as int)));
     }
-    print('request escaped');
-    AppService.httpRequests!.remove(req.uri.path);
+
+    AppService.httpRequests?.remove(req.uri.path);
     throw TimeoutException("Client timeout");
   }
 
   handleException(ClientRequest req, String type, String e, retries) {
+    print(e);
     var details = jsonEncode({
       "retry": retries,
       "version":
@@ -316,7 +307,7 @@ class BearerTokenApiInterceptor implements InterceptorContract {
 }
 
 class ClientRequest {
-  final Client? client;
+  final Client client;
   final String method;
   final Uri uri;
   final Map<String, String>? headers;
@@ -333,18 +324,15 @@ class ClientRequest {
   Future<Response> send() async {
     switch (method) {
       case 'GET':
-        return await client!.get(uri, headers: headers as Map<String, String>?);
+        return await client.get(uri, headers: headers);
       case 'POST':
-        return await client!
-            .post(uri, headers: headers as Map<String, String>?, body: data);
+        return await client.post(uri, headers: headers, body: data);
       case 'PUT':
-        return await client!
-            .put(uri, headers: headers as Map<String, String>?, body: data);
+        return await client.put(uri, headers: headers, body: data);
       case 'DELETE':
-        return await client!
-            .delete(uri, headers: headers as Map<String, String>?);
+        return await client.delete(uri, headers: headers);
       default:
-        return await client!.get(uri, headers: headers as Map<String, String>?);
+        return await client.get(uri, headers: headers);
     }
   }
 }
