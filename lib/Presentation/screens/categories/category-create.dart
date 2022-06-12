@@ -3,14 +3,14 @@ import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:flutter/material.dart';
 
-class CreateMarketPage extends StatefulWidget {
-  const CreateMarketPage({Key? key}) : super(key: key);
+class CreateCategoryPage extends StatefulWidget {
+  const CreateCategoryPage({Key? key}) : super(key: key);
 
   @override
-  State<CreateMarketPage> createState() => _CreateMarketPageState();
+  State<CreateCategoryPage> createState() => _CreateCategoryPageState();
 }
 
-class _CreateMarketPageState extends State<CreateMarketPage> {
+class _CreateCategoryPageState extends State<CreateCategoryPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController_tm = TextEditingController();
   final titleController_ru = TextEditingController();

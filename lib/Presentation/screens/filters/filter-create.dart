@@ -51,7 +51,7 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
               ),
               SizedBox(height: 14),
               DropdownButtonFormField2<FilterType>(
-                validator: (value) => emptyField(value),
+                validator: emptyField,
                 value: selectedType,
                 onChanged: (val) {
                   selectedType = val;

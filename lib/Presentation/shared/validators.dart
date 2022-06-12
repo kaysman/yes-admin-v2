@@ -36,3 +36,10 @@ String? validatePassword(String? value) {
   RegExp regExp = RegExp(pattern);
   return regExp.hasMatch(value) ? null : 'Weak password';
 }
+
+String? phoneValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return "Telefon belginizi girizin!";
+  } else
+    return null;
+}

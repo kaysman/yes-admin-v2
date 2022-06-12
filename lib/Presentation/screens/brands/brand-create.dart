@@ -47,17 +47,36 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 style: Theme.of(context).textTheme.headline4,
               ),
               SizedBox(height: 20),
-              if (_selectedLogoImage != null) ...[
-                ClipOval(
-                  child: Image.memory(
-                    _selectedLogoImage!.files.first.bytes!,
-                    fit: BoxFit.cover,
-                    height: 80,
-                    width: 80,
-                  ),
-                ),
-                SizedBox(height: 14),
-              ],
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (_selectedLogoImage != null) ...[
+                    ClipOval(
+                      child: Image.memory(
+                        _selectedLogoImage!.files.first.bytes!,
+                        fit: BoxFit.cover,
+                        height: 80,
+                        width: 80,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 14,
+                    ),
+                  ],
+                  if (_selectedImage != null) ...[
+                    ClipOval(
+                      child: Image.memory(
+                        _selectedImage!.files.first.bytes!,
+                        fit: BoxFit.cover,
+                        height: 80,
+                        width: 80,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              SizedBox(height: 14),
               Card(
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
