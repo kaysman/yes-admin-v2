@@ -129,18 +129,21 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                 ),
               ),
               SizedBox(height: 14),
-              DropdownButtonFormField2<RoleType>(
-                validator: emptyField,
-                value: selectedRole,
-                onChanged: (val) {
-                  selectedRole = val;
-                },
-                items: RoleType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(type.name),
-                  );
-                }).toList(),
+              DropdownButtonHideUnderline(
+                child: DropdownButtonFormField2<RoleType>(
+                  isExpanded: true,
+                  validator: emptyField,
+                  value: selectedRole,
+                  onChanged: (val) {
+                    selectedRole = val;
+                  },
+                  items: RoleType.values.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type.name),
+                    );
+                  }).toList(),
+                ),
               ),
               SizedBox(height: 24),
               Row(

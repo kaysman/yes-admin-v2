@@ -50,18 +50,21 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 ),
               ),
               SizedBox(height: 14),
-              DropdownButtonFormField2<FilterType>(
-                validator: emptyField,
-                value: selectedType,
-                onChanged: (val) {
-                  selectedType = val;
-                },
-                items: FilterType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Text(type.name),
-                  );
-                }).toList(),
+              DropdownButtonHideUnderline(
+                child: DropdownButtonFormField2<FilterType>(
+                  isExpanded: true,
+                  validator: emptyField,
+                  value: selectedType,
+                  onChanged: (val) {
+                    selectedType = val;
+                  },
+                  items: FilterType.values.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type.name),
+                    );
+                  }).toList(),
+                ),
               ),
               SizedBox(height: 24),
               Row(

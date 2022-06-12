@@ -71,65 +71,74 @@ class _CreateProductPageState extends State<CreateProductPage> {
                 ),
               ),
               // TODO: SELECT COLOR
-              // DropdownButtonFormField2<FilterDTO>(
-              //   hint: Text('Select color', style: Theme.of(context).textTheme.subtitle1!.copyWith(color:   Colors.black54 ),),
-              //   validator: emptyField,
-              //   value: color,
-              //   onChanged: (val) {
-              //     color = val;
-              //   },
-              //   items: .map((type) {
-              //     return DropdownMenuItem(
-              //       value: type,
-              //       child: Text(type.name),
-              //     );
-              //   }).toList(),
+              // DropdownButtonHideUnderline(
+              //   child: DropdownButtonFormField2<FilterDTO>(
+              //     isExpanded: true,
+              //     hint: Text('Select color', style: Theme.of(context).textTheme.subtitle1!.copyWith(color:   Colors.black54 ),),
+              //     validator: emptyField,
+              //     value: color,
+              //     onChanged: (val) {
+              //       color = val;
+              //     },
+              //     items: .map((type) {
+              //       return DropdownMenuItem(
+              //         value: type,
+              //         child: Text(type.name),
+              //       );
+              //     }).toList(),
+              //   ),
               // ),
 
               SizedBox(height: 14),
               // TODO: SELECT SIZES
-              // DropdownButtonFormField2<FilterDTO>(
-              //   hint: Text(
-              //     'Select sizes',
-              //     style: Theme.of(context)
-              //         .textTheme
-              //         .subtitle1!
-              //         .copyWith(color: Colors.black54),
-              //   ),
-              //   validator: emptyField,
-              //   value: size,
-              //   onChanged: (val) {
-              //     size = val;
-              //     sizes!.add(val!);
-              //   },
-              //   items: sizes!.map((type) {
-              //     return DropdownMenuItem(
-              //       value: type,
-              //       child: Text(type.name_tm),
-              //     );
-              //   }).toList(),
-              // ),
+              DropdownButtonHideUnderline(
+                child: DropdownButtonFormField2<FilterDTO>(
+                  isExpanded: true,
+                  hint: Text(
+                    'Select sizes',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1!
+                        .copyWith(color: Colors.black54),
+                  ),
+                  validator: emptyField,
+                  value: size,
+                  onChanged: (val) {
+                    size = val;
+                    sizes!.add(val!);
+                  },
+                  items: sizes!.map((type) {
+                    return DropdownMenuItem(
+                      value: type,
+                      child: Text(type.name_tm),
+                    );
+                  }).toList(),
+                ),
+              ),
               SizedBox(height: 14),
               // TODO: SELECT CATEGORY
-              // DropdownButtonFormField2<Category>(
-              //   hint: Text(
-              //     'Select caategory',
-              //     style: Theme.of(context)
-              //         .textTheme
-              //         .subtitle1!
-              //         .copyWith(color: Colors.black54),
+              // DropdownButtonHideUnderline(
+              //   child: DropdownButtonFormField2<Category>(
+              //     isExpanded:true ,
+              //     hint: Text(
+              //       'Select caategory',
+              //       style: Theme.of(context)
+              //           .textTheme
+              //           .subtitle1!
+              //           .copyWith(color: Colors.black54),
+              //     ),
+              //     validator: emptyField,
+              //     value: category,
+              //     onChanged: (val) {
+              //       category = val;
+              //     },
+              //     items: categories!.map((type) {
+              //       return DropdownMenuItem(
+              //         value: type,
+              //         child: Text(type.name_tm),
+              //       );
+              //     }).toList(),
               //   ),
-              //   validator: emptyField,
-              //   value: category,
-              //   onChanged: (val) {
-              //     category = val;
-              //   },
-              //   items: categories!.map((type) {
-              //     return DropdownMenuItem(
-              //       value: type,
-              //       child: Text(type.name_tm),
-              //     );
-              //   }).toList(),
               // ),
 
 
