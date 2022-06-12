@@ -58,11 +58,25 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       theme: Theme.of(context).copyWith(
-        textTheme: TextTheme(
-            headline4: Theme.of(context).textTheme.headline4?.copyWith(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                )),
+        dataTableTheme: DataTableThemeData(
+          checkboxHorizontalMargin: 18,
+          headingRowColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) => Colors.black38.withOpacity(0.05),
+          ),
+          dataRowColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.selected)) {
+                return Colors.grey.shade300;
+              }
+              return Colors.transparent;
+            },
+          ),
+          dataRowHeight: 56,
+          headingTextStyle: Theme.of(context).textTheme.bodyText1,
+          dataTextStyle: Theme.of(context).textTheme.bodyText2,
+          dividerThickness: 0.6,
+          headingRowHeight: 46,
+        ),
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(2),
@@ -91,6 +105,67 @@ class _AppState extends State<App> with WidgetsBindingObserver {
               color: Theme.of(context).primaryColor,
               width: 1.5,
             ),
+          ),
+        ),
+        textTheme: TextTheme(
+          headline1: TextStyle(
+            color: Colors.black87,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+          ),
+          headline2: TextStyle(
+            color: Colors.black87,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+          headline3: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+          headline4: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          headline5: TextStyle(
+            color: Colors.black87,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+          headline6: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+          bodyText1: TextStyle(
+            color: Colors.black87,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          bodyText2: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+          button: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+          subtitle1: TextStyle(
+            fontSize: 16, // TextField text style uses this by default
+            fontWeight: FontWeight.w400,
+            color: Colors.black87,
+          ),
+          subtitle2: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+          ),
+          caption: TextStyle(
+            color: Colors.black87,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),

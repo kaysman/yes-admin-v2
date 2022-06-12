@@ -29,7 +29,7 @@ class _IndexScreenState extends State<IndexScreen> {
           builder: (_, constraints) {
             return Scaffold(
               appBar: AppBar(
-                centerTitle: true,
+                centerTitle: false,
                 title: Text(
                   state.selected?.title ?? 'YES',
                 ),
