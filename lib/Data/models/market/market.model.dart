@@ -11,10 +11,12 @@ class MarketEntity {
   final String? description;
   final String phoneNumber;
   final String? ownerName;
+  bool isSelected;
   final DateTime? updatedAt;
   final DateTime? createdAt;
 
   MarketEntity({
+    this.isSelected = false,
     required this.id,
     required this.title,
     this.logo,

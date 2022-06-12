@@ -22,7 +22,21 @@ SidebarItem getMarketSidebarItem() {
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
-              SearchFieldInAppBar(hintText: "e.g mb shoes"),
+              BlocBuilder<MarketBloc, MarketState>(
+                builder: (context, state) {
+                  return SearchFieldInAppBar(
+                    onEnter: state.listingStatus == MarketListStatus.loading
+                        ? null
+                        : (value) {
+                            print(value);
+                            context
+                                .read<MarketBloc>()
+                                .getAllMarkets(searchQuery: value);
+                          },
+                    hintText: "e.g mb shoes",
+                  );
+                },
+              ),
               SizedBox(width: 14),
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -144,7 +158,11 @@ class _MarketsTableState extends State<MarketsTable> {
           selected: selectedMarkets.contains(market),
           onSelectChanged: (v) {
             setState(() {
-              selectedMarkets.add(market);
+              if (!selectedMarkets.contains(market)) {
+                selectedMarkets.add(market);
+              } else {
+                selectedMarkets.remove(market);
+              }
             });
           },
           cells: [

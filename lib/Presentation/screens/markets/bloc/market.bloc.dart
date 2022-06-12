@@ -23,10 +23,16 @@ class MarketBloc extends Cubit<MarketState> {
     }
   }
 
-  getAllMarkets() async {
+  getAllMarkets({String? searchQuery}) async {
     emit(state.copyWith(listingStatus: MarketListStatus.loading));
     try {
-      var res = await MarketService.getMarkets();
+      var res;
+      if (searchQuery != null) {
+        print(searchQuery);
+        res = await MarketService.searchMarket(searchQuery);
+      } else {
+        res = await MarketService.getMarkets();
+      }
       emit(state.copyWith(
         markets: res,
         listingStatus: MarketListStatus.idle,

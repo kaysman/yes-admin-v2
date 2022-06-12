@@ -25,6 +25,19 @@ class MarketService {
     var uri = Uri.parse(baseUrl + '/markets/all');
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
+      return (res.data as List)
+          .map((json) => MarketEntity.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } catch (_) {
+      print(_);
+      throw _;
+    }
+  }
+
+  static Future<List<MarketEntity>> searchMarket(String? searchQuery) async {
+    var uri = Uri.parse(baseUrl + '/markets?search=$searchQuery');
+    try {
+      var res = await ApiClient.instance.get(uri, headers: header());
       print(res.data);
       return (res.data as List)
           .map((json) => MarketEntity.fromJson(json as Map<String, dynamic>))
