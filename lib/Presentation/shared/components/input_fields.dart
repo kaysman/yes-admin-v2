@@ -20,7 +20,6 @@ class LabeledInput extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
-      // readOnly: !editMode,
       decoration: InputDecoration(
         labelText: label,
         enabled: editMode,

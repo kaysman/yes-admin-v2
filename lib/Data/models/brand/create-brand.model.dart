@@ -6,7 +6,8 @@ class CreateBrandDTO {
   final String name;
   final String logo;
   final String? image;
-  final bool vip; // default false
+  final bool vip;
+   
 
   CreateBrandDTO({
     required this.name,

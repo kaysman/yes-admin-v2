@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:admin_v2/Data/models/brand/create-brand.model.dart';
+import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
+import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum ImageType { BRAND_LOGO, BRAND_IMAGE }
 
@@ -203,30 +206,38 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
                     ),
                   ),
                   SizedBox(width: 16),
-                  Button(
-                    text: "Save",
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        String? logo64String;
-                        String? image64String;
-                        if (_selectedLogoImage != null ||
-                            _selectedImage != null) {
-                          logo64String =
-                              '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
-                          ;
-                          image64String =
-                              '${base64.encode(_selectedImage!.files[0].bytes as List<int>)}-ext-${_selectedImage!.files[0].extension}';
-                          ;
-                        }
-                        CreateBrandDTO data = CreateBrandDTO(
-                          name: titleController.text,
-                          logo: logo64String!,
-                          image: image64String,
-                          vip: this._isSelected,
+                  BlocConsumer<BrandBloc, BrandState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        return Button(
+                          isLoading:
+                              state.createStatus == BrandCreateStatus.loading,
+                          text: "Save",
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              String? logo64String;
+                              String? image64String;
+                              if (_selectedLogoImage != null ||
+                                  _selectedImage != null) {
+                                logo64String =
+                                    '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
+                                ;
+                                image64String =
+                                    '${base64.encode(_selectedImage!.files[0].bytes as List<int>)}-ext-${_selectedImage!.files[0].extension}';
+                                ;
+                              }
+                              CreateBrandDTO data = CreateBrandDTO(
+                                name: titleController.text,
+                                logo: logo64String!,
+                                image: image64String,
+                                vip: this._isSelected,
+                              );
+
+                              context.read<BrandBloc>().createBrand(data);
+                            }
+                          },
                         );
-                      }
-                    },
-                  ),
+                      }),
                 ],
               ),
             ],
