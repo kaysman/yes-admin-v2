@@ -25,6 +25,7 @@ SidebarItem getMarketSidebarItem() {
               BlocBuilder<MarketBloc, MarketState>(
                 builder: (context, state) {
                   return SearchFieldInAppBar(
+                    hintText: "e.g mb shoes",
                     onEnter: state.listingStatus == MarketListStatus.loading
                         ? null
                         : (value) {
@@ -33,7 +34,6 @@ SidebarItem getMarketSidebarItem() {
                                 .read<MarketBloc>()
                                 .getAllMarkets(searchQuery: value);
                           },
-                    hintText: "e.g mb shoes",
                   );
                 },
               ),

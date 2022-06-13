@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SearchFieldInAppBar extends StatefulWidget {
   final ValueChanged<String>? onEnter;
@@ -22,49 +21,33 @@ class _SearchFieldInAppBarState extends State<SearchFieldInAppBar> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 360,
-      child: RawKeyboardListener(
-        focusNode: FocusNode(onKey: (node, event) {
-          if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
-            return KeyEventResult.handled;
-          }
-          return KeyEventResult.ignored;
-        }),
-        onKey: (e) {
-          if (e.isKeyPressed(LogicalKeyboardKey.enter)) {
-            setState(() {
-              if (widget.onEnter != null) {
-                widget.onEnter!(controller.text);
-              }
-            });
-          }
-        },
-        child: TextFormField(
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(left: 14, right: 14),
-            hintText: widget.hintText,
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(
-                width: 0.0,
-                color: Colors.black38,
-              ),
+      child: TextFormField(
+        controller: controller,
+        onFieldSubmitted: (v) => widget.onEnter?.call(v),
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.only(left: 14, right: 14),
+          hintText: widget.hintText,
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: BorderSide(
+              width: 0.0,
+              color: Colors.black38,
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(
-                width: 0.0,
-                color: Colors.black38,
-              ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: BorderSide(
+              width: 0.0,
+              color: Colors.black38,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(
-                color: Colors.white24,
-                width: 1.5,
-              ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: BorderSide(
+              color: Colors.white24,
+              width: 1.5,
             ),
           ),
         ),
