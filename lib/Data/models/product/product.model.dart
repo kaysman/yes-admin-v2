@@ -1,9 +1,10 @@
 import 'package:admin_v2/Data/models/filter/size.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'create-product.model.g.dart';
+part 'product.model.g.dart';
 
 @JsonSerializable()
-class CreateProductDTO {
+class ProductEntity {
+  final int id;
   final String name_tm;
   final String name_ru;
   final String price;
@@ -18,7 +19,8 @@ class CreateProductDTO {
   final String? description_ru;
   final List<CreateSizeDTO>? sizes;
 
-  CreateProductDTO({
+  ProductEntity({
+    required this.id,
     required this.name_tm,
     required this.name_ru,
     required this.price,
@@ -33,8 +35,8 @@ class CreateProductDTO {
     this.description_ru,
     this.sizes,
   });
-  factory CreateProductDTO.fromJson(Map<String, dynamic> json) =>
-      _$CreateProductDTOFromJson(json);
+  factory ProductEntity.fromJson(Map<String, dynamic> json) =>
+      _$ProductEntityFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CreateProductDTOToJson(this);
+  Map<String, dynamic> toJson() => _$ProductEntityToJson(this);
 }

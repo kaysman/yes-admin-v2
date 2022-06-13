@@ -1,11 +1,13 @@
 import 'package:admin_v2/Presentation/screens/brands/brand-table.dart';
+import 'package:admin_v2/Presentation/screens/categories/category-table.dart';
 import 'package:admin_v2/Presentation/screens/products/product-table.dart';
-import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/markets/market-table.dart';
+
+import '../filters/filter-table.dart';
 
 class IndexBloc extends Cubit<IndexState> {
   IndexBloc() : super(IndexState(items: sidebars));
@@ -33,6 +35,8 @@ class IndexState {
 List<SidebarItem> sidebars = [
   getMarketSidebarItem(),
   getBrandSidebarItem(),
+  getFiltesSidebarItem(),
+  getCategoriesdebarItem(),
   SidebarItem(
       title: "Aksiýalar",
       view: Container(),

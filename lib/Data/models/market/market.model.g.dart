@@ -7,6 +7,7 @@ part of 'market.model.dart';
 // **************************************************************************
 
 MarketEntity _$MarketEntityFromJson(Map<String, dynamic> json) => MarketEntity(
+      isSelected: json['isSelected'] as bool? ?? false,
       id: json['id'] as int,
       title: json['title'] as String,
       logo: json['logo'] as String?,
@@ -31,6 +32,7 @@ Map<String, dynamic> _$MarketEntityToJson(MarketEntity instance) =>
       'description': instance.description,
       'phoneNumber': instance.phoneNumber,
       'ownerName': instance.ownerName,
+      'isSelected': instance.isSelected,
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
     };

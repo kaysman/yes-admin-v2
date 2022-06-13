@@ -1,4 +1,4 @@
-import 'package:admin_v2/Data/models/category/category.model.dart';
+import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/meta.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
@@ -9,12 +9,9 @@ import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/category..bloc.dart';
-import 'bloc/category.state.dart';
-
-SidebarItem getCategoriesdebarItem() {
+SidebarItem getFiltesSidebarItem() {
   return SidebarItem(
-    title: "Kategoriyalar",
+    title: "Filterler",
     view: Container(),
     getActions: (context) {
       return [
@@ -29,7 +26,7 @@ SidebarItem getCategoriesdebarItem() {
               showAppDialog(context, CreateCategoryPage());
             },
             child: Text(
-              'Kategoriya döret',
+              'Filter döret',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -39,17 +36,17 @@ SidebarItem getCategoriesdebarItem() {
   );
 }
 
-class CategoriesTable extends StatefulWidget {
-  const CategoriesTable({Key? key}) : super(key: key);
+class FiltersTable extends StatefulWidget {
+  const FiltersTable({Key? key}) : super(key: key);
 
   @override
-  State<CategoriesTable> createState() => _CategoriesTableState();
+  State<FiltersTable> createState() => _FiltersTableState();
 }
 
-class _CategoriesTableState extends State<CategoriesTable> {
+class _FiltersTableState extends State<FiltersTable> {
   int sortColumnIndex = 0;
   bool sortAscending = true;
-  List<CategoryEntity> selectedCategories = [];
+  List<FilterEntity> selectedFilters = [];
 
   List<String> columnNames = [
     'Logo',

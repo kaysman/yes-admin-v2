@@ -1,23 +1,35 @@
+import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/category/create-category.model.dart';
-import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
+import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CreateCategoryPage extends StatefulWidget {
-  const CreateCategoryPage({Key? key}) : super(key: key);
+class UpdateCategoryPage extends StatefulWidget {
+  const UpdateCategoryPage({Key? key, required this.category})
+      : super(key: key);
 
+  final CategoryEntity category;
   @override
-  State<CreateCategoryPage> createState() => _CreateCategoryPageState();
+  State<UpdateCategoryPage> createState() => _UpdateCategoryPageState();
 }
 
-class _CreateCategoryPageState extends State<CreateCategoryPage> {
+class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController_tm = TextEditingController();
   final titleController_ru = TextEditingController();
   final descriptionController_tm = TextEditingController();
   final descriptionController_ru = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    titleController_tm.text = widget.category.title_tm;
+    titleController_ru.text = widget.category.title_ru ?? '';
+    descriptionController_tm.text = widget.category.description_tm ?? '';
+    descriptionController_ru.text = widget.category.description_ru ?? '';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,33 +47,25 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                 style: Theme.of(context).textTheme.headline4,
               ),
               SizedBox(height: 20),
-              TextFormField(
+              LabeledInput(
                 controller: titleController_tm,
+                label: "Kategoriyanyn ady-tm *",
                 validator: emptyField,
-                decoration: InputDecoration(
-                  labelText: "Kategoriyanyn ady-tm *",
-                ),
               ),
               SizedBox(height: 14),
-              TextFormField(
+              LabeledInput(
                 controller: titleController_ru,
-                decoration: InputDecoration(
-                  labelText: "Kategoriyanyn ady-ru ",
-                ),
+                label: "Kategoriyanyn ady-ru ",
               ),
               SizedBox(height: 14),
-              TextFormField(
+              LabeledInput(
                 controller: descriptionController_tm,
-                decoration: InputDecoration(
-                  labelText: "Barada-tm",
-                ),
+                label: "Barada-tm",
               ),
               SizedBox(height: 14),
-              TextFormField(
+              LabeledInput(
                 controller: descriptionController_ru,
-                decoration: InputDecoration(
-                  labelText: "Barada-ru",
-                ),
+                label: "Barada-ru",
               ),
               SizedBox(height: 24),
               Row(
@@ -77,24 +81,19 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                     ),
                   ),
                   SizedBox(width: 16),
-                  BlocConsumer(
-                      listener: (_, state) {},
-                      builder: (context, state) {
-                        return Button(
-                          text: "Save",
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              CreateCategoryDTO data = CreateCategoryDTO(
-                                title_tm: titleController_tm.text,
-                                title_ru: titleController_ru.text,
-                                description_ru: descriptionController_tm.text,
-                                description_tm: descriptionController_ru.text,
-                              );
-                              context.read<CategoryBloc>().createCategory(data);
-                            }
-                          },
+                  Button(
+                    text: "Save",
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        CreateCategoryDTO data = CreateCategoryDTO(
+                          title_tm: titleController_tm.text,
+                          title_ru: titleController_ru.text,
+                          description_ru: descriptionController_tm.text,
+                          description_tm: descriptionController_ru.text,
                         );
-                      }),
+                      }
+                    },
+                  ),
                 ],
               ),
             ],

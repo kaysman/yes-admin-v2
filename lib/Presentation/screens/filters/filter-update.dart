@@ -1,26 +1,38 @@
+import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.enum.dart';
 import 'package:admin_v2/Data/models/filter/filter.model.dart';
+import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
+import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc/filter.bloc.dart';
+class CreateFilterPage extends StatefulWidget {
+  const CreateFilterPage({Key? key, required this.filter}) : super(key: key);
 
-class CreateMarketPage extends StatefulWidget {
-  const CreateMarketPage({Key? key}) : super(key: key);
+  final FilterEntity filter;
 
   @override
-  State<CreateMarketPage> createState() => _CreateMarketPageState();
+  State<CreateFilterPage> createState() => _CreateFilterPageState();
 }
 
-class _CreateMarketPageState extends State<CreateMarketPage> {
+class _CreateFilterPageState extends State<CreateFilterPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController_tm = TextEditingController();
   final titleController_ru = TextEditingController();
   FilterType? selectedType;
+  bool editMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController_tm.text = widget.filter.name_tm;
+    titleController_ru.text = widget.filter.name_ru;
+    selectedType = widget.filter.type;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,20 +49,25 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 "Filter döret".toUpperCase(),
                 style: Theme.of(context).textTheme.headline4,
               ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: titleController_tm,
-                validator: emptyField,
-                decoration: InputDecoration(
-                  labelText: "Kategoriyanyn ady-tm *",
+              SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => setState(() => editMode = !editMode),
+                child: Text(
+                  editMode ? "Cancel" : "Üýtget",
                 ),
               ),
+              SizedBox(height: 20),
+              LabeledInput(
+                controller: titleController_tm,
+                label: "Filterin ady-tm *",
+                editMode: editMode,
+                validator: emptyField,
+              ),
               SizedBox(height: 14),
-              TextFormField(
+              LabeledInput(
                 controller: titleController_ru,
-                decoration: InputDecoration(
-                  labelText: "Kategoriyanyn ady-ru ",
-                ),
+                label: "Filterin ady-ru",
+                editMode: editMode,
               ),
               SizedBox(height: 14),
               DropdownButtonHideUnderline(
@@ -58,9 +75,11 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                   isExpanded: true,
                   validator: emptyField,
                   value: selectedType,
-                  onChanged: (val) {
-                    selectedType = val;
-                  },
+                  onChanged: editMode
+                      ? (val) {
+                          selectedType = val;
+                        }
+                      : null,
                   items: FilterType.values.map((type) {
                     return DropdownMenuItem(
                       value: type,

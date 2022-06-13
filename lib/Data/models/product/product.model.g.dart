@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'create-product.model.dart';
+part of 'product.model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CreateProductDTO _$CreateProductDTOFromJson(Map<String, dynamic> json) =>
-    CreateProductDTO(
+ProductEntity _$ProductEntityFromJson(Map<String, dynamic> json) =>
+    ProductEntity(
+      id: json['id'] as int,
       name_tm: json['name_tm'] as String,
       name_ru: json['name_ru'] as String,
       price: json['price'] as String,
@@ -25,8 +26,9 @@ CreateProductDTO _$CreateProductDTOFromJson(Map<String, dynamic> json) =>
           .toList(),
     );
 
-Map<String, dynamic> _$CreateProductDTOToJson(CreateProductDTO instance) =>
+Map<String, dynamic> _$ProductEntityToJson(ProductEntity instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name_tm': instance.name_tm,
       'name_ru': instance.name_ru,
       'price': instance.price,
