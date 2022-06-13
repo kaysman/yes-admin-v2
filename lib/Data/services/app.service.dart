@@ -10,6 +10,7 @@ import 'package:admin_v2/Presentation/Blocs/connectivity.bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/http.bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/snackbar_bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/theme.bloc.dart';
+import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
@@ -87,6 +88,7 @@ class AppService {
         BlocProvider<HttpRequestBloc>(create: (context) => httpRequests!),
         BlocProvider<EnvironmentBloc>(create: (context) => EnvironmentBloc()),
         BlocProvider<MarketBloc>(create: (context) => MarketBloc()),
+        BlocProvider<BrandBloc>(create: (context) => BrandBloc()),
         // BlocProvider<ConnectivityBloc>(create: (context) => connectivityBloc),
       ], child: App(initialRoute: initialRoute)),
       // ),
