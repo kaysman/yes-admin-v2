@@ -1,11 +1,7 @@
 import 'package:admin_v2/Data/services/app.service.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
 import 'package:admin_v2/routes.dart';
-// import 'package:firebase_analytics/firebase_analytics.dart';
-// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_downloader/flutter_downloader.dart';
-import 'Data/services/firebase.service.dart';
 import 'Data/services/notification.service.dart';
 import 'Presentation/shared/components/app_observer.dart';
 
@@ -66,7 +62,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
           dataRowColor: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
               if (states.contains(MaterialState.selected)) {
-                return Colors.grey.shade300;
+                return Colors.grey.shade200;
               }
               return Colors.transparent;
             },

@@ -1,8 +1,4 @@
-import 'dart:convert';
-import 'package:admin_v2/Data/models/filter/filter.enum.dart';
 import 'package:admin_v2/Data/models/filter/filter.model.dart';
-import 'package:admin_v2/Data/models/market/create-market.model.dart';
-import 'package:admin_v2/Data/models/product/create-product.model.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -107,7 +103,7 @@ class _CreateProductPageState extends State<CreateProductPage> {
                     size = val;
                     sizes!.add(val!);
                   },
-                  items: sizes!.map((type) {
+                  items: sizes?.map((type) {
                     return DropdownMenuItem(
                       value: type,
                       child: Text(type.name_tm),
@@ -115,7 +111,7 @@ class _CreateProductPageState extends State<CreateProductPage> {
                   }).toList(),
                 ),
               ),
-              SizedBox(height: 14),
+              // SizedBox(height: 14),
               // TODO: SELECT CATEGORY
               // DropdownButtonHideUnderline(
               //   child: DropdownButtonFormField2<Category>(
@@ -140,7 +136,6 @@ class _CreateProductPageState extends State<CreateProductPage> {
               //     }).toList(),
               //   ),
               // ),
-
 
               SizedBox(height: 14),
               TextFormField(

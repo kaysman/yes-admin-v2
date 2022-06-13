@@ -1,4 +1,3 @@
-import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/index/drawer.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
 import 'package:flutter/material.dart';

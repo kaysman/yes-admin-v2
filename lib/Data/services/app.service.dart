@@ -12,6 +12,7 @@ import 'package:admin_v2/Presentation/Blocs/snackbar_bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/theme.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
+import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/environment.dart';
 import 'package:admin_v2/main.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class AppService {
     // ConnectivityBloc connectivityBloc = ConnectivityBloc();
 
     httpRequests = HttpRequestBloc();
-    onAuthError = () => {ApiClient.reset(), authBloc.setAuthLoggedOut()};
+    onAuthError = () => {() {}, authBloc.setAuthLoggedOut()};
     showSnackbar = (String x, SnackbarType type) {
       if (lifecycle.state.lifecycle == AppLifecycleState.resumed)
         snackbarBloc.showSnackbar(x, type);
@@ -85,6 +86,7 @@ class AppService {
         BlocProvider<AuthBloc>(create: (context) => authBloc),
         BlocProvider<HttpRequestBloc>(create: (context) => httpRequests!),
         BlocProvider<EnvironmentBloc>(create: (context) => EnvironmentBloc()),
+        BlocProvider<MarketBloc>(create: (context) => MarketBloc()),
         // BlocProvider<ConnectivityBloc>(create: (context) => connectivityBloc),
       ], child: App(initialRoute: initialRoute)),
       // ),

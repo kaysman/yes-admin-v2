@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 
-class SearchFieldInAppBar extends StatelessWidget {
+class SearchFieldInAppBar extends StatefulWidget {
+  final ValueChanged<String>? onEnter;
   SearchFieldInAppBar({
     Key? key,
     this.hintText,
+    required this.onEnter,
   }) : super(key: key);
 
-  final controller = TextEditingController();
   final String? hintText;
+
+  @override
+  State<SearchFieldInAppBar> createState() => _SearchFieldInAppBarState();
+}
+
+class _SearchFieldInAppBarState extends State<SearchFieldInAppBar> {
+  final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +23,10 @@ class SearchFieldInAppBar extends StatelessWidget {
       width: 360,
       child: TextFormField(
         controller: controller,
+        onFieldSubmitted: (v) => widget.onEnter?.call(v),
         decoration: InputDecoration(
           contentPadding: EdgeInsets.only(left: 14, right: 14),
-          hintText: hintText,
+          hintText: widget.hintText,
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
