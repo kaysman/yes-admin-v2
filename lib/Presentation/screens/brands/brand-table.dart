@@ -15,7 +15,7 @@ import 'brand-update.dart';
 SidebarItem getBrandSidebarItem() {
   return SidebarItem(
     title: "Brendlar",
-    view: Container(),
+    view: BrandsTable(),
     getActions: (context) {
       return [
         Padding(
@@ -52,8 +52,8 @@ class _BrandsTableState extends State<BrandsTable> {
   int sortColumnIndex = 0;
   bool sortAscending = true;
   List<BrandEntity> selectedBrands = [];
-
   List<String> columnNames = [
+    'ID',
     'Logo',
     'Ady',
     'Suraty',
@@ -62,53 +62,57 @@ class _BrandsTableState extends State<BrandsTable> {
 
   @override
   void initState() {
+    brandBloc = context.read<BrandBloc>();
+    brandBloc.getAllBrands();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return BlocBuilder<BrandBloc, BrandState>(builder: (context, state) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // StatisticsCard(
-              //   label: "Jemi",
-              //   content: "60",
-              //   description: "Market",
-              // ),
-              ScrollableWidget(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: constraints.maxWidth,
-                  ),
-                  child: DataTable(
-                    border: TableBorder.all(
-                      width: 1.0,
-                      color: Colors.grey.shade100,
+      return BlocBuilder<BrandBloc, BrandState>(
+          bloc: brandBloc,
+          builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // StatisticsCard(
+                  //   label: "Jemi",
+                  //   content: "60",
+                  //   description: "Market",
+                  // ),
+                  ScrollableWidget(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: DataTable(
+                        border: TableBorder.all(
+                          width: 1.0,
+                          color: Colors.grey.shade100,
+                        ),
+                        sortColumnIndex: sortColumnIndex,
+                        sortAscending: sortAscending,
+                        columns: tableColumns,
+                        rows: tableRows(state),
+                      ),
                     ),
-                    sortColumnIndex: sortColumnIndex,
-                    sortAscending: sortAscending,
-                    columns: tableColumns,
-                    rows: tableRows(state),
                   ),
-                ),
+                  Pagination(
+                    goPrevious: () {},
+                    goNext: () {},
+                    metaData: Meta(
+                      totalItems: 50,
+                      totalPages: 5,
+                      itemCount: 10,
+                      currentPage: 1,
+                    ),
+                  ),
+                ],
               ),
-              Pagination(
-                goPrevious: () {},
-                goNext: () {},
-                metaData: Meta(
-                  totalItems: 50,
-                  totalPages: 5,
-                  itemCount: 10,
-                  currentPage: 1,
-                ),
-              ),
-            ],
-          ),
-        );
-      });
+            );
+          });
     });
   }
 
@@ -135,6 +139,15 @@ class _BrandsTableState extends State<BrandsTable> {
             });
           },
           cells: [
+            DataCell(
+              Text("${brand.id}"),
+              onTap: () {
+                showAppDialog(
+                  context,
+                  UpdateBrandPage(brand: brand),
+                );
+              },
+            ),
             DataCell(
               Text("${brand.logo}"),
               onTap: () {
@@ -163,7 +176,9 @@ class _BrandsTableState extends State<BrandsTable> {
               },
             ),
             DataCell(
-              Text("${brand.vip}"),
+              Text(() {
+                return brand.vip ? 'Hawa' : 'Yok';
+              }()),
               onTap: () {
                 showAppDialog(
                   context,

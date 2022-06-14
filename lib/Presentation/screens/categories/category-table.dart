@@ -1,8 +1,8 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/meta.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
-import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-create.dart';
+import 'package:admin_v2/Presentation/screens/categories/category-update.dart';
 import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
@@ -15,7 +15,7 @@ import 'bloc/category.state.dart';
 SidebarItem getCategoriesdebarItem() {
   return SidebarItem(
     title: "Kategoriyalar",
-    view: Container(),
+    view: CategoriesTable(),
     getActions: (context) {
       return [
         Padding(
@@ -50,16 +50,19 @@ class _CategoriesTableState extends State<CategoriesTable> {
   int sortColumnIndex = 0;
   bool sortAscending = true;
   List<CategoryEntity> selectedCategories = [];
-
+  late CategoryBloc categoryBloc;
   List<String> columnNames = [
-    'Logo',
-    'Ady',
-    'Suraty',
-    'VIP',
+    'ID',
+    'Ady tm',
+    'Ady ru',
+    'Barada tm',
+    'Barada ru',
   ];
 
   @override
   void initState() {
+    categoryBloc = context.read<CategoryBloc>();
+    categoryBloc.getAllCategories();
     super.initState();
   }
 
@@ -120,56 +123,31 @@ class _CategoriesTableState extends State<CategoriesTable> {
     });
   }
 
-  List<DataRow> tableRows(BrandState state) {
-    if (state.brands == null) return [];
+  List<DataRow> tableRows(CategoryState state) {
+    if (state.categories == null) return [];
     return List.generate(
-      state.brands!.length,
+      state.categories!.length,
       (index) {
-        var brand = state.brands![index];
+        var category = state.categories![index];
         return DataRow(
-          selected: selectedCategories.contains(brand),
+          selected: selectedCategories.contains(category),
+          onLongPress: () {
+            showAppDialog(
+              context,
+              UpdateCategoryPage(category: category),
+            );
+          },
           onSelectChanged: (v) {
             setState(() {
-              selectedCategories.add(brand);
+              selectedCategories.add(category);
             });
           },
           cells: [
-            DataCell(
-              Text("${brand.logo}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
-            ),
-            DataCell(
-              Text("${brand.name}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
-            ),
-            DataCell(
-              Text("${brand.image}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
-            ),
-            DataCell(
-              Text("${brand.vip}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
-            ),
+            DataCell(Text("${category.id}")),
+            DataCell(Text("${category.title_tm}")),
+            DataCell(Text("${category.title_ru}")),
+            DataCell(Text("${category.description_tm}")),
+            DataCell(Text("${category.description_ru}")),
           ],
         );
       },

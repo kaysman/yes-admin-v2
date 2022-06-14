@@ -42,9 +42,9 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
 
     titleController_tm.text = widget.product.name_tm;
     titleController_ru.text = widget.product.name_tm;
-    priceController.text = widget.product.price;
-    quantityController.text = widget.product.quantity as String;
-    codeController.text = widget.product.code as String;
+    priceController.text = widget.product.ourPrice.toString();
+    quantityController.text = widget.product.quantity.toString();
+    codeController.text = widget.product.code;
     descriptionController_tm.text = widget.product.description_tm ?? '';
     descriptionController_ru.text = widget.product.description_ru ?? '';
   }
@@ -185,47 +185,47 @@ class _UpdateProductPageState extends State<UpdateProductPage> {
                 editMode: editMode,
               ),
               SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      "Cancel",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  BlocConsumer<FilterBloc, FilterState>(
-                    listener: (context, state) {
-                      if (state.createStatus == MarketCreateStatus.success) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    builder: (context, state) {
-                      return Button(
-                        text: "Save",
-                        isLoading:
-                            state.createStatus == MarketCreateStatus.loading,
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            String? logo64String;
-                            if (_selectedLogoImage != null) {
-                              logo64String =
-                                  '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
-                              ;
-                            }
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     OutlinedButton(
+              //       onPressed: () => Navigator.of(context).pop(),
+              //       child: Text(
+              //         "Cancel",
+              //         style: Theme.of(context).textTheme.bodyText2!.copyWith(
+              //               color: Theme.of(context).primaryColor,
+              //             ),
+              //       ),
+              //     ),
+              //     SizedBox(width: 16),
+              //     BlocConsumer<FilterBloc, FilterState>(
+              //       listener: (context, state) {
+              //         if (state.createStatus == MarketCreateStatus.success) {
+              //           Navigator.of(context).pop();
+              //         }
+              //       },
+              //       builder: (context, state) {
+              //         return Button(
+              //           text: "Save",
+              //           isLoading:
+              //               state.createStatus == MarketCreateStatus.loading,
+              //           onPressed: () async {
+              //             if (formKey.currentState!.validate()) {
+              //               String? logo64String;
+              //               if (_selectedLogoImage != null) {
+              //                 logo64String =
+              //                     '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
+              //                 ;
+              //               }
 
-                            CreateProductDTO data = CreateProductDTO();
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ],
-              ),
+              //               CreateProductDTO data = CreateProductDTO();
+              //             }
+              //           },
+              //         );
+              //       },
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),

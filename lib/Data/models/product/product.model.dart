@@ -7,14 +7,15 @@ class ProductEntity {
   final int id;
   final String name_tm;
   final String name_ru;
-  final String price;
+  final int ourPrice;
+  final int marketPrice;
   final int color_id;
   final int gender_id;
   final int quantity;
   final int brand_id;
   final int category_id;
   final int market_id;
-  final int code;
+  final String code;
   final String? description_tm;
   final String? description_ru;
   final List<CreateSizeDTO>? sizes;
@@ -23,7 +24,8 @@ class ProductEntity {
     required this.id,
     required this.name_tm,
     required this.name_ru,
-    required this.price,
+    required this.ourPrice,
+    required this.marketPrice,
     required this.color_id,
     required this.gender_id,
     required this.brand_id,

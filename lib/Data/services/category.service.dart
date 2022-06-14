@@ -6,7 +6,7 @@ import 'api_client.dart';
 
 class CategoryService {
   static Future<CategoryEntity?> createCategory(CreateCategoryDTO data) async {
-    var uri = Uri.parse(baseUrl + '/brands/create');
+    var uri = Uri.parse(baseUrl + '/categories/create');
     try {
       var res = await ApiClient.instance.post(
         uri,
@@ -21,7 +21,7 @@ class CategoryService {
   }
 
   static Future<List<CategoryEntity>> getCategories() async {
-    var uri = Uri.parse(baseUrl + '/brands/all');
+    var uri = Uri.parse(baseUrl + '/categories/all');
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
       print(res.data);

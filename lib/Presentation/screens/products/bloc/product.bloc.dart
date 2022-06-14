@@ -1,45 +1,45 @@
-import 'package:admin_v2/Data/models/market/create-market.model.dart';
-import 'package:admin_v2/Data/models/market/market.model.dart';
+import 'package:admin_v2/Data/models/product/create-product.model.dart';
+import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Data/services/market.service.dart';
+import 'package:admin_v2/Data/services/product_service.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductBloc extends Cubit<ProductState> {
   ProductBloc() : super(ProductState());
 
-  createMarket(CreateMarketDTO data) async {
-    emit(state.copyWith(createStatus: MarketCreateStatus.loading));
+  createProduct(CreateProductDTO data) async {
+    emit(state.copyWith(createStatus: ProductCreateStatus.loading));
     try {
-      var res = await MarketService.createMarket(data);
-      List<MarketEntity> l = List<MarketEntity>.from(state.markets ?? []);
+      var res = await ProductService.createProduct(data);
+      List<ProductEntity>? l = List<ProductEntity>.from(state.products ?? []);
       l.add(res!);
       emit(state.copyWith(
-        markets: l,
-        createStatus: MarketCreateStatus.success,
+        products: l,
+        createStatus: ProductCreateStatus.success,
       ));
     } catch (_) {
       print(_);
-      emit(state.copyWith(createStatus: MarketCreateStatus.error));
+      emit(state.copyWith(createStatus: ProductCreateStatus.error));
     }
   }
 
-  getAllMarkets({String? searchQuery}) async {
-    emit(state.copyWith(listingStatus: MarketListStatus.loading));
+  getAllProducts({String? searchQuery}) async {
+    emit(state.copyWith(listingStatus: ProductListStatus.loading));
     try {
       var res;
       if (searchQuery != null) {
         print(searchQuery);
-        res = await MarketService.searchMarket(searchQuery);
       } else {
-        res = await MarketService.getMarkets();
+        res = await ProductService.getProducts();
       }
       emit(state.copyWith(
-        markets: res,
-        listingStatus: MarketListStatus.idle,
+        products: res,
+        listingStatus: ProductListStatus.idle,
       ));
     } catch (_) {
       print(_);
-      emit(state.copyWith(listingStatus: MarketListStatus.error));
+      emit(state.copyWith(listingStatus: ProductListStatus.error));
     }
   }
 }

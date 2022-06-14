@@ -11,9 +11,12 @@ import 'package:admin_v2/Presentation/Blocs/http.bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/snackbar_bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/theme.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
+import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
+import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
+import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/environment.dart';
 import 'package:admin_v2/main.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +92,9 @@ class AppService {
         BlocProvider<EnvironmentBloc>(create: (context) => EnvironmentBloc()),
         BlocProvider<MarketBloc>(create: (context) => MarketBloc()),
         BlocProvider<BrandBloc>(create: (context) => BrandBloc()),
+        BlocProvider<FilterBloc>(create: (context) => FilterBloc()),
+        BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
+        BlocProvider<ProductBloc>(create: (context) => ProductBloc()),
         // BlocProvider<ConnectivityBloc>(create: (context) => connectivityBloc),
       ], child: App(initialRoute: initialRoute)),
       // ),

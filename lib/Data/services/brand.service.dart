@@ -21,7 +21,7 @@ class BrandService {
   }
 
   static Future<List<BrandEntity>> getBrands() async {
-    var uri = Uri.parse(baseUrl + '/brands/all');
+    var uri = Uri.parse(baseUrl + '/brands');
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
       print(res.data);

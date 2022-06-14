@@ -74,6 +74,7 @@ class _MarketsTableState extends State<MarketsTable> {
   List<MarketEntity> selectedMarkets = [];
 
   List<String> columnNames = [
+    'ID',
     'Logo',
     'Ady',
     'Adres',
@@ -166,6 +167,15 @@ class _MarketsTableState extends State<MarketsTable> {
             });
           },
           cells: [
+            DataCell(
+              Text("${market.id}"),
+              onTap: () {
+                showAppDialog(
+                  context,
+                  UpdateMarketPage(market: market),
+                );
+              },
+            ),
             DataCell(
               Text("${market.logo}"),
               onTap: () {

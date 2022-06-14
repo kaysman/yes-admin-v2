@@ -1,27 +1,27 @@
-import 'package:admin_v2/Data/models/market/market.model.dart';
+import 'package:admin_v2/Data/models/product/product.model.dart';
 
-enum MarketListStatus { idle, loading, error }
+enum ProductListStatus { idle, loading, error }
 
-enum MarketCreateStatus { idle, loading, error, success }
+enum ProductCreateStatus { idle, loading, error, success }
 
 class ProductState {
-  final List<MarketEntity>? markets;
-  final MarketListStatus? listingStatus;
-  final MarketCreateStatus? createStatus;
+  final List<ProductEntity>? products;
+  final ProductListStatus? listingStatus;
+  final ProductCreateStatus? createStatus;
 
   ProductState({
-    this.markets,
-    this.listingStatus = MarketListStatus.idle,
-    this.createStatus = MarketCreateStatus.idle,
+    this.products,
+    this.listingStatus = ProductListStatus.idle,
+    this.createStatus = ProductCreateStatus.idle,
   });
 
   ProductState copyWith({
-    List<MarketEntity>? markets,
-    MarketListStatus? listingStatus,
-    MarketCreateStatus? createStatus,
+    List<ProductEntity>? products,
+    ProductListStatus? listingStatus,
+    ProductCreateStatus? createStatus,
   }) {
     return ProductState(
-      markets: markets ?? this.markets,
+      products: products ?? this.products,
       listingStatus: listingStatus ?? this.listingStatus,
       createStatus: createStatus ?? this.createStatus,
     );

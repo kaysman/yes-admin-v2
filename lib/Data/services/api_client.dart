@@ -4,8 +4,6 @@ import 'dart:io';
 import 'dart:math';
 import 'package:admin_v2/Data/models/credentials.dart';
 import 'package:collection/collection.dart' show IterableExtension;
-// import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:http/io_client.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http_interceptor/http_interceptor.dart';
@@ -16,7 +14,7 @@ import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
-const baseUrl = 'http://192.168.1.33:3333';
+const baseUrl = 'http://192.168.1.27:3333';
 
 class ApiClient {
   static Client? http;
@@ -203,9 +201,8 @@ class ApiClient {
       retries++;
       await Future.delayed(
           Duration(milliseconds: 100 * (pow(2, retries) as int)));
+      AppService.httpRequests?.remove(req.uri.path);
     }
-
-    AppService.httpRequests?.remove(req.uri.path);
     throw TimeoutException("Client timeout");
   }
 

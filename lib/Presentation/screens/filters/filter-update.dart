@@ -10,16 +10,16 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CreateFilterPage extends StatefulWidget {
-  const CreateFilterPage({Key? key, required this.filter}) : super(key: key);
+class UpdateFilterPage extends StatefulWidget {
+  const UpdateFilterPage({Key? key, required this.filter}) : super(key: key);
 
   final FilterEntity filter;
 
   @override
-  State<CreateFilterPage> createState() => _CreateFilterPageState();
+  State<UpdateFilterPage> createState() => _UpdateFilterPageState();
 }
 
-class _CreateFilterPageState extends State<CreateFilterPage> {
+class _UpdateFilterPageState extends State<UpdateFilterPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController_tm = TextEditingController();
   final titleController_ru = TextEditingController();
