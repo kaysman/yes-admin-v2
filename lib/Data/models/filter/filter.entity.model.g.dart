@@ -7,6 +7,7 @@ part of 'filter.entity.model.dart';
 // **************************************************************************
 
 FilterEntity _$FilterEntityFromJson(Map<String, dynamic> json) => FilterEntity(
+      isSelected: json['isSelected'] as bool? ?? false,
       id: json['id'] as int,
       name_tm: json['name_tm'] as String,
       name_ru: json['name_ru'] as String,
@@ -19,6 +20,7 @@ Map<String, dynamic> _$FilterEntityToJson(FilterEntity instance) =>
       'name_tm': instance.name_tm,
       'name_ru': instance.name_ru,
       'type': _$FilterTypeEnumMap[instance.type],
+      'isSelected': instance.isSelected,
     };
 
 const _$FilterTypeEnumMap = {

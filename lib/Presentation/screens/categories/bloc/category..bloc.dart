@@ -1,5 +1,6 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/category/create-category.model.dart';
+import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/services/category.service.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,10 +25,18 @@ class CategoryBloc extends Cubit<CategoryState> {
     }
   }
 
-  getAllCategories() async {
-    emit(state.copyWith(listingStatus: CategoryListStatus.loading));
+  getAllCategories({PaginationDTO? filter, bool subtle = false}) async {
+    emit(state.copyWith(
+      listingStatus: subtle
+          ? CategoryListStatus.silentLoading
+          : CategoryListStatus.loading,
+    ));
+
+    if (filter == null) {
+      filter = PaginationDTO();
+    }
     try {
-      var res = await CategoryService.getCategories();
+      var res = await CategoryService.getCategories(filter.toJson());
       emit(state.copyWith(
         categories: res,
         listingStatus: CategoryListStatus.idle,

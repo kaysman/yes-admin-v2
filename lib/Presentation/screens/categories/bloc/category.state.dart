@@ -1,6 +1,6 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
 
-enum CategoryListStatus { idle, loading, error }
+enum CategoryListStatus { idle, loading, error , silentLoading}
 
 enum CategoryCreateStatus { idle, loading, error, success }
 

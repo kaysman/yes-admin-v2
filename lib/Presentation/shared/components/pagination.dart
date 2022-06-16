@@ -5,22 +5,24 @@ class Pagination extends StatelessWidget {
   const Pagination({
     Key? key,
     this.metaData,
-    required this.goPrevious,
+    required this.text,
+    this.goPrevious,
     required this.goNext,
   }) : super(key: key);
 
   final Meta? metaData;
-  final Function goPrevious;
-  final Function goNext;
+  final Function? goPrevious;
+  final Function? goNext;
+  final String text;
 
-  Future<void> fetchPage(/*Meta?*/ meta, [toPrevious = false]) async {
-    if (meta != null) {
-      if (toPrevious && meta.hasPrevious)
-        this.goPrevious();
-      else if (meta.hasNext) this.goNext();
-    }
-    return;
-  }
+  // Future<void> fetchPage(/*Meta?*/ meta, [toPrevious = false]) async {
+  //   if (meta != null) {
+  //     if (toPrevious && meta.hasPrevious)
+  //       this.goPrevious();
+  //     else if (meta.hasNext) this.goNext();
+  //   }
+  //   return;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +41,9 @@ class Pagination extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              if (_meta != null && _meta.hasPrevious)
+              if (this.goPrevious != null)
                 InkWell(
-                  onTap: () => fetchPage(_meta, true),
+                  onTap: () => this.goPrevious!.call(),
                   child: Row(
                     children: [
                       Icon(
@@ -69,21 +71,22 @@ class Pagination extends StatelessWidget {
                     vertical: 6,
                   ),
                   child: Text(
-                    "${_meta?.currentPage}",
+                    // "${_meta?.currentPage}",,
+                    text,
                     style: Theme.of(context).textTheme.headline3,
                   ),
                 ),
               ),
-              if (_meta?.totalPages != null) SizedBox(width: 8),
-              if (_meta?.totalPages != null)
-                Text(
-                  "out of ${_meta?.totalPages}",
-                  style: Theme.of(context).textTheme.headline4,
-                ),
+              // if (_meta?.totalPages != null) SizedBox(width: 8),
+              // if (_meta?.totalPages != null)
+              //   Text(
+              //     "out of ${_meta?.totalPages}",
+              //     style: Theme.of(context).textTheme.headline4,
+              //   ),
               SizedBox(width: 16),
-              if (_meta != null && _meta.hasNext)
+              if (this.goNext != null)
                 InkWell(
-                  onTap: () => fetchPage(_meta),
+                  onTap: () => this.goNext!.call(),
                   child: Row(
                     children: [
                       Text(

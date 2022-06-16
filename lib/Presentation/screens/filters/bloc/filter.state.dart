@@ -1,7 +1,7 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 
-enum FilterListStatus { idle, loading, error }
+enum FilterListStatus { idle, loading, error, silentLoading }
 
 enum FilterCreateStatus { idle, loading, error, success }
 

@@ -19,8 +19,10 @@ class ProductEntity {
   final String? description_tm;
   final String? description_ru;
   final List<CreateSizeDTO>? sizes;
+  bool isSelected;
 
   ProductEntity({
+    this.isSelected = false,
     required this.id,
     required this.name_tm,
     required this.name_ru,

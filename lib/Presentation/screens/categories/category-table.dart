@@ -1,8 +1,11 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/meta.dart';
+import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-create.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-update.dart';
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
 import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
@@ -20,18 +23,68 @@ SidebarItem getCategoriesdebarItem() {
       return [
         Padding(
           padding: const EdgeInsets.all(12.0),
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              onSurface: Colors.white,
-              primary: Colors.transparent,
-            ),
-            onPressed: () {
-              showAppDialog(context, CreateCategoryPage());
-            },
-            child: Text(
-              'Kategoriya döret',
-              style: TextStyle(color: Colors.white),
-            ),
+          child: Row(
+            children: [
+              BlocConsumer<CategoryBloc, CategoryState>(
+                listener: (_, state) {
+                  if (state.createStatus == CategoryCreateStatus.success) {
+                    Scaffold.of(context)
+                        // ignore: deprecated_member_use
+                        .showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.lightBlue,
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(milliseconds: 1000),
+                        content: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 30,
+                          ),
+                          child: new Text(
+                            'Created Successully',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                    color: Colors.white, letterSpacing: 1),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return SearchFieldInAppBar(
+                    hintText: "e.g mb shoes",
+                    onEnter: state.listingStatus == CategoryListStatus.loading
+                        ? null
+                        : (value) {
+                            print(value);
+                            context.read<CategoryBloc>().getAllCategories(
+                                  filter: PaginationDTO(search: value),
+                                );
+                          },
+                  );
+                },
+              ),
+              SizedBox(
+                width: 14,
+              ),
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  onSurface: Colors.white,
+                  primary: Colors.transparent,
+                ),
+                onPressed: () {
+                  showAppDialog(context, CreateCategoryPage());
+                },
+                child: Text(
+                  'Kategoriya döret',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
       ];
@@ -71,45 +124,70 @@ class _CategoriesTableState extends State<CategoriesTable> {
     return LayoutBuilder(builder: (context, constraints) {
       return BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              // StatisticsCard(
-              //   label: "Jemi",
-              //   content: "60",
-              //   description: "Market",
-              // ),
-              ScrollableWidget(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minWidth: constraints.maxWidth,
-                  ),
-                  child: DataTable(
-                    border: TableBorder.all(
-                      width: 1.0,
-                      color: Colors.grey.shade100,
+        return state.listingStatus == CategoryListStatus.loading
+            ? Center(
+                child: CircularProgressIndicator(
+                color: kPrimaryColor,
+              ))
+            : Container(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if (selectedCategories.length == 1)
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: Colors.lightBlueAccent,
+                              ),
+                              onPressed: () {
+                                var _category = selectedCategories.firstWhere(
+                                  (e) => e.isSelected == false,
+                                );
+                                showAppDialog(context,
+                                    UpdateCategoryPage(category: _category));
+                              },
+                              child: Text(
+                                'Uytget',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
-                    sortColumnIndex: sortColumnIndex,
-                    sortAscending: sortAscending,
-                    columns: tableColumns,
-                    rows: tableRows(state),
-                  ),
+                    ScrollableWidget(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: constraints.maxWidth,
+                        ),
+                        child: DataTable(
+                          border: TableBorder.all(
+                            width: 1.0,
+                            color: Colors.grey.shade100,
+                          ),
+                          sortColumnIndex: sortColumnIndex,
+                          sortAscending: sortAscending,
+                          columns: tableColumns,
+                          rows: tableRows(state),
+                        ),
+                      ),
+                    ),
+                    // Pagination(
+                    //   goPrevious: () {},
+                    //   goNext: () {},
+                    //   metaData: Meta(
+                    //     totalItems: 50,
+                    //     totalPages: 5,
+                    //     itemCount: 10,
+                    //     currentPage: 1,
+                    //   ),
+                    // ),
+                  ],
                 ),
-              ),
-              Pagination(
-                goPrevious: () {},
-                goNext: () {},
-                metaData: Meta(
-                  totalItems: 50,
-                  totalPages: 5,
-                  itemCount: 10,
-                  currentPage: 1,
-                ),
-              ),
-            ],
-          ),
-        );
+              );
       });
     });
   }
@@ -131,19 +209,22 @@ class _CategoriesTableState extends State<CategoriesTable> {
         var category = state.categories![index];
         return DataRow(
           selected: selectedCategories.contains(category),
-          onLongPress: () {
-            showAppDialog(
-              context,
-              UpdateCategoryPage(category: category),
-            );
-          },
           onSelectChanged: (v) {
             setState(() {
-              selectedCategories.add(category);
+              if (!selectedCategories.contains(category)) {
+                selectedCategories.add(category);
+              } else {
+                selectedCategories.remove(category);
+              }
             });
           },
           cells: [
-            DataCell(Text("${category.id}")),
+            DataCell(
+                onTap: () => showAppDialog(
+                      context,
+                      SubCategoriesPage(subCategories: category.subcategories),
+                    ),
+                Text("${category.id}")),
             DataCell(Text("${category.title_tm}")),
             DataCell(Text("${category.title_ru}")),
             DataCell(Text("${category.description_tm}")),
@@ -151,6 +232,28 @@ class _CategoriesTableState extends State<CategoriesTable> {
           ],
         );
       },
+    );
+  }
+}
+
+class SubCategoriesPage extends StatelessWidget {
+  final List<CategoryEntity>? subCategories;
+  const SubCategoriesPage({Key? key, required this.subCategories})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.45,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: subCategories?.map((e) {
+              return ListTile(
+                title: Text('${e.title_tm}'),
+              );
+            }).toList() ??
+            [],
+      ),
     );
   }
 }

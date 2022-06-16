@@ -2,21 +2,16 @@ class ApiResponse<T> {
   final bool? success;
   final T? data;
   final dynamic links;
-  final dynamic messages;
-  final List<ApiError>? errors;
+  final dynamic message;
 
-  ApiResponse(
-      {this.success, this.data, this.links, this.messages, this.errors});
+  ApiResponse({this.success, this.data, this.links, this.message});
 
   factory ApiResponse.fromJson(Map<String, dynamic> json) {
     return ApiResponse(
       success: json["success"],
       data: json["data"],
       links: json["links"],
-      messages: json["messages"],
-      errors: (json["errors"] != null)
-          ? List<ApiError>.from(json["errors"].map((x) => ApiError.fromJson(x)))
-          : [],
+      message: json["message"],
     );
   }
 }

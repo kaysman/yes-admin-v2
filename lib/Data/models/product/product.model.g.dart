@@ -8,6 +8,7 @@ part of 'product.model.dart';
 
 ProductEntity _$ProductEntityFromJson(Map<String, dynamic> json) =>
     ProductEntity(
+      isSelected: json['isSelected'] as bool? ?? false,
       id: json['id'] as int,
       name_tm: json['name_tm'] as String,
       name_ru: json['name_ru'] as String,
@@ -44,4 +45,5 @@ Map<String, dynamic> _$ProductEntityToJson(ProductEntity instance) =>
       'description_tm': instance.description_tm,
       'description_ru': instance.description_ru,
       'sizes': instance.sizes,
+      'isSelected': instance.isSelected,
     };

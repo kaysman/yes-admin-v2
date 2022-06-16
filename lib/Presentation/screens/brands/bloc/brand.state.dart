@@ -1,6 +1,6 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 
-enum BrandListStatus { idle, loading, error }
+enum BrandListStatus { idle, loading, error, silentLoading }
 
 enum BrandCreateStatus { idle, loading, error, success }
 

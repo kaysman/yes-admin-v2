@@ -1,9 +1,10 @@
 import 'package:admin_v2/Data/services/api_client.dart';
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'market.model.g.dart';
 
 @JsonSerializable()
-class MarketEntity {
+class MarketEntity with EquatableMixin {
   final int id;
   final String title;
   final String? logo;
@@ -11,12 +12,10 @@ class MarketEntity {
   final String? description;
   final String phoneNumber;
   final String? ownerName;
-  bool isSelected;
   final DateTime? updatedAt;
   final DateTime? createdAt;
 
   MarketEntity({
-    this.isSelected = false,
     required this.id,
     required this.title,
     this.logo,
@@ -34,4 +33,7 @@ class MarketEntity {
       _$MarketEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$MarketEntityToJson(this);
+
+  @override
+  List<Object?> get props => [id];
 }

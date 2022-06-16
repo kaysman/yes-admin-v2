@@ -1,6 +1,6 @@
 import 'package:admin_v2/Data/models/market/market.model.dart';
 
-enum MarketListStatus { idle, loading, error }
+enum MarketListStatus { idle, loading, error , silentLoading}
 
 enum MarketCreateStatus { idle, loading, error, success }
 

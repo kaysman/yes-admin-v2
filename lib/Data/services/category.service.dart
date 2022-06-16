@@ -20,11 +20,21 @@ class CategoryService {
     }
   }
 
-  static Future<List<CategoryEntity>> getCategories() async {
-    var uri = Uri.parse(baseUrl + '/categories/all');
+  static Future<List<CategoryEntity>> getCategories(
+    Map<String, dynamic> queryParams,
+  ) async {
+    String url = baseUrl + '/categories?';
+    queryParams.forEach((key, value) {
+      if (key != null && value != null) {
+        url += url.endsWith('?')
+            ? '${key}=${queryParams[key]}'
+            : '&${key}=${queryParams[key]}';
+      }
+    });
+    var uri = Uri.parse(url);
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
-      print(res.data);
+      
       return (res.data as List)
           .map((json) => CategoryEntity.fromJson(json as Map<String, dynamic>))
           .toList();

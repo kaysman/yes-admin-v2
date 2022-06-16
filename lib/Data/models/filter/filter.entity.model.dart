@@ -8,8 +8,10 @@ class FilterEntity {
   final String name_tm;
   final String name_ru;
   final FilterType type;
+  bool isSelected;
 
   FilterEntity({
+    this.isSelected = false,
     required this.id,
     required this.name_tm,
     required this.name_ru,

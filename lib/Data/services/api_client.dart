@@ -4,11 +4,12 @@ import 'dart:io';
 import 'dart:math';
 import 'package:admin_v2/Data/models/credentials.dart';
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:http_parser/http_parser.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:http/http.dart';
-
+import 'package:http_parser/http_parser.dart';
 import '../models/error_log.dart';
 import '../models/response.dart';
 import 'app.service.dart';
@@ -96,6 +97,19 @@ class ApiClient {
     }
   }
 
+  Future<ApiResponse> patch(Uri uri,
+      {Map<String, String>? headers,
+      dynamic data,
+      bool anonymous = false}) async {
+    try {
+      return await sendWithRetry(
+        ClientRequest(http!, 'PATCH', uri, data: data, headers: headers),
+      );
+    } catch (_) {
+      throw _;
+    }
+  }
+
   Future<ApiResponse> get(Uri uri,
       {dynamic data,
       Map<String, String>? headers,
@@ -118,6 +132,49 @@ class ApiClient {
         ClientRequest(http!, 'DELETE', uri, headers: headers),
       );
     } catch (_) {
+      throw _;
+    }
+  }
+
+  Future<ApiResponse> multiPartRequest(
+    Uri uri,
+    String filename,
+    List<int> bytes, {
+    Map<String, String>? fields,
+    String? type,
+    String? subtype,
+  }) async {
+    try {
+      var request = await MultipartRequest('POST', uri);
+      request.files.add(
+        MultipartFile.fromBytes(
+          'file',
+          bytes,
+          filename: filename,
+          contentType:
+              type != null && subtype != null ? MediaType(type, subtype) : null,
+        ),
+      );
+      var res = await Response.fromStream(await request.send());
+      print(res.body);
+      // Map<String, dynamic> apiResponse = {};
+      // res.stream.listen(
+      //   (v) {},
+      //   onDone: () {
+      //     apiResponse['success'] = true;
+      //     apiResponse['message'] = ["Success"];
+      //   },
+      //   cancelOnError: true,
+      //   onError: (e) {
+      //     print(e);
+      //     apiResponse['success'] = false;
+      //     apiResponse['message'] = ["$e"];
+      //   },
+      // );
+
+      return ApiResponse.fromJson(json.decode(res.body));
+    } catch (_) {
+      print(_);
       throw _;
     }
   }
@@ -244,12 +301,7 @@ class ExpiredTokenRetryPolicy extends RetryPolicy {
           : ApiResponse.fromJson(jsonDecode(response.body!));
 
       // refresh conditions
-      if (response.statusCode == 401 ||
-          response.statusCode == 403 ||
-          (data != null &&
-              data.errors!
-                  .where((err) => err.description == "Unauthorized")
-                  .isNotEmpty)) {
+      if (response.statusCode == 401 || response.statusCode == 403) {
         if (ApiClient.refreshing == null) {
           // ApiClient.refreshing = AuthService.refreshCredentials();
         }
@@ -322,6 +374,8 @@ class ClientRequest {
     switch (method) {
       case 'GET':
         return await client.get(uri, headers: headers);
+      case 'PATCH':
+        return await client.patch(uri, headers: headers, body: data);
       case 'POST':
         return await client.post(uri, headers: headers, body: data);
       case 'PUT':

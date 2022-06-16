@@ -10,8 +10,12 @@ class CategoryEntity {
   final String? description_ru;
   final DateTime? updatedAt;
   final DateTime? createdAt;
+  final List<CategoryEntity>? subcategories;
+  bool isSelected;
 
   CategoryEntity({
+    this.subcategories,
+    this.isSelected = false,
     required this.id,
     required this.title_tm,
     this.title_ru,

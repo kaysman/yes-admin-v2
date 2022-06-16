@@ -21,8 +21,18 @@ class MarketService {
     }
   }
 
-  static Future<List<MarketEntity>> getMarkets() async {
-    var uri = Uri.parse(baseUrl + '/markets/all');
+  static Future<List<MarketEntity>> getMarkets(
+    Map<String, dynamic> queryParams,
+  ) async {
+    String url = baseUrl + '/markets?';
+    queryParams.forEach((key, value) {
+      if (key != null && value != null) {
+        url += url.endsWith('?')
+            ? '${key}=${queryParams[key]}'
+            : '&${key}=${queryParams[key]}';
+      }
+    });
+    var uri = Uri.parse(url);
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
       return (res.data as List)
@@ -34,14 +44,15 @@ class MarketService {
     }
   }
 
-  static Future<List<MarketEntity>> searchMarket(String? searchQuery) async {
-    var uri = Uri.parse(baseUrl + '/markets?search=$searchQuery');
+  static Future<MarketEntity> updateMarkets(int id, MarketEntity data) async {
+    var uri = Uri.parse(baseUrl + '/markets/update/$id');
     try {
-      var res = await ApiClient.instance.get(uri, headers: header());
-      print(res.data);
-      return (res.data as List)
-          .map((json) => MarketEntity.fromJson(json as Map<String, dynamic>))
-          .toList();
+      var res = await ApiClient.instance.patch(
+        uri,
+        headers: header(),
+        data: jsonEncode(data.toJson()),
+      );
+      return MarketEntity.fromJson(res.data);
     } catch (_) {
       print(_);
       throw _;

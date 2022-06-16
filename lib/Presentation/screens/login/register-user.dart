@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegisterUserPage extends StatefulWidget {
+  static const String routeName = "index";
   const RegisterUserPage({Key? key}) : super(key: key);
 
   @override
@@ -39,7 +40,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.45,
+      width: MediaQuery.of(context).size.width * 0.2,
       child: Form(
         key: formKey,
         child: Padding(

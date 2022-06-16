@@ -27,6 +27,8 @@ class _IndexScreenState extends State<IndexScreen> {
         return LayoutBuilder(
           builder: (_, constraints) {
             return Scaffold(
+              drawerEnableOpenDragGesture: false,
+              // endDrawer: EndDrawer(),
               appBar: AppBar(
                 centerTitle: false,
                 title: Text(
@@ -52,3 +54,4 @@ class _IndexScreenState extends State<IndexScreen> {
     );
   }
 }
+

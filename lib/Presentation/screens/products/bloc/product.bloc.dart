@@ -1,6 +1,7 @@
+import 'package:admin_v2/Data/models/current-page.dart';
 import 'package:admin_v2/Data/models/product/create-product.model.dart';
+import 'package:admin_v2/Data/models/product/filter-for-product.model.dart';
 import 'package:admin_v2/Data/models/product/product.model.dart';
-import 'package:admin_v2/Data/services/market.service.dart';
 import 'package:admin_v2/Data/services/product_service.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,22 +25,70 @@ class ProductBloc extends Cubit<ProductState> {
     }
   }
 
-  getAllProducts({String? searchQuery}) async {
-    emit(state.copyWith(listingStatus: ProductListStatus.loading));
+  getAllProducts({FilterForProductDTO? filter, bool subtle = false}) async {
+    if (filter == null) {
+      filter = FilterForProductDTO();
+    }
+
+    emit(
+      state.copyWith(
+          listingStatus: subtle
+              ? ProductListStatus.silentLoading
+              : ProductListStatus.loading),
+    );
+
     try {
-      var res;
-      if (searchQuery != null) {
-        print(searchQuery);
-      } else {
-        res = await ProductService.getProducts();
+      if (filter.next == true) {
+        filter.lastId = state.currentPage!.lastId;
+      } else if (filter.next == false) {
+        var index = state.itemIds.indexOf(state.currentPage!);
+        filter.lastId = state.itemIds[index - 1].firstId;
       }
+
+      var res = await ProductService.getProducts(filter.toJson());
+
+      List<CurrentPage> ids = [];
+      CurrentPage? current;
+      ids.addAll(state.itemIds);
+      if (res != null) {
+        current = CurrentPage(firstId: res.first.id, lastId: res.last.id);
+        if (!ids.contains(current)) {
+          ids.add(current);
+          print('asda');
+        }
+        print(ids);
+      }
+
       emit(state.copyWith(
         products: res,
+        lastFilter: filter,
+        itemIds: ids,
+        currentPage: current,
         listingStatus: ProductListStatus.idle,
       ));
     } catch (_) {
       print(_);
       emit(state.copyWith(listingStatus: ProductListStatus.error));
+    }
+  }
+
+  uploadExcel(String filename, List<int> bytes) async {
+    emit(state.copyWith(excelStatus: ProductExcelUploadStatus.loading));
+    try {
+      var res = await ProductService.uploadExcel(filename, bytes);
+      if (res.success == true) {
+        emit(state.copyWith(excelStatus: ProductExcelUploadStatus.success));
+      } else if (res.success == false) {
+        emit(state.copyWith(
+          excelStatus: ProductExcelUploadStatus.error,
+          uploadExcelErrorMessage: res.message,
+        ));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        excelStatus: ProductExcelUploadStatus.error,
+        uploadExcelErrorMessage: e.toString(),
+      ));
     }
   }
 }

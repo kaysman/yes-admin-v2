@@ -20,11 +20,21 @@ class BrandService {
     }
   }
 
-  static Future<List<BrandEntity>> getBrands() async {
-    var uri = Uri.parse(baseUrl + '/brands');
+  static Future<List<BrandEntity>> getBrands(
+    Map<String, dynamic> queryParams,
+  ) async {
+    String url = baseUrl + '/brands?';
+    queryParams.forEach((key, value) {
+      if (key != null && value != null) {
+        url += url.endsWith('?')
+            ? '${key}=${queryParams[key]}'
+            : '&${key}=${queryParams[key]}';
+      }
+    });
+    var uri = Uri.parse(url);
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
-      print(res.data);
+     
       return (res.data as List)
           .map((json) => BrandEntity.fromJson(json as Map<String, dynamic>))
           .toList();

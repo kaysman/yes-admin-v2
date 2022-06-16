@@ -1,5 +1,6 @@
 import 'package:admin_v2/Data/models/market/market.model.dart';
 import 'package:admin_v2/Data/models/meta.dart';
+import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
@@ -15,14 +16,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 SidebarItem getMarketSidebarItem() {
   return SidebarItem(
     title: "Marketlar",
-    view: MarketsTable(),
+    view: SingleChildScrollView(child: MarketsTable()),
     getActions: (context) {
       return [
         Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
-              BlocBuilder<MarketBloc, MarketState>(
+              BlocConsumer<MarketBloc, MarketState>(
+                listener: (_, state) {
+                  if (state.createStatus == MarketCreateStatus.success) {
+                    Scaffold.of(context)
+                        // ignore: deprecated_member_use
+                        .showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.lightBlue,
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(milliseconds: 1000),
+                        content: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 5,
+                            horizontal: 30,
+                          ),
+                          child: new Text(
+                            'Created Successully',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline3
+                                ?.copyWith(
+                                    color: Colors.white, letterSpacing: 1),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
                 builder: (context, state) {
                   return SearchFieldInAppBar(
                     hintText: "e.g mb shoes",
@@ -30,9 +59,8 @@ SidebarItem getMarketSidebarItem() {
                         ? null
                         : (value) {
                             print(value);
-                            context
-                                .read<MarketBloc>()
-                                .getAllMarkets(searchQuery: value);
+                            context.read<MarketBloc>().getAllMarkets(
+                                filter: PaginationDTO(search: value));
                           },
                   );
                 },
@@ -93,48 +121,79 @@ class _MarketsTableState extends State<MarketsTable> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return BlocBuilder<MarketBloc, MarketState>(
+      return BlocConsumer<MarketBloc, MarketState>(
         bloc: marketBloc,
+        listener: (contex, state) {},
         builder: (context, state) {
-          return Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // StatisticsCard(
-                //   label: "Jemi",
-                //   content: "60",
-                //   description: "Market",
-                // ),
-                ScrollableWidget(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minWidth: constraints.maxWidth,
-                    ),
-                    child: DataTable(
-                      border: TableBorder.all(
-                        width: 1.0,
-                        color: Colors.grey.shade100,
+          return state.listingStatus == MarketListStatus.loading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blueAccent,
+                  ),
+                )
+              : Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 50,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (selectedMarkets.length == 1)
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                  vertical: 10,
+                                ),
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.lightBlueAccent,
+                                  ),
+                                  onPressed: () {
+                                    showAppDialog(
+                                        context,
+                                        UpdateMarketPage(
+                                            market: selectedMarkets.first));
+                                  },
+                                  child: Text(
+                                    'Uytget',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
-                      sortColumnIndex: sortColumnIndex,
-                      sortAscending: sortAscending,
-                      columns: tableColumns,
-                      rows: tableRows(state),
-                    ),
+                      ScrollableWidget(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: constraints.maxWidth,
+                          ),
+                          child: DataTable(
+                            border: TableBorder.all(
+                              width: 1.0,
+                              color: Colors.grey.shade100,
+                            ),
+                            sortColumnIndex: sortColumnIndex,
+                            sortAscending: sortAscending,
+                            columns: tableColumns,
+                            rows: tableRows(state),
+                          ),
+                        ),
+                      ),
+                      // Pagination(
+                      //   goPrevious: () {},
+                      //   goNext: () {},
+                      //   metaData: Meta(
+                      //     totalItems: 50,
+                      //     totalPages: 5,
+                      //     itemCount: 10,
+                      //     currentPage: 1,
+                      //   ),
+                      // ),
+                    ],
                   ),
-                ),
-                Pagination(
-                  goPrevious: () {},
-                  goNext: () {},
-                  metaData: Meta(
-                    totalItems: 50,
-                    totalPages: 5,
-                    itemCount: 10,
-                    currentPage: 1,
-                  ),
-                ),
-              ],
-            ),
-          );
+                );
         },
       );
     });
@@ -169,66 +228,24 @@ class _MarketsTableState extends State<MarketsTable> {
           cells: [
             DataCell(
               Text("${market.id}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
             DataCell(
               Text("${market.logo}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
             DataCell(
               Text("${market.title}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
             DataCell(
               Text("${market.address}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
             DataCell(
               Text("${market.description}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
             DataCell(
               Text("${market.phoneNumber}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
             DataCell(
               Text("${market.ownerName}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateMarketPage(market: market),
-                );
-              },
             ),
           ],
         );

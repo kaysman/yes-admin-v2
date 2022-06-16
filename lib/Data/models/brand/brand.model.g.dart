@@ -7,6 +7,7 @@ part of 'brand.model.dart';
 // **************************************************************************
 
 BrandEntity _$BrandEntityFromJson(Map<String, dynamic> json) => BrandEntity(
+      isSelected: json['isSelected'] as bool? ?? false,
       id: json['id'] as int,
       name: json['name'] as String,
       logo: json['logo'] as String,
@@ -29,4 +30,5 @@ Map<String, dynamic> _$BrandEntityToJson(BrandEntity instance) =>
       'vip': instance.vip,
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
+      'isSelected': instance.isSelected,
     };

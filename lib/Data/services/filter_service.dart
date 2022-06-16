@@ -19,11 +19,21 @@ class FilterService {
     }
   }
 
-  static Future<List<FilterEntity>> getFilters() async {
-    var uri = Uri.parse(baseUrl + '/filters/all');
+  static Future<List<FilterEntity>> getFilters(
+    Map<String, dynamic> queryParams,
+  ) async {
+    String url = baseUrl + '/filters?';
+    queryParams.forEach((key, value) {
+      if (key != null && value != null) {
+        url += url.endsWith('?')
+            ? '${key}=${queryParams[key]}'
+            : '&${key}=${queryParams[key]}';
+      }
+    });
+    var uri = Uri.parse(url);
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
-      print(res.data);
+     
       return (res.data as List)
           .map((json) => FilterEntity.fromJson(json as Map<String, dynamic>))
           .toList();

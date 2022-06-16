@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+const kPrimaryColor = Colors.blue;
+const kSecondaryColor = Color(0xffEBF7F9);
+final kScaffoldBgColor = Colors.grey[300];
+
+const kText1Color = Color(0xff000000);
+const kText2Color = Color(0xff333333);
+
+const kWhite = Color(0xffFFFFFF);
+const kBlack = Color(0xff000000);
+
 enum AppTheme { light, dark, darker }
 
 extension EnvExetension on AppTheme {

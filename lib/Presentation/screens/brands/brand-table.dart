@@ -1,9 +1,12 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/meta.dart';
+import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-create.dart';
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
 import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
@@ -14,29 +17,78 @@ import 'brand-update.dart';
 
 SidebarItem getBrandSidebarItem() {
   return SidebarItem(
-    title: "Brendlar",
-    view: BrandsTable(),
-    getActions: (context) {
-      return [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              onSurface: Colors.white,
-              primary: Colors.transparent,
-            ),
-            onPressed: () {
-              showAppDialog(context, CreateBrandPage());
-            },
-            child: Text(
-              'Brend döret',
-              style: TextStyle(color: Colors.white),
+      title: "Brendlar",
+      view: BrandsTable(),
+      getActions: (context) {
+        return [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              children: [
+                BlocConsumer<BrandBloc, BrandState>(
+                  listener: (_, state) {
+                    if (state.createStatus == BrandCreateStatus.success) {
+                      Scaffold.of(context)
+                          // ignore: deprecated_member_use
+                          .showSnackBar(
+                        SnackBar(
+                          backgroundColor: Colors.lightBlue,
+                          behavior: SnackBarBehavior.floating,
+                          duration: Duration(milliseconds: 1000),
+                          content: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 5,
+                              horizontal: 30,
+                            ),
+                            child: new Text(
+                              'Created Successully',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline3
+                                  ?.copyWith(
+                                      color: Colors.white, letterSpacing: 1),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    return SearchFieldInAppBar(
+                      hintText: "e.g mb shoes",
+                      onEnter: state.listingStatus == BrandListStatus.loading
+                          ? null
+                          : (value) {
+                              print(value);
+                              context.read<BrandBloc>().getAllBrands(
+                                    filter: PaginationDTO(search: value),
+                                  );
+                            },
+                    );
+                  },
+                ),
+                SizedBox(
+                  width: 14,
+                ),
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    onSurface: Colors.white,
+                    primary: Colors.transparent,
+                  ),
+                  onPressed: () {
+                    showAppDialog(context, CreateBrandPage());
+                  },
+                  child: Text(
+                    'Brend döret',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ];
-    },
-  );
+        ];
+      });
 }
 
 class BrandsTable extends StatefulWidget {
@@ -73,45 +125,70 @@ class _BrandsTableState extends State<BrandsTable> {
       return BlocBuilder<BrandBloc, BrandState>(
           bloc: brandBloc,
           builder: (context, state) {
-            return Container(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // StatisticsCard(
-                  //   label: "Jemi",
-                  //   content: "60",
-                  //   description: "Market",
-                  // ),
-                  ScrollableWidget(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minWidth: constraints.maxWidth,
-                      ),
-                      child: DataTable(
-                        border: TableBorder.all(
-                          width: 1.0,
-                          color: Colors.grey.shade100,
+            return state.listingStatus == BrandListStatus.loading
+                ? Center(
+                    child: CircularProgressIndicator(
+                    color: kPrimaryColor,
+                  ))
+                : Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (selectedBrands.length == 1)
+                                OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.lightBlueAccent,
+                                  ),
+                                  onPressed: () {
+                                    var _market = selectedBrands.firstWhere(
+                                      (e) => e.isSelected == false,
+                                    );
+                                    showAppDialog(context,
+                                        UpdateBrandPage(brand: _market));
+                                  },
+                                  child: Text(
+                                    'Uytget',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                            ],
+                          ),
                         ),
-                        sortColumnIndex: sortColumnIndex,
-                        sortAscending: sortAscending,
-                        columns: tableColumns,
-                        rows: tableRows(state),
-                      ),
+                        ScrollableWidget(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: constraints.maxWidth,
+                            ),
+                            child: DataTable(
+                              border: TableBorder.all(
+                                width: 1.0,
+                                color: Colors.grey.shade100,
+                              ),
+                              sortColumnIndex: sortColumnIndex,
+                              sortAscending: sortAscending,
+                              columns: tableColumns,
+                              rows: tableRows(state),
+                            ),
+                          ),
+                        ),
+                        // Pagination(
+                        //   goPrevious: () {},
+                        //   goNext: () {},
+                        //   metaData: Meta(
+                        //     totalItems: 50,
+                        //     totalPages: 5,
+                        //     itemCount: 10,
+                        //     currentPage: 1,
+                        //   ),
+                        // ),
+                      ],
                     ),
-                  ),
-                  Pagination(
-                    goPrevious: () {},
-                    goNext: () {},
-                    metaData: Meta(
-                      totalItems: 50,
-                      totalPages: 5,
-                      itemCount: 10,
-                      currentPage: 1,
-                    ),
-                  ),
-                ],
-              ),
-            );
+                  );
           });
     });
   }
@@ -135,56 +212,30 @@ class _BrandsTableState extends State<BrandsTable> {
           selected: selectedBrands.contains(brand),
           onSelectChanged: (v) {
             setState(() {
-              selectedBrands.add(brand);
+              if (!selectedBrands.contains(brand)) {
+                selectedBrands.add(brand);
+              } else {
+                selectedBrands.remove(brand);
+              }
             });
           },
           cells: [
             DataCell(
               Text("${brand.id}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
             ),
             DataCell(
               Text("${brand.logo}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
             ),
             DataCell(
               Text("${brand.name}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
             ),
             DataCell(
               Text("${brand.image}"),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
             ),
             DataCell(
               Text(() {
                 return brand.vip ? 'Hawa' : 'Yok';
               }()),
-              onTap: () {
-                showAppDialog(
-                  context,
-                  UpdateBrandPage(brand: brand),
-                );
-              },
             ),
           ],
         );

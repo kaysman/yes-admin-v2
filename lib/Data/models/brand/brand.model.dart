@@ -12,8 +12,10 @@ class BrandEntity {
   final bool vip;
   final DateTime? updatedAt;
   final DateTime? createdAt;
+  bool isSelected;
 
   BrandEntity({
+    this.isSelected = false,
     required this.id,
     required this.name,
     required this.logo,

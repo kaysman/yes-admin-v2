@@ -8,6 +8,10 @@ part of 'category.model.dart';
 
 CategoryEntity _$CategoryEntityFromJson(Map<String, dynamic> json) =>
     CategoryEntity(
+      subcategories: (json['subcategories'] as List<dynamic>?)
+          ?.map((e) => CategoryEntity.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      isSelected: json['isSelected'] as bool? ?? false,
       id: json['id'] as int,
       title_tm: json['title_tm'] as String,
       title_ru: json['title_ru'] as String?,
@@ -30,4 +34,6 @@ Map<String, dynamic> _$CategoryEntityToJson(CategoryEntity instance) =>
       'description_ru': instance.description_ru,
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
+      'subcategories': instance.subcategories,
+      'isSelected': instance.isSelected,
     };

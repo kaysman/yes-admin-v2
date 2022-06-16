@@ -1,5 +1,6 @@
 import 'package:admin_v2/Data/services/app.service.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
+import 'package:admin_v2/Presentation/screens/login/register-user.dart';
 import 'package:admin_v2/routes.dart';
 import 'package:flutter/material.dart';
 import 'Data/services/notification.service.dart';
@@ -169,7 +170,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       //   FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
       // ],
       onGenerateRoute: onGenerateRoutes,
-      initialRoute: IndexScreen.routeName,
+      initialRoute: RegisterUserPage.routeName,
       // onGenerateInitialRoutes: (String initialRouteName) {
       //   switch (initialRouteName) {
       //     case IndexScreen.routeName:
