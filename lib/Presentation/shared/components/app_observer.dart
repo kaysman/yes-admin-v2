@@ -58,7 +58,7 @@ class _AppObserverState extends State<AppObserver> {
         listener: (context, state) async {
           if (state.status == AuthStatus.unauthenticated) {
             widget.navigatorKey!.currentState!
-                .pushNamedAndRemoveUntil('Login', (_) => false);
+                .pushNamedAndRemoveUntil('login', (_) => false);
           }
         },
       );

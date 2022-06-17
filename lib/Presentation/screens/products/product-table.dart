@@ -301,7 +301,7 @@ class _ProductsTableState extends State<ProductsTable> {
             DataCell(Text("${product.name_ru}")),
             DataCell(Text("${product.ourPrice}")),
             DataCell(Text("${product.marketPrice}")),
-            DataCell(Text("${product.color_id}")),
+            DataCell(Text("${product.colorName}")),
             DataCell(Text("${product.gender_id}")),
             DataCell(Text("${product.quantity}")),
             DataCell(Text("${product.brand_id}")),

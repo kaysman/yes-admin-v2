@@ -9,6 +9,25 @@ Map<String, String> header() {
   };
 }
 
+final OutlineInputBorder kErrorInputBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: Colors.red),
+  borderRadius: BorderRadius.circular(8),
+);
+final OutlineInputBorder kFocusedInputBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: kPrimaryColor),
+  borderRadius: BorderRadius.circular(8),
+);
+final OutlineInputBorder kEnabledInputBorder = OutlineInputBorder(
+  borderSide: BorderSide(color: Colors.black45),
+  borderRadius: BorderRadius.circular(8),
+);
+final BoxShadow shadow = BoxShadow(
+  blurRadius: 10,
+  color: Colors.black12,
+  offset: Offset(1, -1),
+  spreadRadius: 1,
+);
+
 /// -------------
 /// [showSnackBar] method shows snackbar.
 /// Context should not be null

@@ -1,5 +1,4 @@
 import 'package:admin_v2/Data/services/app.service.dart';
-import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
 import 'package:admin_v2/Presentation/screens/login/register-user.dart';
 import 'package:admin_v2/routes.dart';
 import 'package:flutter/material.dart';

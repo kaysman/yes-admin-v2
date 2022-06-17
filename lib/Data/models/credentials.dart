@@ -12,7 +12,7 @@ class Credentials {
 
   Credentials.fromStore(Map<String, dynamic> json)
       : accessToken = json["access_token"],
-        refreshToken = json["refresh_token"],
+        // refreshToken = json["refresh_token"],
         expiresIn = json["expires_in"];
 
   Map<String, dynamic> toJson() {

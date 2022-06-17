@@ -144,11 +144,12 @@ class _CategoriesTableState extends State<CategoriesTable> {
                                 backgroundColor: Colors.lightBlueAccent,
                               ),
                               onPressed: () {
-                                var _category = selectedCategories.firstWhere(
-                                  (e) => e.isSelected == false,
+                                showAppDialog(
+                                  context,
+                                  UpdateCategoryPage(
+                                    category: selectedCategories.first,
+                                  ),
                                 );
-                                showAppDialog(context,
-                                    UpdateCategoryPage(category: _category));
                               },
                               child: Text(
                                 'Uytget',

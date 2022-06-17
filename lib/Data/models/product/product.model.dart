@@ -39,6 +39,20 @@ class ProductEntity {
     this.description_ru,
     this.sizes,
   });
+
+  String get colorName {
+    switch (color_id) {
+      case 1:
+        return 'ak';
+      case 2:
+        return 'gara';
+      case 3:
+        return 'sary';
+      default:
+        return '';
+    }
+  }
+
   factory ProductEntity.fromJson(Map<String, dynamic> json) =>
       _$ProductEntityFromJson(json);
 

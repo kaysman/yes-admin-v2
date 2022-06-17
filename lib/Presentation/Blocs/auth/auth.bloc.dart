@@ -1,6 +1,7 @@
 import 'package:admin_v2/Data/models/credentials.dart';
 import 'package:admin_v2/Data/services/api_client.dart';
 import 'package:admin_v2/Data/services/app.service.dart';
+import 'package:admin_v2/Data/services/auth-service.dart';
 import 'package:admin_v2/Data/services/local_storage.service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth_state.dart';
@@ -30,13 +31,14 @@ class AuthBloc extends Cubit<AuthState> {
     }
   }
 
-  setAuthLoggedIn(Credentials credentials) async {
+  setAuthLoggedIn() async {
     try {
       var disk = (await (LocalStorage.instance as Future<LocalStorage>));
-      disk.credentials = credentials;
-      ApiClient.setCredentials(credentials);
-      emit(AuthState.authenticated(credentials));
-      await loadIdentity();
+      // final res = AuthService.login(phone, password)
+      // disk.credentials = credentials;
+      // ApiClient.setCredentials(credentials);
+      // emit(AuthState.authenticated(credentials));
+      // await loadIdentity();
       // TeamtimeService.addUserDevice();
     } catch (_) {
       print(_.toString());
