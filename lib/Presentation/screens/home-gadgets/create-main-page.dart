@@ -1,10 +1,12 @@
 import 'package:admin_v2/Data/enums/gadget-type.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/banner-for-men-and-women.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/two-to-two-with-title-as-image.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/two-two-grid-title-as-text.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'widgets/cards-16_9-horizontal-with-title-text.dart';
 import 'widgets/two-small-cards.dart';
 
@@ -17,6 +19,13 @@ class CreateMainPage extends StatefulWidget {
 
 class _CreateMainPageState extends State<CreateMainPage> {
   HomeGadgetType? selectedType;
+  late GadgetBloc gadgetBloc;
+
+  @override
+  void initState() {
+    gadgetBloc = BlocProvider.of<GadgetBloc>(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +94,9 @@ class _CreateMainPageState extends State<CreateMainPage> {
 
                     case HomeGadgetType
                         .CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
-                      return Cards16_9HorizontalWithTitleText();
+                      return Cards16_9HorizontalWithTitleText(
+                        gadgetBloc: gadgetBloc,
+                      );
 
                     default:
                       return SizedBox();

@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:admin_v2/Data/enums/gadget-type.dart';
+import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
 import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
@@ -101,14 +105,22 @@ class _Cards16_9HorizontalWithTitleTextState
                               state.createStatus == GadgetCreateStatus.loading,
                           onPressed: () async {
                             // TODO: Validate image states
-                            List<FilePickerResult> files = [];
-                            Map<String, dynamic> fields = {};
 
-
+                            CreateGadgetModel model = CreateGadgetModel(
+                              type: HomeGadgetType
+                                  .CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT,
+                              apiUrls: this
+                                  .cartItems
+                                  .map((e) => e.textController.text)
+                                  .toList(),
+                              queue: 1,
+                              title: titleController.text,
+                            );
 
                             await widget.gadgetBloc.createHomeGadget(
-                                ,
-                                fields);
+                              this.cartItems.map((e) => e.image!).toList(),
+                              model.toJson(),
+                            );
                           },
                         );
                       },

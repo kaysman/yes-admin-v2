@@ -15,7 +15,7 @@ import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
-const baseUrl = 'http://192.168.1.27:3333';
+const baseUrl = 'http://127.0.0.1:3333';
 
 class ApiClient {
   static Client? http;
@@ -145,6 +145,7 @@ class ApiClient {
   }) async {
     try {
       var request = await MultipartRequest('POST', uri);
+      if (fields != null) request.fields.addAll(fields);
       request.files.addAll(files);
       var res = await Response.fromStream(await request.send());
       print(res.body);

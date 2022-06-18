@@ -11,6 +11,7 @@ class GadgetService {
   ) async {
     var uri = Uri.parse(baseUrl + '/gadgets/create/home');
     try {
+      print(fields);
       var res = await ApiClient.instance.multiPartRequest(
         uri,
         files
@@ -18,7 +19,7 @@ class GadgetService {
                   'files',
                   e.files.first.bytes!.toList(),
                   filename: e.names.first,
-                  contentType: MediaType("excel", "xlsx"),
+                  // contentType: MediaType("image", "xlsx"),
                 ))
             .toList(),
         fields: fields,
