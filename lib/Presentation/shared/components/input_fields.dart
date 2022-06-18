@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class LabeledInput extends StatelessWidget {
   const LabeledInput({
     Key? key,
-    required this.controller,
+    this.controller,
     required this.label,
     this.validator,
     this.editMode = false,
   }) : super(key: key);
 
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String label;
 

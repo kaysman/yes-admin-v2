@@ -138,40 +138,16 @@ class ApiClient {
 
   Future<ApiResponse> multiPartRequest(
     Uri uri,
-    String filename,
-    List<int> bytes, {
+    List<MultipartFile> files, {
     Map<String, String>? fields,
     String? type,
     String? subtype,
   }) async {
     try {
       var request = await MultipartRequest('POST', uri);
-      request.files.add(
-        MultipartFile.fromBytes(
-          'file',
-          bytes,
-          filename: filename,
-          contentType:
-              type != null && subtype != null ? MediaType(type, subtype) : null,
-        ),
-      );
+      request.files.addAll(files);
       var res = await Response.fromStream(await request.send());
       print(res.body);
-      // Map<String, dynamic> apiResponse = {};
-      // res.stream.listen(
-      //   (v) {},
-      //   onDone: () {
-      //     apiResponse['success'] = true;
-      //     apiResponse['message'] = ["Success"];
-      //   },
-      //   cancelOnError: true,
-      //   onError: (e) {
-      //     print(e);
-      //     apiResponse['success'] = false;
-      //     apiResponse['message'] = ["$e"];
-      //   },
-      // );
-
       return ApiResponse.fromJson(json.decode(res.body));
     } catch (_) {
       print(_);
@@ -247,7 +223,7 @@ class ApiClient {
       print("Bad handshake 👎");
       handleException(req, 'HandshakeException', e.toString(), retries);
     } on ClientException catch (e) {
-      print("Client was reset");
+      print("Client was reset : $e");
       AppService.httpRequests?.remove(req.uri.path);
       throw ClientException("Client was reset");
     } catch (_) {
@@ -278,7 +254,9 @@ class ApiClient {
   logAttempt(ClientRequest req, String type, String details) {
     if (req.uri.path == '/api/v1/logging/errors') return;
 
-    (LocalStorage.instance).then((store) => store!.enqueueErrorLog(ErrorLog(
+    (LocalStorage.instance).then(
+      (store) => store!.enqueueErrorLog(
+        ErrorLog(
           errorDate: DateTime.now().toUtc(),
           category: 'MOBILE',
           location: '${req.method} | ${req.uri.path}',
@@ -286,7 +264,9 @@ class ApiClient {
           params: req.uri.query,
           message: type,
           details: details,
-        )));
+        ),
+      ),
+    );
   }
 }
 

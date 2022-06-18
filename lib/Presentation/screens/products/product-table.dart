@@ -110,6 +110,7 @@ class ProductsTable extends StatefulWidget {
 
 class _ProductsTableState extends State<ProductsTable> {
   int sortColumnIndex = 0;
+  int all = 0;
   bool sortAscending = true;
   List<ProductEntity> selectedProducts = [];
   late ProductBloc productBloc;
@@ -146,9 +147,7 @@ class _ProductsTableState extends State<ProductsTable> {
           return BlocBuilder<ProductBloc, ProductState>(
             bloc: productBloc,
             builder: (context, state) {
-              var allProductLength =
-                  state.itemIds.length * (state.lastFilter?.take ?? 10);
-
+              var allProductLength = state.totalProductsCount;
               return state.listingStatus == ProductListStatus.loading
                   ? Center(
                       child: CircularProgressIndicator(
@@ -243,7 +242,8 @@ class _ProductsTableState extends State<ProductsTable> {
                             ),
                             Pagination(
                               text: "${state.lastFilter?.take} items per page",
-                              goPrevious: state.lastFilter?.lastId != null
+                              goPrevious: state.itemIds.first.firstId !=
+                                      state.currentPage?.firstId
                                   ? () async {
                                       productBloc.getAllProducts(
                                         filter:
@@ -251,11 +251,14 @@ class _ProductsTableState extends State<ProductsTable> {
                                       );
                                     }
                                   : null,
-                              goNext: () async {
-                                productBloc.getAllProducts(
-                                  filter: FilterForProductDTO(next: true),
-                                );
-                              },
+                              goNext: state.currentPage?.firstId ==
+                                      state.currentPage?.lastId
+                                  ? null
+                                  : () async {
+                                      productBloc.getAllProducts(
+                                        filter: FilterForProductDTO(next: true),
+                                      );
+                                    },
                             ),
                           ],
                         ),

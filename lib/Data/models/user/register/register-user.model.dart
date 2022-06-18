@@ -7,7 +7,7 @@ class RegisterUserDTO {
   final String phoneNumber;
   final String password;
   final RoleType role;
-  final String? firstName;
+  final String? name;
   final String? image;
   final String address;
 
@@ -15,7 +15,7 @@ class RegisterUserDTO {
     required this.phoneNumber,
     required this.password,
     required this.role,
-    this.firstName,
+    this.name,
     this.image,
     required this.address,
   });

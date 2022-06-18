@@ -4,6 +4,8 @@ import 'package:admin_v2/Data/models/role.enum.dart';
 import 'package:admin_v2/Data/models/user/register/register-user.model.dart';
 import 'package:admin_v2/Presentation/Blocs/auth/auth.bloc.dart';
 import 'package:admin_v2/Presentation/Blocs/auth/auth_state.dart';
+import 'package:admin_v2/Presentation/screens/login/bloc/login.bloc.dart';
+import 'package:admin_v2/Presentation/screens/login/bloc/login.state.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
@@ -45,6 +47,16 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
 
   goToLogin() {
     Navigator.of(context).pushNamed('login');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    adressController.text = 'Dashoguz';
+    passwordController.text = 'abc123';
+    phoneNumberController.text = '865938049';
+    firstNameController.text = 'dani';
+    selectedRole = RoleType.ADMIN;
   }
 
   @override
@@ -180,7 +192,9 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                         validator: emptyField,
                         value: selectedRole,
                         onChanged: (val) {
-                          selectedRole = val;
+                          setState(() {
+                            selectedRole = val;
+                          });
                         },
                         items: RoleType.values.map((type) {
                           return DropdownMenuItem(
@@ -198,7 +212,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                         ..onTap = () {
                           Navigator.of(context).pushNamed('login');
                         },
-                      text: 'Already registered',
+                      text: 'Men agza!',
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge
@@ -209,40 +223,35 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      OutlinedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text(
-                          "Cancel",
-                          style:
-                              Theme.of(context).textTheme.bodyText2!.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                        ),
-                      ),
-                      SizedBox(width: 16),
-                      Button(
-                        text: "Save",
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            String? image64String;
-                            if (_selectedImage != null) {
-                              image64String =
-                                  '${base64.encode(_selectedImage!.files[0].bytes as List<int>)}-ext-${_selectedImage!.files[0].extension}';
-                              ;
-                            }
-                            RegisterUserDTO data = RegisterUserDTO(
-                              address: adressController.text,
-                              password: passwordController.text,
-                              phoneNumber: phoneNumberController.text,
-                              role: selectedRole!,
-                              firstName: firstNameController.text,
-                              image: image64String,
-                            );
+                      BlocBuilder<LoginBloc, LoginState>(
+                          builder: (context, state) {
+                        return Button(
+                          isLoading: state.status == LoginStatus.loading,
+                          text: "Register",
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              String? image64String;
+                              if (_selectedImage != null) {
+                                image64String =
+                                    '${base64.encode(_selectedImage!.files[0].bytes as List<int>)}-ext-${_selectedImage!.files[0].extension}';
+                                ;
+                              }
+                              print(selectedRole);
 
-                            // context.read<AuthBloc>().setAuthLoggedIn();
-                          }
-                        },
-                      ),
+                              RegisterUserDTO data = RegisterUserDTO(
+                                address: adressController.text,
+                                password: passwordController.text,
+                                phoneNumber: phoneNumberController.text,
+                                role: selectedRole!,
+                                name: firstNameController.text,
+                                image: image64String,
+                              );
+
+                              await context.read<LoginBloc>().register(data);
+                            }
+                          },
+                        );
+                      }),
                     ],
                   ),
                 ],

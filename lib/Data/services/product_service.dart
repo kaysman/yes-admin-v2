@@ -3,6 +3,8 @@ import 'package:admin_v2/Data/models/product/create-product.model.dart';
 import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Data/models/response.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
 
 import 'api_client.dart';
 
@@ -62,8 +64,17 @@ class ProductService {
       String filename, List<int> bytes) async {
     var uri = Uri.parse(baseUrl + '/products/uploadExcel');
     try {
-      var res = await ApiClient.instance.multiPartRequest(uri, filename, bytes,
-          type: "excel", subtype: "xlsx");
+      var res = await ApiClient.instance.multiPartRequest(
+        uri,
+        [
+          MultipartFile.fromBytes(
+            'file',
+            bytes,
+            filename: filename,
+            contentType: MediaType("excel", "xlsx"),
+          )
+        ],
+      );
       return res;
     } catch (e) {
       throw e;

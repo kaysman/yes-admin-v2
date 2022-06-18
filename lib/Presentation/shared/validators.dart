@@ -21,8 +21,9 @@ extension EmailValidator on String {
 }
 
 String? emptyField(dynamic value) {
-  dynamic trimmedValue = value.trim();
-  if (trimmedValue.toString().isEmpty) {
+  // dynamic trimmedValue = value.trim();
+
+  if (value.toString().isEmpty) {
     return 'Boş bolmaly däl';
   }
   return null;

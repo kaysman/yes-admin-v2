@@ -1,4 +1,4 @@
-enum LoginStatus { idle, loading, error }
+enum LoginStatus { idle, loading, error, success }
 
 class LoginState {
   final LoginStatus? status;

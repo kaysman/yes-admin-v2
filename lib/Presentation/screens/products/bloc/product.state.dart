@@ -10,11 +10,12 @@ enum ProductExcelUploadStatus { idle, loading, error, success }
 
 class ProductState {
   final List<ProductEntity>? products;
-
   final ProductListStatus? listingStatus;
   final ProductCreateStatus? createStatus;
   final ProductExcelUploadStatus? excelUploadStatus;
   final String? uploadExcelErrorMessage;
+  int? totalProductsCount;
+  bool isLastItem;
 
   // filter and pagination
   final FilterForProductDTO? lastFilter;
@@ -22,6 +23,8 @@ class ProductState {
   CurrentPage? currentPage;
 
   ProductState({
+    this.isLastItem = false,
+    this.totalProductsCount,
     this.products,
     this.itemIds = const [],
     this.lastFilter,
@@ -33,6 +36,8 @@ class ProductState {
   });
 
   ProductState copyWith({
+    bool? isLastItem,
+    int? totalProductsCount,
     List<ProductEntity>? products,
     ProductListStatus? listingStatus,
     ProductCreateStatus? createStatus,
@@ -43,6 +48,8 @@ class ProductState {
     CurrentPage? currentPage,
   }) {
     return ProductState(
+      isLastItem: isLastItem ?? this.isLastItem,
+      totalProductsCount: totalProductsCount ?? this.totalProductsCount,
       products: products ?? this.products,
       listingStatus: listingStatus ?? this.listingStatus,
       createStatus: createStatus ?? this.createStatus,

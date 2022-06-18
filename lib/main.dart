@@ -4,6 +4,7 @@ import 'package:admin_v2/routes.dart';
 import 'package:flutter/material.dart';
 import 'Data/services/notification.service.dart';
 import 'Presentation/shared/components/app_observer.dart';
+import 'Presentation/shared/components/scrollable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +52,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MaterialApp(
       color: Colors.white,
+      scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       theme: Theme.of(context).copyWith(

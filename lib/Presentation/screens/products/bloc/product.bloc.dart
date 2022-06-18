@@ -50,16 +50,22 @@ class ProductBloc extends Cubit<ProductState> {
       List<CurrentPage> ids = [];
       CurrentPage? current;
       ids.addAll(state.itemIds);
+      current = CurrentPage(firstId: res.first.id, lastId: res.last.id);
       if (res != null) {
-        current = CurrentPage(firstId: res.first.id, lastId: res.last.id);
+        if (res.first.id != res.last.id && !state.itemIds.contains(current)) {
+          state.totalProductsCount =
+              (state.totalProductsCount ?? 0) + (res.length);
+        } else if (!state.itemIds.contains(current)) {
+          state.totalProductsCount = (state.totalProductsCount ?? 0) + 1;
+        }
+
         if (!ids.contains(current)) {
           ids.add(current);
-          print('asda');
         }
-        print(ids);
       }
 
       emit(state.copyWith(
+        totalProductsCount: state.totalProductsCount,
         products: res,
         lastFilter: filter,
         itemIds: ids,

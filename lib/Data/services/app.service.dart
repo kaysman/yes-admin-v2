@@ -13,8 +13,10 @@ import 'package:admin_v2/Presentation/Blocs/theme.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
+import 'package:admin_v2/Presentation/screens/login/bloc/login.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/environment.dart';
@@ -95,6 +97,9 @@ class AppService {
         BlocProvider<FilterBloc>(create: (context) => FilterBloc()),
         BlocProvider<CategoryBloc>(create: (context) => CategoryBloc()),
         BlocProvider<ProductBloc>(create: (context) => ProductBloc()),
+        BlocProvider<LoginBloc>(create: (context) => LoginBloc(authBloc)),
+        BlocProvider<GadgetBloc>(create: (context) => GadgetBloc()),
+
         // BlocProvider<ConnectivityBloc>(create: (context) => connectivityBloc),
       ], child: App(initialRoute: initialRoute)),
       // ),

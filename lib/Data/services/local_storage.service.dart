@@ -30,6 +30,10 @@ class LocalStorage {
     return Credentials.fromStore(json.decode(credJson));
   }
 
+  set toSetResponseMessage(dynamic sms) =>
+      _preferences?.setString('message', sms);
+  String? get toGetResMessage => _preferences?.getString('message');
+
   set credentials(Credentials? value) => _saveToDisk('$envPrefix-credentials',
       value == null ? '' : json.encode(value.toJson()));
 

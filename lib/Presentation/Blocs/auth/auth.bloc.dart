@@ -14,6 +14,8 @@ class AuthBloc extends Cubit<AuthState> {
     }
   }
 
+  // {{baseUrl}}/auth/signup
+
   loadIdentity() async {
     emit(state.copyWith(identityStatus: IdentityStatus.loading));
     try {
@@ -31,13 +33,12 @@ class AuthBloc extends Cubit<AuthState> {
     }
   }
 
-  setAuthLoggedIn() async {
+  setAuthLoggedIn(Credentials credentials) async {
     try {
-      var disk = (await (LocalStorage.instance as Future<LocalStorage>));
-      // final res = AuthService.login(phone, password)
-      // disk.credentials = credentials;
-      // ApiClient.setCredentials(credentials);
-      // emit(AuthState.authenticated(credentials));
+      var disk = (await LocalStorage.instance);
+      disk?.credentials = credentials;
+      ApiClient.setCredentials(credentials);
+      emit(AuthState.authenticated(credentials));
       // await loadIdentity();
       // TeamtimeService.addUserDevice();
     } catch (_) {

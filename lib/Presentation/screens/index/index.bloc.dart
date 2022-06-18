@@ -1,5 +1,6 @@
 import 'package:admin_v2/Presentation/screens/brands/brand-table.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-table.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/main-page.dart';
 import 'package:admin_v2/Presentation/screens/products/product-table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,9 +63,6 @@ List<SidebarItem> sidebars = [
     title: "Zakazlar",
     view: Container(),
   ),
-  SidebarItem(
-    title: "Programmanyň Esasy Sahypasy",
-    view: Container(),
-  ),
+  getMainPageSidebarItem(),
   getProductSidebarItem(),
 ];
