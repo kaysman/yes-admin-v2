@@ -3,7 +3,6 @@ import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,28 +11,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../shared/components/image_preview.dart';
 import '../bloc/gadget.bloc.dart';
 
-class TwoSmallCards extends StatefulWidget {
-  const TwoSmallCards({Key? key, required this.gadgetBloc}) : super(key: key);
+class OneImageWithFullWidth extends StatefulWidget {
+  const OneImageWithFullWidth({Key? key, required this.gadgetBloc})
+      : super(key: key);
 
   final GadgetBloc gadgetBloc;
 
   @override
-  State<TwoSmallCards> createState() => _TwoSmallCardsState();
+  State<OneImageWithFullWidth> createState() => _OneImageWithFullWidthState();
 }
 
-class _TwoSmallCardsState extends State<TwoSmallCards> {
+class _OneImageWithFullWidthState extends State<OneImageWithFullWidth> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   FilePickerResult? _selectedImage_1;
-  FilePickerResult? _selectedImage_2;
   TextEditingController imageLink1Controller = TextEditingController();
-  TextEditingController imageLink2Controller = TextEditingController();
 
-  Future<FilePickerResult?> pickImageAndReturn() async {
+  Future<void> pickImage() async {
     try {
       FilePickerResult? result =
           await FilePicker.platform.pickFiles(withData: true);
-      if (result != null) return result;
+      if (result == null) return;
+      setState(() {
+        _selectedImage_1 = result;
+      });
     } on PlatformException catch (e) {
       print('failed to pick image $e');
     }
@@ -59,9 +60,6 @@ class _TwoSmallCardsState extends State<TwoSmallCards> {
                             width: 14,
                           ),
                         ],
-                        if (_selectedImage_2 != null) ...[
-                          ImagePreview(selectedImage: _selectedImage_2),
-                        ],
                       ],
                     ),
                     SizedBox(height: 14),
@@ -69,56 +67,30 @@ class _TwoSmallCardsState extends State<TwoSmallCards> {
                       context,
                       _selectedImage_1,
                       imageLink1Controller,
-                      () async {
-                        var res = await this.pickImageAndReturn();
-                        if (res != null) {
-                          setState(() {
-                            _selectedImage_1 = res;
-                          });
-                        }
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    buildImageWithLink(
-                      context,
-                      _selectedImage_2,
-                      imageLink2Controller,
-                      () async {
-                        var res = await this.pickImageAndReturn();
-                        if (res != null) {
-                          setState(() {
-                            _selectedImage_2 = res;
-                          });
-                        }
-                      },
                     ),
                     Spacer(),
                     BlocConsumer<GadgetBloc, GadgetState>(
                       listener: (context, state) {},
-                      listenWhen: (p, c) => p.createStatus != c.createStatus,
                       builder: (context, state) {
                         return ButtonsForGadgetCreation(
-                          // formKey: _formKey,
+                          formKey: _formKey,
                           isLoading:
                               state.createStatus == GadgetCreateStatus.loading,
                           onPressed: () async {
                             CreateGadgetModel model = CreateGadgetModel(
-                              type: HomeGadgetType.TWO_SMALL_CARDS_HORIZONTAL,
+                              type: HomeGadgetType.ONE_IMAGE_WITH_FULL_WIDTH,
                               apiUrls: [
                                 imageLink1Controller.text,
-                                imageLink2Controller.text
                               ],
                               queue: 1,
                             );
-                            if (_selectedImage_1 != null &&
-                                _selectedImage_2 != null) {
+                            if (_selectedImage_1 != null) {
                               await widget.gadgetBloc.createHomeGadget(
-                                [_selectedImage_1!, _selectedImage_2!],
+                                [
+                                  _selectedImage_1!,
+                                ],
                                 model.toJson(),
                               );
-                              print('object');
                             }
                           },
                         );
@@ -143,12 +115,8 @@ class _TwoSmallCardsState extends State<TwoSmallCards> {
     );
   }
 
-  buildImageWithLink(
-    BuildContext context,
-    FilePickerResult? image,
-    TextEditingController? imageLinkController,
-    VoidCallback onImageChanged,
-  ) {
+  buildImageWithLink(BuildContext context, FilePickerResult? selectedImage,
+      TextEditingController imageLinkController) {
     return Row(
       children: [
         Expanded(
@@ -161,19 +129,22 @@ class _TwoSmallCardsState extends State<TwoSmallCards> {
               ),
             ),
             child: ListTile(
-              trailing: OutlinedButton(
-                onPressed: onImageChanged,
-                child: Text(
-                  image == null ? 'Surat sayla' : "Täzele",
-                  style: Theme.of(context).textTheme.caption!.copyWith(
-                        color: Theme.of(context).primaryColor,
+              onTap: selectedImage == null ? () => this.pickImage() : null,
+              trailing: selectedImage == null
+                  ? null
+                  : OutlinedButton(
+                      onPressed: () => this.pickImage(),
+                      child: Text(
+                        "Täzele",
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              color: Theme.of(context).primaryColor,
+                            ),
                       ),
-                ),
-              ),
+                    ),
               title: Text(
-                image == null
-                    ? "e.g abc.jpg"
-                    : image.names.map((e) => e).toList().join(', '),
+                selectedImage == null
+                    ? "Suart saýla"
+                    : selectedImage.names.map((e) => e).toList().join(', '),
                 style: Theme.of(context).textTheme.subtitle1!.copyWith(
                       color: Colors.black54,
                       fontWeight: FontWeight.w500,
@@ -186,7 +157,6 @@ class _TwoSmallCardsState extends State<TwoSmallCards> {
         Expanded(
           child: LabeledInput(
             editMode: true,
-            validator: emptyField,
             controller: imageLinkController,
             label: 'Link',
           ),

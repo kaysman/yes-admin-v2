@@ -1,20 +1,29 @@
+import 'package:admin_v2/Data/enums/gadget-type.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/image_preview.dart';
 import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum ImageType { IMAGE_1, IMAGE_2, IMAGE_3, IMAGE_4, IMAGE_5 }
+import '../../../../Data/models/gadget/create-gadget.model.dart';
+
+enum ImageType { IMAGE_1 }
 
 class BannerForMenAndWomen extends StatefulWidget {
-  const BannerForMenAndWomen({Key? key}) : super(key: key);
-
+  const BannerForMenAndWomen({Key? key, required this.gadgetBloc})
+      : super(key: key);
+  final GadgetBloc gadgetBloc;
   @override
   State<BannerForMenAndWomen> createState() => _BannerForMenAndWomenState();
 }
 
 class _BannerForMenAndWomenState extends State<BannerForMenAndWomen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   FilePickerResult? _selectedImage_1;
   TextEditingController imageLink1Controller = TextEditingController();
   TextEditingController imageLink2Controller = TextEditingController();
@@ -101,6 +110,33 @@ class _BannerForMenAndWomenState extends State<BannerForMenAndWomen> {
                                   ),
                         ),
                       ),
+                    ),
+                    Spacer(),
+                    BlocConsumer<GadgetBloc, GadgetState>(
+                      listener: (context, state) {},
+                      builder: (context, state) {
+                        return ButtonsForGadgetCreation(
+                          formKey: _formKey,
+                          isLoading:
+                              state.createStatus == GadgetCreateStatus.loading,
+                          onPressed: () async {
+                            CreateGadgetModel model = CreateGadgetModel(
+                              type: HomeGadgetType.BANNER_FOR_MEN_AND_WOMEN,
+                              apiUrls: [
+                                imageLink1Controller.text,
+                                imageLink2Controller.text,
+                              ],
+                              queue: 1,
+                            );
+                            if (_selectedImage_1 != null) {
+                              await widget.gadgetBloc.createHomeGadget(
+                                [_selectedImage_1!],
+                                model.toJson(),
+                              );
+                            }
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),

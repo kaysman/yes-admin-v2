@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 class ButtonsForGadgetCreation extends StatefulWidget {
   const ButtonsForGadgetCreation({
     Key? key,
-    required this.formKey,
+    this.formKey,
     this.isLoading = false,
     required this.onPressed,
   }) : super(key: key);
 
-  final GlobalKey<FormState> formKey;
+  final GlobalKey<FormState>? formKey;
   final bool? isLoading;
   final VoidCallback onPressed;
 
@@ -39,9 +39,9 @@ class _ButtonsForGadgetCreationState extends State<ButtonsForGadgetCreation> {
           isLoading: widget.isLoading ?? false,
           text: "Save",
           onPressed: () {
-            if (widget.formKey.currentState!.validate()) {
-              widget.onPressed.call();
-            }
+            // if (widget.formKey.currentState?.validate() == true) {
+            widget.onPressed.call();
+            // }
           },
         ),
       ],

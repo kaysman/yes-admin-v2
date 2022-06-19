@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Cards16_9HorizontalWithTitleText extends StatefulWidget {
-  const Cards16_9HorizontalWithTitleText({
+class Cards16_9HorizontalWithTitleAsImage extends StatefulWidget {
+  const Cards16_9HorizontalWithTitleAsImage({
     Key? key,
     required this.gadgetBloc,
   }) : super(key: key);
@@ -19,14 +19,16 @@ class Cards16_9HorizontalWithTitleText extends StatefulWidget {
   final GadgetBloc gadgetBloc;
 
   @override
-  State<Cards16_9HorizontalWithTitleText> createState() =>
-      _Cards16_9HorizontalWithTitleTextState();
+  State<Cards16_9HorizontalWithTitleAsImage> createState() =>
+      _Cards16_9HorizontalWithTitleAsImageState();
 }
 
-class _Cards16_9HorizontalWithTitleTextState
-    extends State<Cards16_9HorizontalWithTitleText> {
+class _Cards16_9HorizontalWithTitleAsImageState
+    extends State<Cards16_9HorizontalWithTitleAsImage> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController titleController = TextEditingController();
+  FilePickerResult? selectedTitleImage;
+
+  List<FilePickerResult> pickImages = [];
 
   List<GadgetCartItemModel> cartItems = [];
 
@@ -54,10 +56,48 @@ class _Cards16_9HorizontalWithTitleTextState
                 child: Column(
                   children: [
                     SizedBox(height: 14),
-                    LabeledInput(
-                      editMode: true,
-                      controller: titleController,
-                      label: 'Title text',
+                    Card(
+                      margin: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                          color: Colors.black38,
+                          width: 0.0,
+                        ),
+                      ),
+                      child: ListTile(
+                        trailing: OutlinedButton(
+                          onPressed: () async {
+                            var res = await this.pickImageAndReturn();
+                            if (res != null) {
+                              setState(() {
+                                selectedTitleImage = res;
+                              });
+                            }
+                          },
+                          child: Text(
+                            selectedTitleImage == null
+                                ? 'Surat sayla'
+                                : "Täzele",
+                            style:
+                                Theme.of(context).textTheme.caption!.copyWith(
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                          ),
+                        ),
+                        title: Text(
+                          selectedTitleImage == null
+                              ? "e.g abc.jpg"
+                              : selectedTitleImage!.names
+                                  .map((e) => e)
+                                  .toList()
+                                  .join(', '),
+                          style:
+                              Theme.of(context).textTheme.subtitle1!.copyWith(
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                        ),
+                      ),
                     ),
                     SizedBox(height: 14),
                     OutlinedButton(
@@ -109,17 +149,25 @@ class _Cards16_9HorizontalWithTitleTextState
 
                             CreateGadgetModel model = CreateGadgetModel(
                               type: HomeGadgetType
-                                  .CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT,
+                                  .CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE,
                               apiUrls: this
                                   .cartItems
                                   .map((e) => e.textController.text)
                                   .toList(),
                               queue: 1,
-                              title: titleController.text,
                             );
-
+                            setState(() {
+                              pickImages = this
+                                  .cartItems
+                                  .map(
+                                    (e) => e.image!,
+                                  )
+                                  .toList();
+                              pickImages.add(selectedTitleImage!);
+                            });
+                            print(pickImages.length);
                             await widget.gadgetBloc.createHomeGadget(
-                              this.cartItems.map((e) => e.image!).toList(),
+                              pickImages,
                               model.toJson(),
                             );
                           },
@@ -153,7 +201,7 @@ class _Cards16_9HorizontalWithTitleTextState
     TextEditingController? imageLinkController,
     VoidCallback onImageChanged,
     ValueChanged<int> onDelete,
-    int index,
+    int? index,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14.0),

@@ -1,15 +1,22 @@
+import 'package:admin_v2/Data/enums/gadget-type.dart';
+import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/image_preview.dart';
 import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/gadget.bloc.dart';
 
 enum ImageType { IMAGE_1, IMAGE_2, IMAGE_3, IMAGE_4, IMAGE_5 }
 
 class TwoToTwoWithTitleAsImage extends StatefulWidget {
-  const TwoToTwoWithTitleAsImage({Key? key}) : super(key: key);
+  const TwoToTwoWithTitleAsImage({Key? key, required this.gadgetBloc})
+      : super(key: key);
+  final GadgetBloc gadgetBloc;
 
   @override
   State<TwoToTwoWithTitleAsImage> createState() =>
@@ -17,6 +24,8 @@ class TwoToTwoWithTitleAsImage extends StatefulWidget {
 }
 
 class _TwoToTwoWithTitleAsImageState extends State<TwoToTwoWithTitleAsImage> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   FilePickerResult? _selectedImage_1;
   FilePickerResult? _selectedImage_2;
   FilePickerResult? _selectedImage_3;
@@ -96,42 +105,6 @@ class _TwoToTwoWithTitleAsImageState extends State<TwoToTwoWithTitleAsImage> {
                           ],
                         ),
                         SizedBox(height: 14),
-                        buildImageWithLink(
-                          context,
-                          _selectedImage_1,
-                          ImageType.IMAGE_1,
-                          imageLink1Controller,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        buildImageWithLink(
-                          context,
-                          _selectedImage_2,
-                          ImageType.IMAGE_2,
-                          imageLink2Controller,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        buildImageWithLink(
-                          context,
-                          _selectedImage_3,
-                          ImageType.IMAGE_3,
-                          imageLink3Controller,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        buildImageWithLink(
-                          context,
-                          _selectedImage_4,
-                          ImageType.IMAGE_4,
-                          imageLink4Controller,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
                         Card(
                           margin: EdgeInsets.zero,
                           shape: RoundedRectangleBorder(
@@ -176,6 +149,80 @@ class _TwoToTwoWithTitleAsImageState extends State<TwoToTwoWithTitleAsImage> {
                                   ),
                             ),
                           ),
+                        ),
+                        SizedBox(height: 14),
+                        buildImageWithLink(
+                          context,
+                          _selectedImage_1,
+                          ImageType.IMAGE_1,
+                          imageLink1Controller,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildImageWithLink(
+                          context,
+                          _selectedImage_2,
+                          ImageType.IMAGE_2,
+                          imageLink2Controller,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildImageWithLink(
+                          context,
+                          _selectedImage_3,
+                          ImageType.IMAGE_3,
+                          imageLink3Controller,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        buildImageWithLink(
+                          context,
+                          _selectedImage_4,
+                          ImageType.IMAGE_4,
+                          imageLink4Controller,
+                        ),
+                        Spacer(),
+                        BlocConsumer<GadgetBloc, GadgetState>(
+                          listener: (context, state) {},
+                          builder: (context, state) {
+                            return ButtonsForGadgetCreation(
+                              formKey: _formKey,
+                              isLoading: state.createStatus ==
+                                  GadgetCreateStatus.loading,
+                              onPressed: () async {
+                                CreateGadgetModel model = CreateGadgetModel(
+                                  type:
+                                      HomeGadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE,
+                                  apiUrls: [
+                                    imageLink1Controller.text,
+                                    imageLink2Controller.text,
+                                    imageLink3Controller.text,
+                                    imageLink4Controller.text,
+                                  ],
+                                  queue: 1,
+                                );
+                                if (_selectedImage_1 != null &&
+                                    _selectedImage_2 != null &&
+                                    _selectedImage_3 != null &&
+                                    _selectedImage_4 != null &&
+                                    _selectedImage_5 != null) {
+                                  await widget.gadgetBloc.createHomeGadget(
+                                    [
+                                      _selectedImage_1!,
+                                      _selectedImage_2!,
+                                      _selectedImage_3!,
+                                      _selectedImage_4!,
+                                      _selectedImage_5!,
+                                    ],
+                                    model.toJson(),
+                                  );
+                                }
+                              },
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -241,7 +288,7 @@ class _TwoToTwoWithTitleAsImageState extends State<TwoToTwoWithTitleAsImage> {
           child: LabeledInput(
             editMode: true,
             controller: imageLinkController,
-            label: 'Image Link',
+            label: 'Link',
           ),
         )
       ],

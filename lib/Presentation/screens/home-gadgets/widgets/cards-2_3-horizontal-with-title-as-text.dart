@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Cards16_9HorizontalWithTitleText extends StatefulWidget {
-  const Cards16_9HorizontalWithTitleText({
+class Cards2_3InHorizontalWithTitleAsText extends StatefulWidget {
+  const Cards2_3InHorizontalWithTitleAsText({
     Key? key,
     required this.gadgetBloc,
   }) : super(key: key);
@@ -19,12 +19,12 @@ class Cards16_9HorizontalWithTitleText extends StatefulWidget {
   final GadgetBloc gadgetBloc;
 
   @override
-  State<Cards16_9HorizontalWithTitleText> createState() =>
-      _Cards16_9HorizontalWithTitleTextState();
+  State<Cards2_3InHorizontalWithTitleAsText> createState() =>
+      _Cards2_3InHorizontalWithTitleAsTextState();
 }
 
-class _Cards16_9HorizontalWithTitleTextState
-    extends State<Cards16_9HorizontalWithTitleText> {
+class _Cards2_3InHorizontalWithTitleAsTextState
+    extends State<Cards2_3InHorizontalWithTitleAsText> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController titleController = TextEditingController();
 
@@ -43,7 +43,7 @@ class _Cards16_9HorizontalWithTitleTextState
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Form(
         key: _formKey,
         child: Row(
@@ -109,7 +109,7 @@ class _Cards16_9HorizontalWithTitleTextState
 
                             CreateGadgetModel model = CreateGadgetModel(
                               type: HomeGadgetType
-                                  .CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT,
+                                  .CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT,
                               apiUrls: this
                                   .cartItems
                                   .map((e) => e.textController.text)
@@ -117,9 +117,13 @@ class _Cards16_9HorizontalWithTitleTextState
                               queue: 1,
                               title: titleController.text,
                             );
-
                             await widget.gadgetBloc.createHomeGadget(
-                              this.cartItems.map((e) => e.image!).toList(),
+                              this
+                                  .cartItems
+                                  .map(
+                                    (e) => e.image!,
+                                  )
+                                  .toList(),
                               model.toJson(),
                             );
                           },
@@ -153,7 +157,7 @@ class _Cards16_9HorizontalWithTitleTextState
     TextEditingController? imageLinkController,
     VoidCallback onImageChanged,
     ValueChanged<int> onDelete,
-    int index,
+    int? index,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14.0),
