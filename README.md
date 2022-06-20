@@ -1,16 +1,22 @@
 # admin_v2
 
-A new Flutter project.
+npm install firebase
 
-## Getting Started
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-This project is a starting point for a Flutter application.
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDRl49CdEjPEoCnRv8igYw782WIvBVzdzE",
+  authDomain: "yes-project-96519.firebaseapp.com",
+  projectId: "yes-project-96519",
+  storageBucket: "yes-project-96519.appspot.com",
+  messagingSenderId: "178012375632",
+  appId: "1:178012375632:web:daf7d7fc79befaebb45f55"
+};
 
-A few resources to get you started if this is your first Flutter project:
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
