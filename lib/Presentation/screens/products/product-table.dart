@@ -1,31 +1,34 @@
-import 'package:admin_v2/Data/models/filter/filter.enum.dart';
+import 'package:admin_v2/Data/models/product/delete-many-products.model.dart';
 import 'package:admin_v2/Data/models/product/filter-for-product.model.dart';
 import 'package:admin_v2/Data/models/product/product.model.dart';
+import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
-import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
-import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
-import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
-import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
-import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
-import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
-import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
-import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
-import 'package:admin_v2/Presentation/screens/products/dialogs/excel-upload.dart';
+import 'package:admin_v2/Presentation/screens/products/dialogs/import.dart';
 import 'package:admin_v2/Presentation/screens/products/product-create.dart';
+import 'package:admin_v2/Presentation/screens/products/product-info.dialog.dart';
+import 'package:admin_v2/Presentation/screens/products/widgets/endrawer.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../shared/components/scrollable copy.dart';
 import 'product-update.dart';
 
 SidebarItem getProductSidebarItem() {
   return SidebarItem(
+    logo: SvgPicture.asset(
+      'assets/bag.svg',
+      width: 30,
+      height: 30,
+      fit: BoxFit.contain,
+      color: kswPrimaryColor,
+    ),
     title: "Harytlar",
     view: ProductsTable(),
     getActions: (context) {
@@ -35,34 +38,7 @@ SidebarItem getProductSidebarItem() {
           child: Row(
             children: [
               BlocConsumer<ProductBloc, ProductState>(
-                listener: (_, state) {
-                  if (state.createStatus == ProductCreateStatus.success) {
-                    Scaffold.of(context)
-                        // ignore: deprecated_member_use
-                        .showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.lightBlue,
-                        behavior: SnackBarBehavior.floating,
-                        duration: Duration(milliseconds: 1000),
-                        content: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 30,
-                          ),
-                          child: new Text(
-                            'Created Successully',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                    color: Colors.white, letterSpacing: 1),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                },
+                listener: (_, state) {},
                 builder: (context, state) {
                   return SearchFieldInAppBar(
                     hintText: "e.g mb shoes",
@@ -86,7 +62,7 @@ SidebarItem getProductSidebarItem() {
                   primary: Colors.transparent,
                 ),
                 onPressed: () {
-                  showAppDialog(context, CreateProductPage());
+                  showAppDialog(context, ProductCreateDialog());
                 },
                 child: Text(
                   'Haryt döret',
@@ -119,6 +95,7 @@ class _ProductsTableState extends State<ProductsTable> {
     'Code',
     'Ady tm',
     'Ady ru',
+    'Suraty',
     'Yes Baha',
     'Market Baha',
     'Renki',
@@ -148,122 +125,179 @@ class _ProductsTableState extends State<ProductsTable> {
             bloc: productBloc,
             builder: (context, state) {
               var allProductLength = state.totalProductsCount;
-              return state.listingStatus == ProductListStatus.loading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ))
-                  : Container(
-                      padding: const EdgeInsets.all(16),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+              if (state.listingStatus == ProductListStatus.loading) {
+                return Container(
+                  height: MediaQuery.of(context).size.height - 100,
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state.listingStatus == ProductListStatus.error) {
+                return Container(
+                  height: MediaQuery.of(context).size.height - 100,
+                  alignment: Alignment.center,
+                  child: TryAgainButton(
+                    tryAgain: () async {
+                      await productBloc.getAllProducts();
+                    },
+                  ),
+                );
+              }
+              return Container(
+                padding: const EdgeInsets.all(16),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        height: 50,
+                        child: Row(
                           children: [
-                            Container(
-                              height: 50,
-                              child: Row(
-                                children: [
-                                  Text("$allProductLength total products"),
-                                  Spacer(),
-                                  if (selectedProducts.length == 1)
-                                    OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        backgroundColor: Colors.lightBlueAccent,
-                                      ),
-                                      onPressed: () {
-                                        showAppDialog(
-                                          context,
-                                          UpdateProductPage(
-                                            product: selectedProducts.first,
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        'Uytget',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
+                            Text("$allProductLength total products"),
+                            Spacer(),
+                            if (selectedProducts.length == 1) ...[
+                              Button(
+                                text: 'Haryt barada',
+                                primary: kswPrimaryColor,
+                                textColor: kWhite,
+                                onPressed: () async {
+                                  showAppDialog(
+                                    context,
+                                    ProductInfo(
+                                      selectedProductId:
+                                          selectedProducts.first.id,
                                     ),
-                                  SizedBox(width: 16),
-                                  OutlinedButton.icon(
-                                    label: Text(
-                                      'Excel Yukle',
-                                      style: TextStyle(
-                                        letterSpacing: .7,
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      showAppDialog(
-                                          context, ExcelUploadDialog());
-                                    },
-                                    icon: Icon(
-                                      Icons.file_upload,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  SizedBox(width: 16),
-                                  OutlinedButton.icon(
-                                    label: Text(
-                                      'Filter',
-                                      style: TextStyle(
-                                          letterSpacing: .7, fontSize: 16),
-                                    ),
-                                    onPressed: () {
-                                      Scaffold.of(context).openEndDrawer();
-                                    },
-                                    icon: Icon(
-                                      Icons.filter_list_alt,
-                                      size: 20,
-                                      color: state.lastFilter!
-                                              .filterArgumentsIsNotNull
-                                          ? Colors.orange
-                                          : null,
-                                    ),
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            ),
-                            ScrollableWidget(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minWidth: constraints.maxWidth,
-                                ),
-                                child: DataTable(
-                                  border: TableBorder.all(
-                                    width: 1.0,
-                                    color: Colors.grey.shade100,
-                                  ),
-                                  sortColumnIndex: sortColumnIndex,
-                                  sortAscending: sortAscending,
-                                  columns: tableColumns,
-                                  rows: tableRows(state),
-                                ),
+                              SizedBox(
+                                width: 14,
                               ),
-                            ),
-                            Pagination(
-                              text: "${state.lastFilter?.take} items per page",
-                              goPrevious: state.itemIds.first.firstId !=
-                                      state.currentPage?.firstId
-                                  ? () async {
-                                      productBloc.getAllProducts(
-                                        filter:
-                                            FilterForProductDTO(next: false),
-                                      );
+                              Button(
+                                text: 'Uytget',
+                                primary: kswPrimaryColor,
+                                textColor: kWhite,
+                                onPressed: () async {
+                                  await showAppDialog(
+                                      context,
+                                      ProductUpdateDialog(
+                                          product: selectedProducts.first));
+                                  setState(
+                                    () {
+                                      selectedProducts = [];
+                                    },
+                                  );
+                                },
+                              ),
+                            ],
+                            if (selectedProducts.length >= 2) ...[
+                              Button(
+                                text: 'Delete',
+                                textColor: Colors.redAccent,
+                                borderColor: Colors.redAccent,
+                                hasBorder: true,
+                                onPressed: () async {
+                                  List<int> ids = [];
+                                  for (var item in selectedProducts) {
+                                    if (item.id != null) {
+                                      var id = item.id;
+                                      ids.add(id!);
                                     }
-                                  : null,
-                              goNext: state.currentPage?.firstId ==
-                                      state.currentPage?.lastId
-                                  ? null
-                                  : () async {
-                                      productBloc.getAllProducts(
-                                        filter: FilterForProductDTO(next: true),
-                                      );
-                                    },
+                                  }
+                                  await showAppDialog(
+                                    context,
+                                    MultiDeleteProductDialog(
+                                      ids: ids,
+                                    ),
+                                  );
+                                  setState(() {
+                                    selectedProducts = [];
+                                  });
+                                },
+                              )
+                            ],
+                            SizedBox(width: 16),
+                            OutlinedButton.icon(
+                              label: Text(
+                                'Import',
+                                style: TextStyle(
+                                  letterSpacing: .7,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              onPressed: () {
+                                showAppDialog(context, ImportDialog());
+                              },
+                              icon: Icon(
+                                Icons.file_upload,
+                                size: 20,
+                              ),
+                            ),
+                            SizedBox(width: 16),
+                            OutlinedButton.icon(
+                              label: Text(
+                                'Filter',
+                                style:
+                                    TextStyle(letterSpacing: .7, fontSize: 16),
+                              ),
+                              onPressed: () {
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              icon: Icon(
+                                Icons.filter_list_alt,
+                                size: 20,
+                                color: state.lastFilter
+                                            ?.filterArgumentsIsNotNull ??
+                                        false
+                                    ? Colors.orange
+                                    : null,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                    );
+                      ScrollableWidget(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: constraints.maxWidth,
+                          ),
+                          child: DataTable(
+                            border: TableBorder.all(
+                              width: 1.0,
+                              color: Colors.grey.shade100,
+                            ),
+                            sortColumnIndex: sortColumnIndex,
+                            sortAscending: sortAscending,
+                            columns: tableColumns,
+                            rows: tableRows(state),
+                          ),
+                        ),
+                      ),
+                      Pagination(
+                        text: "${state.lastFilter?.take} items per page",
+                        goPrevious: state.itemIds.isNotEmpty
+                            ? state.itemIds.first.firstId !=
+                                    state.currentPage?.firstId
+                                ? () async {
+                                    productBloc.getAllProducts(
+                                      filter: FilterForProductDTO(next: false),
+                                    );
+                                  }
+                                : null
+                            : null,
+                        goNext: state.currentPage?.firstId ==
+                                state.currentPage?.lastId
+                            ? null
+                            : () async {
+                                productBloc.getAllProducts(
+                                  filter: FilterForProductDTO(next: true),
+                                );
+                              },
+                      ),
+                    ],
+                  ),
+                ),
+              );
             },
           );
         },
@@ -282,10 +316,12 @@ class _ProductsTableState extends State<ProductsTable> {
 
   List<DataRow> tableRows(ProductState state) {
     if (state.products == null) return [];
+
     return List.generate(
       state.products!.length,
       (index) {
         var product = state.products![index];
+        var productQuantity = getSum(product.sizes);
         return DataRow(
           selected: selectedProducts.contains(product),
           onSelectChanged: (v) {
@@ -302,14 +338,29 @@ class _ProductsTableState extends State<ProductsTable> {
             DataCell(Text("${product.code}")),
             DataCell(Text("${product.name_tm}")),
             DataCell(Text("${product.name_ru}")),
+            DataCell(Wrap(
+                children: product.images!
+                    .map(
+                      (e) => e.getFullPathImage == null
+                          ? CircleAvatar(
+                              radius: 20,
+                              backgroundColor: kswPrimaryColor,
+                            )
+                          : CircleAvatar(
+                              radius: 20,
+                              backgroundImage:
+                                  Image.network(e.getFullPathImage!).image,
+                            ),
+                    )
+                    .toList())),
             DataCell(Text("${product.ourPrice}")),
             DataCell(Text("${product.marketPrice}")),
-            DataCell(Text("${product.colorName}")),
-            DataCell(Text("${product.gender_id}")),
-            DataCell(Text("${product.quantity}")),
-            DataCell(Text("${product.brand_id}")),
-            DataCell(Text("${product.category_id}")),
-            DataCell(Text("${product.market_id}")),
+            DataCell(Text("${product.color?.name_tm}")),
+            DataCell(Text("${product.gender?.name_tm}")),
+            DataCell(Text("${productQuantity}")),
+            DataCell(Text("${product.brand?.name}")),
+            DataCell(Text("${product.category?.title_tm}")),
+            DataCell(Text("${product.market?.title}")),
             DataCell(Text("${product.description_tm}")),
             DataCell(Text("${product.description_ru}")),
           ],
@@ -317,713 +368,93 @@ class _ProductsTableState extends State<ProductsTable> {
       },
     );
   }
+
+  int getSum(List<SizeEntity>? sizes) {
+    List<int> my = [];
+    if (sizes != null) {
+      for (var size in sizes) {
+        my.add(size.quantity!);
+      }
+    }
+    var sum = my.reduce((a, b) => a + b);
+
+    return sum;
+  }
 }
 
-class EndDrawer extends StatefulWidget {
-  EndDrawer({
+class MultiDeleteProductDialog extends StatelessWidget {
+  const MultiDeleteProductDialog({
     Key? key,
+    required this.ids,
   }) : super(key: key);
 
-  @override
-  State<EndDrawer> createState() => _EndDrawerState();
-}
-
-class _EndDrawerState extends State<EndDrawer> {
-  int selectedIndex = 0;
-  int? selectedBrandId;
-  int? selectedCategoryId;
-  int? selectedGenderId;
-  int? selectedSizeId;
-  int? selectedmarketId;
-  int? selectedColorId;
-  int? quantity;
-
-  List<Map<String, dynamic>> quantyties = [
-    {"from": 0, "to": 10},
-    {"from": 10, "to": 20},
-    {"from": 20, "to": 30},
-    {"from": 30, "to": 40},
-    {"from": 40, "to": 50},
-    {"from": 50, "to": 60},
-    {"from": 60, "to": 70},
-  ];
-
-  late BrandBloc brandBloc;
-  late CategoryBloc categoryBloc;
-  late MarketBloc marketBloc;
-  late FilterBloc filterBloc;
-  late ProductBloc productBloc;
-  TextEditingController priceFromController = TextEditingController();
-  TextEditingController priceTController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    productBloc = context.read<ProductBloc>();
-    if (productBloc.state.lastFilter != null) {
-      selectedBrandId = productBloc.state.lastFilter!.brand_id;
-      selectedCategoryId = productBloc.state.lastFilter!.category_id;
-      selectedGenderId = productBloc.state.lastFilter!.gender_id;
-      selectedSizeId = productBloc.state.lastFilter!.size_id;
-      selectedmarketId = productBloc.state.lastFilter!.market_id;
-      selectedColorId = productBloc.state.lastFilter!.color_id;
-      priceFromController.text =
-          productBloc.state.lastFilter!.priceFrom?.toString() ?? '';
-      priceTController.text =
-          productBloc.state.lastFilter!.priceTo?.toString() ?? '';
-      quantity = productBloc.state.lastFilter!.quantity;
-    }
-    brandBloc = context.read<BrandBloc>();
-    if (brandBloc.state.brands == null) {
-      brandBloc.getAllBrands();
-    }
-    categoryBloc = context.read<CategoryBloc>();
-    if (brandBloc.state.brands == null) {
-      categoryBloc.getAllCategories();
-    }
-
-    marketBloc = context.read<MarketBloc>();
-    if (brandBloc.state.brands == null) {
-      marketBloc.getAllMarkets();
-    }
-
-    filterBloc = context.read<FilterBloc>();
-    if (brandBloc.state.brands == null) {
-      filterBloc.getAllFilters();
-    }
-  }
+  final List<int> ids;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * .4,
-      child: Column(
-        children: [
-          Expanded(
-            child: Container(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+    print(ids);
+    return BlocConsumer<ProductBloc, ProductState>(
+      listenWhen: (p, c) => p.multiDeleteStatus != c.multiDeleteStatus,
+      listener: (context, state) {
+        if (state.multiDeleteStatus == ProductMultiDeleteStatus.success) {
+          showSnackBar(
+            context,
+            Text('Deleted all products successfully'),
+            type: SnackbarType.success,
+          );
+          Navigator.of(context).pop();
+        }
+      },
+      builder: (context, state) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          width: MediaQuery.of(context).size.width * .3,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Hakykatdan - da saylan harytlarynyzy \' DELETE \' etmek isleyarsinizmi ?',
+                style: Theme.of(context).textTheme.headline2,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 24,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    child: NavigationRail(
-                      leading: null,
-                      minWidth: 100,
-                      backgroundColor: kScaffoldBgColor,
-                      onDestinationSelected: (val) => setState(
-                        () {
-                          selectedIndex = val;
-                        },
-                      ),
-                      destinations: [
-                        filterSideBarMenuItem(
-                          'Brands',
-                          selectedItem: selectedBrandId,
-                        ),
-                        filterSideBarMenuItem(
-                          'Categories',
-                          selectedItem: selectedCategoryId,
-                        ),
-                        filterSideBarMenuItem(
-                          'Markets',
-                          selectedItem: selectedmarketId,
-                        ),
-                        filterSideBarMenuItem(
-                          'Price',
-                          selectedItem: priceFromController,
-                        ),
-                        filterSideBarMenuItem(
-                          'Quantity',
-                          selectedItem: quantity,
-                        ),
-                        filterSideBarMenuItem(
-                          'Colors',
-                          selectedItem: selectedColorId,
-                        ),
-                        filterSideBarMenuItem(
-                          'Sizes',
-                          selectedItem: selectedSizeId,
-                        ),
-                        filterSideBarMenuItem(
-                          'Genders',
-                          selectedItem: selectedGenderId,
-                        ),
-                      ],
-                      selectedIndex: selectedIndex,
-                    ),
-                  ),
-                  Expanded(
-                    child: buildBody(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: kScaffoldBgColor!, width: 1),
-              ),
-              color: kWhite,
-            ),
-            height: 50,
-            child: Row(
-              children: [
-                Expanded(
-                    child: Container(
-                  height: double.infinity,
-                  child: TextButton(
-                    child: Text(
-                      'Close',
-                      style: TextStyle(color: kText2Color),
-                    ),
+                  Button(
+                    text: 'Yok',
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
+                    hasBorder: true,
+                    borderColor: kGrey5Color,
                   ),
-                )),
-                VerticalDivider(
-                  endIndent: 15,
-                  indent: 15,
-                  width: 2,
-                  color: kScaffoldBgColor,
-                  thickness: 1,
-                ),
-                Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    child: Builder(
-                      builder: (context) {
-                        return TextButton(
-                          child: Text(
-                            'Clear All',
-                            style: TextStyle(color: kText2Color),
-                          ),
-                          onPressed: () {
-                            if (productBloc.state.lastFilter != null) {
-                              setState(
-                                () {
-                                  selectedBrandId = null;
-                                  selectedCategoryId = null;
-                                  selectedGenderId = null;
-                                  selectedSizeId = null;
-                                  selectedmarketId = null;
-                                  selectedColorId = null;
-                                  priceFromController.text = '';
-                                  priceTController.text = '';
-                                  quantity = null;
-                                },
-                              );
-                            }
-                          },
-                        );
-                      },
-                    ),
+                  SizedBox(
+                    width: 20,
                   ),
-                ),
-                VerticalDivider(
-                  endIndent: 15,
-                  indent: 15,
-                  width: 2,
-                  color: kScaffoldBgColor,
-                  thickness: 1,
-                ),
-                Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    child: BlocConsumer<ProductBloc, ProductState>(
-                      listener: (_, state) {
-                        if (state.listingStatus == ProductListStatus.idle) {
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      builder: (context, state) {
-                        return TextButton(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                'Apply',
-                                style: TextStyle(color: kPrimaryColor),
-                              ),
-                              if (state.listingStatus ==
-                                  ProductListStatus.silentLoading)
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 25,
-                                      height: 25,
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: kPrimaryColor,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                            ],
-                          ),
-                          onPressed: () async {
-                            FilterForProductDTO data = FilterForProductDTO(
-                              brand_id: selectedBrandId,
-                              category_id: selectedCategoryId,
-                              color_id: selectedColorId,
-                              gender_id: selectedGenderId,
-                              market_id: selectedmarketId,
-                              priceFrom: int.tryParse(priceFromController.text),
-                              priceTo: int.tryParse(priceTController.text),
-                              quantity: quantity,
-                              size_id: selectedSizeId,
-                            );
-                            await productBloc.getAllProducts(
-                              filter: data,
-                              subtle: true,
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  NavigationRailDestination filterSideBarMenuItem(
-    String title, {
-    selectedItem,
-  }) {
-    return NavigationRailDestination(
-      selectedIcon: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: double.infinity,
-        color: kWhite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(title),
-            SizedBox(
-              height: 10,
-            ),
-            OutlinedButton(
-              onPressed: () {
-                if (productBloc.state.lastFilter != null) {
-                  setState(
-                    () {
-                      if (selectedItem == selectedBrandId) {
-                        selectedBrandId = null;
-                      } else if (selectedItem == selectedCategoryId) {
-                        selectedCategoryId = null;
-                      } else if (selectedItem == selectedGenderId) {
-                        selectedGenderId = null;
-                      } else if (selectedItem == selectedSizeId) {
-                        selectedSizeId = null;
-                      } else if (selectedItem == selectedmarketId) {
-                        selectedmarketId = null;
-                      } else if (selectedItem == selectedColorId) {
-                        selectedColorId = null;
-                      } else if (selectedItem == priceFromController ||
-                          selectedItem == priceTController) {
-                        priceFromController.text = '';
-                        priceTController.text = '';
-                      } else if (selectedItem == quantity) {
-                        quantity = null;
-                      }
+                  Button(
+                    text: 'Hawwa',
+                    isLoading: state.multiDeleteStatus ==
+                        ProductMultiDeleteStatus.loading,
+                    primary: kswPrimaryColor,
+                    textColor: kWhite,
+                    onPressed: () async {
+                      DeleteMultiProductModel data =
+                          DeleteMultiProductModel(ids: ids);
+                      await context
+                          .read<ProductBloc>()
+                          .multiDeleteProduct(data);
                     },
-                  );
-                }
-              },
-              child: Text('Clear'),
-            )
-          ],
-        ),
-      ),
-      icon: Text(title),
-      label: Text(title),
-    );
-  }
-
-  Widget buildBody() {
-    switch (selectedIndex) {
-      case 0:
-        return brandFilterList();
-      case 1:
-        return categoryFilterList();
-      case 2:
-        return marketFilterList();
-      case 3:
-        return priceRangeFilterList();
-      case 4:
-        return quantityFilterList();
-      case 5:
-        return colorFilterList();
-      case 6:
-        return sizeFilterList();
-      case 7:
-        return genderFilterList();
-      default:
-        return SizedBox();
-    }
-  }
-
-  BlocBuilder<MarketBloc, MarketState> marketFilterList() {
-    return BlocBuilder<MarketBloc, MarketState>(
-        bloc: marketBloc,
-        builder: (context, marketState) {
-          return marketState.listingStatus == MarketListStatus.loading
-              ? Container(
-                  color: kWhite,
-                  height: double.infinity,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                )
-              : Container(
-                  color: kWhite,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: marketState.markets?.map((e) {
-                              return Column(
-                                children: [
-                                  Card(
-                                    child: ListTile(
-                                      onTap: () => setState(() {
-                                        selectedmarketId = e.id;
-                                      }),
-                                      leading: Icon(
-                                        Icons.check,
-                                        color: e.id == selectedmarketId
-                                            ? kPrimaryColor
-                                            : kScaffoldBgColor,
-                                      ),
-                                      title: Text(
-                                        '${e.title}',
-                                        style: TextStyle(color: kText2Color),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList() ??
-                            []),
-                  ),
-                );
-        });
-  }
-
-  BlocBuilder<CategoryBloc, CategoryState> categoryFilterList() {
-    return BlocBuilder<CategoryBloc, CategoryState>(
-        bloc: categoryBloc,
-        builder: (context, categoryState) {
-          return categoryState.listingStatus == CategoryListStatus.loading
-              ? Container(
-                  color: kWhite,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                )
-              : Container(
-                  color: kWhite,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: categoryState.categories?.map((e) {
-                              return Card(
-                                child: ListTile(
-                                  onTap: () => setState(() {
-                                    selectedCategoryId = e.id;
-                                  }),
-                                  leading: Icon(
-                                    Icons.check,
-                                    color: selectedCategoryId == e.id
-                                        ? kPrimaryColor
-                                        : kScaffoldBgColor,
-                                  ),
-                                  title: Text(
-                                    '${e.title_tm}',
-                                    style: TextStyle(color: kText2Color),
-                                  ),
-                                ),
-                              );
-                            }).toList() ??
-                            []),
-                  ),
-                );
-        });
-  }
-
-  BlocBuilder brandFilterList() {
-    return BlocBuilder<BrandBloc, BrandState>(
-      bloc: brandBloc,
-      builder: (context, brnadState) {
-        return brnadState.listingStatus == BrandListStatus.loading
-            ? Container(
-                color: kWhite,
-                child: Center(
-                  child: CircularProgressIndicator(
-                    color: kPrimaryColor,
-                  ),
-                ),
+                  )
+                ],
               )
-            : Container(
-                color: kWhite,
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: brnadState.brands?.map(
-                          (e) {
-                            return Column(
-                              children: [
-                                Card(
-                                  child: ListTile(
-                                    onTap: () => setState(() {
-                                      selectedBrandId = e.id;
-                                    }),
-                                    leading: Icon(
-                                      Icons.check,
-                                      color: selectedBrandId == e.id
-                                          ? kPrimaryColor
-                                          : kScaffoldBgColor,
-                                    ),
-                                    title: Text(
-                                      '${e.name}',
-                                      style: TextStyle(color: kText2Color),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ).toList() ??
-                        [],
-                  ),
-                ),
-              );
+            ],
+          ),
+        );
       },
     );
-  }
-
-  Container priceRangeFilterList() {
-    return Container(
-      color: kWhite,
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
-      child: Column(
-        children: [
-          LabeledInput(
-            editMode: true,
-            controller: priceFromController,
-            label: 'From',
-          ),
-          SizedBox(height: 20),
-          LabeledInput(
-            editMode: true,
-            controller: priceTController,
-            label: 'TO',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Container quantityFilterList() {
-    return Container(
-      color: kWhite,
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
-      child: Column(
-        children: quantyties
-            .map((e) => Card(
-                  child: ListTile(
-                    onTap: () => setState(() {
-                      quantity = e['to'];
-                    }),
-                    leading: Icon(
-                      Icons.check,
-                      color: quantity == e['to']
-                          ? kPrimaryColor
-                          : kScaffoldBgColor,
-                    ),
-                    title: Row(
-                      children: [
-                        Text('${e['from']}'),
-                        SizedBox(
-                          width: 30,
-                          child: Divider(
-                            endIndent: 10,
-                            indent: 10,
-                            height: 1,
-                            color: kPrimaryColor,
-                            thickness: 1,
-                          ),
-                        ),
-                        Text('${e['to']}'),
-                      ],
-                    ),
-                  ),
-                ))
-            .toList(),
-      ),
-    );
-  }
-
-  BlocBuilder<FilterBloc, FilterState> colorFilterList() {
-    return BlocBuilder<FilterBloc, FilterState>(
-        bloc: filterBloc,
-        builder: (context, filterState) {
-          var colors = filterState.filters
-              ?.where((element) => element.type == FilterType.COLOR);
-          return filterState.listingStatus == FilterListStatus.loading
-              ? Container(
-                  color: kWhite,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                )
-              : Container(
-                  color: kWhite,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: colors?.map((e) {
-                              return Column(
-                                children: [
-                                  Card(
-                                    child: ListTile(
-                                      onTap: () => setState(() {
-                                        selectedColorId = e.id;
-                                      }),
-                                      leading: Icon(
-                                        Icons.check,
-                                        color: selectedColorId == e.id
-                                            ? kPrimaryColor
-                                            : kScaffoldBgColor,
-                                      ),
-                                      title: Text(
-                                        '${e.name_tm}',
-                                        style: TextStyle(color: kText2Color),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList() ??
-                            []),
-                  ),
-                );
-        });
-  }
-
-  BlocBuilder<FilterBloc, FilterState> sizeFilterList() {
-    return BlocBuilder<FilterBloc, FilterState>(
-        bloc: filterBloc,
-        builder: (context, filterState) {
-          var sizes = filterState.filters
-              ?.where((element) => element.type == FilterType.SIZE);
-          return filterState.listingStatus == FilterListStatus.loading
-              ? Container(
-                  color: kWhite,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                )
-              : Container(
-                  color: kWhite,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: sizes?.map((e) {
-                              return Column(
-                                children: [
-                                  Card(
-                                    child: ListTile(
-                                      onTap: () => setState(() {
-                                        selectedSizeId = e.id;
-                                      }),
-                                      leading: Icon(
-                                        Icons.check,
-                                        color: selectedSizeId == e.id
-                                            ? kPrimaryColor
-                                            : kScaffoldBgColor,
-                                      ),
-                                      title: Text(
-                                        '${e.name_tm}',
-                                        style: TextStyle(color: kText2Color),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList() ??
-                            []),
-                  ),
-                );
-        });
-  }
-
-  BlocBuilder<FilterBloc, FilterState> genderFilterList() {
-    return BlocBuilder<FilterBloc, FilterState>(
-        bloc: filterBloc,
-        builder: (context, filterState) {
-          var genders = filterState.filters
-              ?.where((element) => element.type == FilterType.GENDER);
-          return filterState.listingStatus == FilterListStatus.loading
-              ? Container(
-                  color: kWhite,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                )
-              : Container(
-                  color: kWhite,
-                  height: double.infinity,
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: genders?.map((e) {
-                              return Column(
-                                children: [
-                                  Card(
-                                    child: ListTile(
-                                      onTap: () => setState(() {
-                                        selectedGenderId = e.id;
-                                      }),
-                                      leading: Icon(
-                                        Icons.check,
-                                        color: selectedGenderId == e.id
-                                            ? kPrimaryColor
-                                            : kScaffoldBgColor,
-                                      ),
-                                      title: Text(
-                                        '${e.name_tm}',
-                                        style: TextStyle(color: kText2Color),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList() ??
-                            []),
-                  ),
-                );
-        });
   }
 }

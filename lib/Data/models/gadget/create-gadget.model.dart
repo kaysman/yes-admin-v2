@@ -2,73 +2,92 @@ import 'dart:convert';
 
 import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:json_annotation/json_annotation.dart';
+part 'create-gadget.model.g.dart';
 
 @JsonSerializable()
 class CreateGadgetModel {
-  final HomeGadgetType type;
-  final List<String> apiUrls;
-  final List<String>? brandIds;
+  final HomeGadgetType? type;
+  final List<String>? links;
   final List<String>? productIds;
-  final int? swiperBannersCount;
-  final int queue;
+  final int? queue;
   final String? title;
+  final GadgetStatus? status;
+  final GadgetLocation? location;
 
   CreateGadgetModel({
-    required this.type,
-    required this.apiUrls,
-    this.brandIds,
+    this.links,
+    this.status,
+    this.location,
+    this.type,
     this.productIds,
-    this.swiperBannersCount,
-    required this.queue,
+    this.queue,
     this.title,
   });
 
   factory CreateGadgetModel.fromJson(Map<String, dynamic> json) =>
-      CreateGadgetModel(
-        type: $enumDecode(_$HomeGadgetTypeEnumMap, json['type']),
-        apiUrls:
-            (json['apiUrls'] as List<dynamic>).map((e) => e as String).toList(),
-        brandIds: (json['brandIds'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList(),
-        productIds: (json['productIds'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList(),
-        swiperBannersCount: json['swiperBannersCount'] as int?,
-        queue: json['queue'] as int,
-      );
+      _$CreateGadgetModelFromJson(json);
 
-  Map<String, String> toJson() {
-    Map<String, String> data = <String, String>{'queue': queue.toString()};
+  Map<String, String> toJson() => <String, String>{
+        'type': _$HomeGadgetTypeEnumMap[this.type].toString(),
+        'links': json.encode(this.links),
+        'productIds': json.encode(this.productIds),
+        'queue': this.queue.toString(),
+        'title': this.title.toString(),
+        'status': _$GadgetStatusEnumMap[this.status].toString(),
+        'location': _$GadgetLocationEnumMap[this.location].toString()
+      };
 
-    if (_$HomeGadgetTypeEnumMap[this.type] != null) {
-      data['type'] = _$HomeGadgetTypeEnumMap[this.type]!;
-    }
+  // factory CreateGadgetModel.fromJson(Map<String, dynamic> json) =>
+  //     CreateGadgetModel(
+  //       type: $enumDecode(_$HomeGadgetTypeEnumMap, json['type']),
+  //       apiUrls:
+  //           (json['apiUrls'] as List<dynamic>).map((e) => e as String).toList(),
+  //       brandIds: (json['brandIds'] as List<dynamic>?)
+  //           ?.map((e) => e as String)
+  //           .toList(),
+  //       productIds: (json['productIds'] as List<dynamic>?)
+  //           ?.map((e) => e as String)
+  //           .toList(),
+  //       swiperBannersCount: json['swiperBannersCount'] as int?,
+  //       queue: json['queue'] as int,
+  //     );
 
-    if (this.apiUrls != null) {
-      data['apiUrls'] = json.encode(this.apiUrls);
-    }
+  // Map<String, String> toJson() {
+  //   Map<String, String> data = <String, String>{'queue': queue.toString()};
 
-    if (this.brandIds != null) {
-      data['brandIds'] = json.encode(this.brandIds);
-    }
+  //   if (_$HomeGadgetTypeEnumMap[this.type] != null) {
+  //     data['type'] = _$HomeGadgetTypeEnumMap[this.type]!;
+  //   }
 
-    if (this.productIds != null) {
-      data['productIds'] = json.encode(this.productIds);
-    }
+  //   if (this.links != null) {
+  //     data['links'] = json.encode(this.links);
+  //   }
 
-    if (this.swiperBannersCount != null) {
-      data['swiperBannersCount'] = swiperBannersCount.toString();
-    }
+  //   // if (this.brandIds != null) {
+  //   //   data['brandIds'] = json.encode(this.brandIds);
+  //   // }
 
-    if (this.title != null) {
-      data['title'] = this.title!;
-    }
+  //   if (this.productIds != null) {
+  //     data['productIds'] = json.encode(this.productIds);
+  //   }
 
-    return data;
-  }
+  //   if (this.title != null) {
+  //     data['title'] = this.title!;
+  //   }
+
+  //   return data;
+  // }
 }
 
+const _$GadgetStatusEnumMap = {
+  GadgetStatus.ACTIVE: 'ACTIVE',
+  GadgetStatus.INACTIVE: 'INACTIVE',
+};
+
+const _$GadgetLocationEnumMap = {
+  GadgetLocation.HOME: 'HOME',
+  GadgetLocation.CATEGORY: 'CATEGORY',
+};
 const _$HomeGadgetTypeEnumMap = {
   HomeGadgetType.TWO_SMALL_CARDS_HORIZONTAL: 'TWO_SMALL_CARDS_HORIZONTAL',
   HomeGadgetType.BANNER_SWIPE_WITH_DOTS: 'BANNER_SWIPE_WITH_DOTS',
@@ -91,4 +110,5 @@ const _$HomeGadgetTypeEnumMap = {
   HomeGadgetType.POPULAR: 'POPULAR',
   HomeGadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
       'TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT',
+  HomeGadgetType.CIRCLE_ITEMS: 'CIRCLE_ITEMS',
 };

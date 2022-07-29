@@ -3,21 +3,22 @@ part 'create-brand.model.g.dart';
 
 @JsonSerializable()
 class CreateBrandDTO {
+  final int? id;
   final String name;
-  final String logo;
-  final String? image;
   final bool vip;
-   
 
   CreateBrandDTO({
+    this.id,
     required this.name,
-    required this.logo,
-    this.image,
     required this.vip,
   });
 
   factory CreateBrandDTO.fromJson(Map<String, dynamic> json) =>
       _$CreateBrandDTOFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CreateBrandDTOToJson(this);
+  Map<String, String> toJson() => <String, String>{
+        'id': this.id.toString(),
+        'name': this.name,
+        'vip': this.vip.toString(),
+      };
 }

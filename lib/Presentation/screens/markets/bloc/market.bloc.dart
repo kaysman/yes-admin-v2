@@ -2,23 +2,24 @@ import 'package:admin_v2/Data/models/market/create-market.model.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/services/market.service.dart';
-import 'package:admin_v2/Data/services/product_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'market.state.dart';
 
 class MarketBloc extends Cubit<MarketState> {
   MarketBloc() : super(MarketState());
 
-  createMarket(CreateMarketDTO data) async {
+  createMarket(CreateMarketDTO data, BuildContext buildContext) async {
     emit(state.copyWith(createStatus: MarketCreateStatus.loading));
+    print(data.toJson());
     try {
-      var res = await MarketService.createMarket(data);
+      var res = await MarketService.createMarket(
+        data,
+      );
       List<MarketEntity> l = List<MarketEntity>.from(state.markets ?? []);
       l.add(res!);
-      emit(state.copyWith(
-        markets: l,
-        createStatus: MarketCreateStatus.success,
-      ));
+      emit(
+          state.copyWith(markets: l, createStatus: MarketCreateStatus.success));
     } catch (_) {
       print(_);
       emit(state.copyWith(createStatus: MarketCreateStatus.error));
@@ -26,18 +27,32 @@ class MarketBloc extends Cubit<MarketState> {
   }
 
   updateMarket(MarketEntity data) async {
-    emit(state.copyWith(createStatus: MarketCreateStatus.loading));
+    emit(state.copyWith(marketUpadteStatus: MarketUpadteStatus.loading));
     try {
-      var res = await MarketService.updateMarkets(data.id, data);
-      List<MarketEntity> l = List<MarketEntity>.from(state.markets ?? []);
-      l.add(res);
+      var res = await MarketService.updateMarkets(data);
+      if (res.success == true) {
+        emit(state.copyWith(
+          marketUpadteStatus: MarketUpadteStatus.success,
+        ));
+        getAllMarkets();
+      }
+    } catch (_) {
+      print(_);
+      emit(state.copyWith(marketUpadteStatus: MarketUpadteStatus.error));
+    }
+  }
+
+  getMarketById(int id) async {
+    emit(state.copyWith(getMarketByIdStatus: GetMarketByIdStatus.loading));
+    try {
+      var res = await MarketService.getMarketById(id);
       emit(state.copyWith(
-        markets: l,
-        createStatus: MarketCreateStatus.success,
+        selectedMarket: res,
+        getMarketByIdStatus: GetMarketByIdStatus.success,
       ));
     } catch (_) {
       print(_);
-      emit(state.copyWith(createStatus: MarketCreateStatus.error));
+      emit(state.copyWith(getMarketByIdStatus: GetMarketByIdStatus.error));
     }
   }
 
@@ -51,6 +66,7 @@ class MarketBloc extends Cubit<MarketState> {
     }
     try {
       var res = await MarketService.getMarkets(filter.toJson());
+
       emit(state.copyWith(
         markets: res,
         listingStatus: MarketListStatus.idle,
@@ -61,4 +77,19 @@ class MarketBloc extends Cubit<MarketState> {
     }
   }
 
+  deleteMarket(int id) async {
+    emit(state.copyWith(marketDeleteStatus: MarketDeleteStatus.loading));
+    try {
+      var res = await MarketService.deleteMarket(id);
+      if (res.success == true) {
+        emit(state.copyWith(
+          marketDeleteStatus: MarketDeleteStatus.success,
+        ));
+        getAllMarkets();
+      }
+    } catch (_) {
+      print(_);
+      emit(state.copyWith(marketDeleteStatus: MarketDeleteStatus.error));
+    }
+  }
 }

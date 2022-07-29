@@ -8,12 +8,12 @@ part of 'size.dart';
 
 CreateSizeDTO _$CreateSizeDTOFromJson(Map<String, dynamic> json) =>
     CreateSizeDTO(
-      size: json['size'] as int,
-      count: json['count'] as int,
+      size_id: json['size_id'] as int?,
+      count: json['count'] as int? ?? 1,
     );
 
 Map<String, dynamic> _$CreateSizeDTOToJson(CreateSizeDTO instance) =>
     <String, dynamic>{
-      'size': instance.size,
+      'size_id': instance.size_id,
       'count': instance.count,
     };

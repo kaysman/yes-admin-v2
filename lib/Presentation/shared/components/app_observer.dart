@@ -71,16 +71,16 @@ class _AppObserverState extends State<AppObserver> {
         },
       );
 
-  BlocListener snackbarListener() => BlocListener<SnackbarBloc, SnackbarState>(
-        listener: (context, SnackbarState state) {
-          if (state.type == SnackbarType.success) {
-            presentSuccess(state.message!);
-          }
-          if (state.type == SnackbarType.error) {
-            presentError(state.message!);
-          }
-        },
-      );
+  // BlocListener snackbarListener() => BlocListener<SnackbarBloc, SnackbarState>(
+  //       listener: (context, SnackbarState state) {
+  //         if (state.type == SnackbarType.success) {
+  //           presentSuccess(state.message!);
+  //         }
+  //         if (state.type == SnackbarType.error) {
+  //           presentError(state.message!);
+  //         }
+  //       },
+  //     );
 
   // BlocBuilder connectivityBuilder({Widget? child}) =>
   //     BlocBuilder<ConnectivityBloc, ConnectivityResult?>(
@@ -134,7 +134,7 @@ class _AppObserverState extends State<AppObserver> {
         appLifecycleListener(),
         authListener(),
         environmentListener(),
-        snackbarListener(),
+        // snackbarListener(),
       ],
       child: MediaQuery(
         data: mq.copyWith(

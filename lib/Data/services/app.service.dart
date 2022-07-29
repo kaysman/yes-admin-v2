@@ -68,6 +68,7 @@ class AppService {
 
     // appsflyerSdk = AppsflyerSdk(options);
     // appsflyerSdk.initSdk();
+    showSnackbar = (m, t) => showSnackbar(m, t);
 
     lifecycle = AppLifecycleBloc();
     SnackbarBloc snackbarBloc = SnackbarBloc();

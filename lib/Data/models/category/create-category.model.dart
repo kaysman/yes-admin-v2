@@ -7,12 +7,14 @@ class CreateCategoryDTO {
   final String? title_ru;
   final String? description_tm;
   final String? description_ru;
+  final int? parentId;
 
   CreateCategoryDTO({
     required this.title_tm,
     this.title_ru,
     this.description_tm,
     this.description_ru,
+    this.parentId,
   });
 
   factory CreateCategoryDTO.fromJson(Map<String, dynamic> json) =>

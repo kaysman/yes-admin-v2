@@ -1,22 +1,28 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
-import 'package:admin_v2/Data/models/meta.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-create.dart';
+import 'package:admin_v2/Presentation/screens/categories/category-info.dialog.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-update.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
-import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../shared/components/button.dart';
 import 'bloc/category..bloc.dart';
 import 'bloc/category.state.dart';
 
 SidebarItem getCategoriesdebarItem() {
   return SidebarItem(
+    logo: Image.asset(
+      'assets/category.png',
+      width: 30,
+      height: 30,
+      color: kswPrimaryColor,
+    ),
     title: "Kategoriyalar",
     view: CategoriesTable(),
     getActions: (context) {
@@ -26,34 +32,7 @@ SidebarItem getCategoriesdebarItem() {
           child: Row(
             children: [
               BlocConsumer<CategoryBloc, CategoryState>(
-                listener: (_, state) {
-                  if (state.createStatus == CategoryCreateStatus.success) {
-                    Scaffold.of(context)
-                        // ignore: deprecated_member_use
-                        .showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.lightBlue,
-                        behavior: SnackBarBehavior.floating,
-                        duration: Duration(milliseconds: 1000),
-                        content: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 30,
-                          ),
-                          child: new Text(
-                            'Created Successully',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                    color: Colors.white, letterSpacing: 1),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                },
+                listener: (_, state) {},
                 builder: (context, state) {
                   return SearchFieldInAppBar(
                     hintText: "e.g mb shoes",
@@ -108,6 +87,8 @@ class _CategoriesTableState extends State<CategoriesTable> {
     'ID',
     'Ady tm',
     'Ady ru',
+    'Esasy kategoriya',
+    'Sub kategoriyalar',
     'Barada tm',
     'Barada ru',
   ];
@@ -120,75 +101,106 @@ class _CategoriesTableState extends State<CategoriesTable> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return LayoutBuilder(builder: (context, constraints) {
       return BlocBuilder<CategoryBloc, CategoryState>(
           builder: (context, state) {
-        return state.listingStatus == CategoryListStatus.loading
-            ? Center(
-                child: CircularProgressIndicator(
-                color: kPrimaryColor,
-              ))
-            : Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
+        if (state.listingStatus == CategoryListStatus.loading) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 100,
+            alignment: Alignment.center,
+            child: Center(
+              child: CircularProgressIndicator(color: kPrimaryColor),
+            ),
+          );
+        }
+        if (state.listingStatus == CategoryListStatus.error) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 100,
+            alignment: Alignment.center,
+            child: TryAgainButton(
+              tryAgain: () async {
+                await categoryBloc.getAllCategories(context: buildContext);
+              },
+            ),
+          );
+        }
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Container(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (selectedCategories.length == 1)
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.lightBlueAccent,
-                              ),
-                              onPressed: () {
-                                showAppDialog(
-                                  context,
-                                  UpdateCategoryPage(
-                                    category: selectedCategories.first,
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Uytget',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                    if (selectedCategories.length == 1) ...[
+                      Button(
+                        text: 'Kategoriya barada',
+                        primary: kswPrimaryColor,
+                        textColor: kWhite,
+                        onPressed: () async {
+                          showAppDialog(
+                            context,
+                            CategoryInfo(
+                              selectedCategoryId: selectedCategories.first.id,
                             ),
-                        ],
+                          );
+                        },
                       ),
-                    ),
-                    ScrollableWidget(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: constraints.maxWidth,
-                        ),
-                        child: DataTable(
-                          border: TableBorder.all(
-                            width: 1.0,
-                            color: Colors.grey.shade100,
-                          ),
-                          sortColumnIndex: sortColumnIndex,
-                          sortAscending: sortAscending,
-                          columns: tableColumns,
-                          rows: tableRows(state),
-                        ),
+                      SizedBox(
+                        width: 14,
                       ),
-                    ),
-                    // Pagination(
-                    //   goPrevious: () {},
-                    //   goNext: () {},
-                    //   metaData: Meta(
-                    //     totalItems: 50,
-                    //     totalPages: 5,
-                    //     itemCount: 10,
-                    //     currentPage: 1,
-                    //   ),
-                    // ),
+                      Button(
+                        text: 'Uytget',
+                        primary: kswPrimaryColor,
+                        textColor: kWhite,
+                        onPressed: () async {
+                          await showAppDialog(
+                              context,
+                              UpdateCategoryPage(
+                                  category: selectedCategories.first));
+                          setState(
+                            () {
+                              selectedCategories = [];
+                            },
+                          );
+                        },
+                      ),
+                    ],
                   ],
                 ),
-              );
+              ),
+              ScrollableWidget(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: constraints.maxWidth,
+                  ),
+                  child: DataTable(
+                    border: TableBorder.all(
+                      width: 1.0,
+                      color: Colors.grey.shade100,
+                    ),
+                    sortColumnIndex: sortColumnIndex,
+                    sortAscending: sortAscending,
+                    columns: tableColumns,
+                    rows: tableRows(state),
+                  ),
+                ),
+              ),
+              // Pagination(
+              //   goPrevious: () {},
+              //   goNext: () {},
+              //   metaData: Meta(
+              //     totalItems: 50,
+              //     totalPages: 5,
+              //     itemCount: 10,
+              //     currentPage: 1,
+              //   ),
+              // ),
+            ],
+          ),
+        );
       });
     });
   }
@@ -220,16 +232,21 @@ class _CategoriesTableState extends State<CategoriesTable> {
             });
           },
           cells: [
+            DataCell(Text("${category.id ?? '-'} ")),
+            DataCell(Text("${category.title_tm  ?? '-'}")),
+            DataCell(Text("${category.title_ru ?? '-'} ")),
+            DataCell(Text("${category.parentId ?? '-' } ")),
             DataCell(
-                onTap: () => showAppDialog(
-                      context,
-                      SubCategoriesPage(subCategories: category.subcategories),
-                    ),
-                Text("${category.id}")),
-            DataCell(Text("${category.title_tm}")),
-            DataCell(Text("${category.title_ru}")),
-            DataCell(Text("${category.description_tm}")),
-            DataCell(Text("${category.description_ru}")),
+              Wrap(
+                spacing: 5,
+                children: category.subcategories
+                        ?.map((e) => Text(e.title_tm ?? '-'))
+                        .toList() ??
+                    [],
+              ),
+            ),
+            DataCell(Text("${category.description_tm ?? '-'} ?? '-'")),
+            DataCell(Text("${category.description_ru ?? '-'} ?? '-'")),
           ],
         );
       },

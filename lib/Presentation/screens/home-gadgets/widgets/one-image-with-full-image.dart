@@ -2,7 +2,10 @@ import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/components/image_select_card.dart';
+import 'package:admin_v2/Presentation/shared/components/info.label.dart';
 import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +29,8 @@ class _OneImageWithFullWidthState extends State<OneImageWithFullWidth> {
 
   FilePickerResult? _selectedImage_1;
   TextEditingController imageLink1Controller = TextEditingController();
+  GadgetStatus? status;
+  GadgetLocation? location;
 
   Future<void> pickImage() async {
     try {
@@ -43,74 +48,120 @@ class _OneImageWithFullWidthState extends State<OneImageWithFullWidth> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        children: [
-          Expanded(
-              flex: 6,
-              child: Container(
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (_selectedImage_1 != null) ...[
-                          ImagePreview(selectedImage: _selectedImage_1),
-                          SizedBox(
-                            width: 14,
-                          ),
+      child: Form(
+        key: _formKey,
+        child: Row(
+          children: [
+            Expanded(
+                flex: 6,
+                child: Container(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (_selectedImage_1 != null) ...[
+                            ImagePreview(selectedImage: _selectedImage_1),
+                            SizedBox(
+                              width: 14,
+                            ),
+                          ],
                         ],
-                      ],
-                    ),
-                    SizedBox(height: 14),
-                    buildImageWithLink(
-                      context,
-                      _selectedImage_1,
-                      imageLink1Controller,
-                    ),
-                    Spacer(),
-                    BlocConsumer<GadgetBloc, GadgetState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return ButtonsForGadgetCreation(
-                          formKey: _formKey,
-                          isLoading:
-                              state.createStatus == GadgetCreateStatus.loading,
-                          onPressed: () async {
-                            CreateGadgetModel model = CreateGadgetModel(
-                              type: HomeGadgetType.ONE_IMAGE_WITH_FULL_WIDTH,
-                              apiUrls: [
-                                imageLink1Controller.text,
-                              ],
-                              queue: 1,
-                            );
-                            if (_selectedImage_1 != null) {
-                              await widget.gadgetBloc.createHomeGadget(
-                                [
-                                  _selectedImage_1!,
-                                ],
-                                model.toJson(),
-                              );
-                            }
+                      ),
+                      SizedBox(height: 14),
+                      RowOfTwoChildren(
+                        child1: InfoWithLabel<GadgetStatus>(
+                          editMode: true,
+                          hintText: 'Gadget status',
+                          label: 'Status',
+                          value: status,
+                          onValueChanged: (v) {
+                            setState(() {
+                              status = v;
+                            });
                           },
-                        );
-                      },
-                    ),
-                  ],
+                          items: GadgetStatus.values
+                              .map(
+                                (e) => DropdownMenuItem<GadgetStatus>(
+                                  value: e,
+                                  child: Text(e.name),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                        child2: InfoWithLabel<GadgetLocation>(
+                          editMode: true,
+                          hintText: 'Gadget status',
+                          label: ' Location',
+                          value: location,
+                          onValueChanged: (v) {
+                            setState(() {
+                              location = v;
+                            });
+                          },
+                          items: GadgetLocation.values
+                              .map(
+                                (e) => DropdownMenuItem<GadgetLocation>(
+                                  value: e,
+                                  child: Text(e.name),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                      SizedBox(height: 14),
+                      buildImageWithLink(
+                        context,
+                        _selectedImage_1,
+                        imageLink1Controller,
+                      ),
+                      Spacer(),
+                      BlocConsumer<GadgetBloc, GadgetState>(
+                        listener: (context, state) {},
+                        builder: (context, state) {
+                          return ButtonsForGadgetCreation(
+                            formKey: _formKey,
+                            isLoading: state.createStatus ==
+                                GadgetCreateStatus.loading,
+                            onPressed: () async {
+                              CreateGadgetModel model = CreateGadgetModel(
+                                location: location,
+                                status: status,
+                                type: HomeGadgetType.ONE_IMAGE_WITH_FULL_WIDTH,
+                                links: [
+                                  imageLink1Controller.text,
+                                ],
+                                queue: 1,
+                              );
+                              if (_selectedImage_1 != null) {
+                                await widget.gadgetBloc.createHomeGadget(
+                                  [
+                                    _selectedImage_1!,
+                                  ],
+                                  model.toJson(),
+                                );
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )),
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              flex: 3,
+              child: Card(
+                child: Container(
+                  color: kPrimaryColor,
                 ),
-              )),
-          SizedBox(
-            width: 10,
-          ),
-          Expanded(
-            flex: 3,
-            child: Card(
-              child: Container(
-                color: kPrimaryColor,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -120,45 +171,17 @@ class _OneImageWithFullWidthState extends State<OneImageWithFullWidth> {
     return Row(
       children: [
         Expanded(
-          child: Card(
-            margin: EdgeInsets.zero,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                color: Colors.black38,
-                width: 0.0,
-              ),
-            ),
-            child: ListTile(
-              onTap: selectedImage == null ? () => this.pickImage() : null,
-              trailing: selectedImage == null
-                  ? null
-                  : OutlinedButton(
-                      onPressed: () => this.pickImage(),
-                      child: Text(
-                        "Täzele",
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                      ),
-                    ),
-              title: Text(
-                selectedImage == null
-                    ? "Suart saýla"
-                    : selectedImage.names.map((e) => e).toList().join(', '),
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: Colors.black54,
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ),
-          ),
-        ),
+            child: ImageSelectCard(
+          editMode: true,
+          image: selectedImage,
+          pickImage: () => this.pickImage(),
+        )),
         SizedBox(width: 14),
         Expanded(
           child: LabeledInput(
             editMode: true,
             controller: imageLinkController,
-            label: 'Link',
+            hintText: 'Link',
           ),
         )
       ],

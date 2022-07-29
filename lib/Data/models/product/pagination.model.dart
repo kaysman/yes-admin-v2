@@ -9,7 +9,7 @@ class PaginationDTO {
 
   PaginationDTO({
     this.lastId,
-    this.take = 10,
+    this.take = 20,
     this.search,
   });
 

@@ -9,7 +9,7 @@ part of 'pagination.model.dart';
 PaginationDTO _$PaginationDTOFromJson(Map<String, dynamic> json) =>
     PaginationDTO(
       lastId: json['lastId'] as int?,
-      take: json['take'] as int? ?? 10,
+      take: json['take'] as int? ?? 20,
       search: json['search'] as String?,
     );
 

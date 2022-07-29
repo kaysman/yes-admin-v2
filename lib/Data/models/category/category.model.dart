@@ -1,15 +1,19 @@
+import 'package:admin_v2/Data/models/product/product.model.dart';
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'category.model.g.dart';
 
 @JsonSerializable()
-class CategoryEntity {
-  final int id;
-  final String title_tm;
+class CategoryEntity with EquatableMixin {
+  final int? id;
+  final String? title_tm;
   final String? title_ru;
   final String? description_tm;
   final String? description_ru;
+  final int? parentId;
   final DateTime? updatedAt;
   final DateTime? createdAt;
+  final List<ProductEntity>? products;
   final List<CategoryEntity>? subcategories;
   bool isSelected;
 
@@ -23,10 +27,18 @@ class CategoryEntity {
     this.description_ru,
     this.createdAt,
     this.updatedAt,
+    this.parentId,
+    this.products,
   });
 
   factory CategoryEntity.fromJson(Map<String, dynamic> json) =>
       _$CategoryEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$CategoryEntityToJson(this);
+
+  @override
+  List<Object?> get props => [id];
+
+  @override
+  String toString() => 'Category: $title_tm $id';
 }

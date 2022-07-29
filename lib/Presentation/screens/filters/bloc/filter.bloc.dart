@@ -24,7 +24,24 @@ class FilterBloc extends Cubit<FilterState> {
     }
   }
 
-  getAllFilters({PaginationDTO? filter, bool subtle = false}) async {
+  getFilterById(int id) async {
+    emit(state.copyWith(getFilterByIdStatus: GetFilterByIdStatus.loading));
+    try {
+      var res = await FilterService.getFilterById(id);
+      emit(state.copyWith(
+        selectedFilter: res,
+        getFilterByIdStatus: GetFilterByIdStatus.success,
+      ));
+    } catch (_) {
+      print(_);
+      emit(state.copyWith(getFilterByIdStatus: GetFilterByIdStatus.error));
+    }
+  }
+
+  getAllFilters({
+    PaginationDTO? filter,
+    bool subtle = false,
+  }) async {
     emit(
       state.copyWith(
         listingStatus:
@@ -41,6 +58,36 @@ class FilterBloc extends Cubit<FilterState> {
     } catch (_) {
       print(_);
       emit(state.copyWith(listingStatus: FilterListStatus.error));
+    }
+  }
+
+  updateFilter(FilterEntity data) async {
+    emit(state.copyWith(updateStatus: FilterUpdateStatus.loading));
+    try {
+      var res = await FilterService.updateFilter(data);
+
+      if (res.success == true) {
+        emit(state.copyWith(updateStatus: FilterUpdateStatus.success));
+        getAllFilters();
+      }
+    } catch (_) {
+      print(_);
+      emit(state.copyWith(updateStatus: FilterUpdateStatus.error));
+    }
+  }
+
+  deleteFilter(int id) async {
+    emit(state.copyWith(deleteStatus: FilterDeleteStatus.loading));
+    try {
+      var res = await FilterService.deleteFilter(id);
+
+      if (res.success == true) {
+        emit(state.copyWith(deleteStatus: FilterDeleteStatus.success));
+        getAllFilters();
+      }
+    } catch (_) {
+      print(_);
+      emit(state.copyWith(deleteStatus: FilterDeleteStatus.error));
     }
   }
 }

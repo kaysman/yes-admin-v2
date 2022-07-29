@@ -12,6 +12,7 @@ CreateCategoryDTO _$CreateCategoryDTOFromJson(Map<String, dynamic> json) =>
       title_ru: json['title_ru'] as String?,
       description_tm: json['description_tm'] as String?,
       description_ru: json['description_ru'] as String?,
+      parentId: json['parentId'] as int?,
     );
 
 Map<String, dynamic> _$CreateCategoryDTOToJson(CreateCategoryDTO instance) =>
@@ -20,4 +21,5 @@ Map<String, dynamic> _$CreateCategoryDTOToJson(CreateCategoryDTO instance) =>
       'title_ru': instance.title_ru,
       'description_tm': instance.description_tm,
       'description_ru': instance.description_ru,
+      'parentId': instance.parentId,
     };

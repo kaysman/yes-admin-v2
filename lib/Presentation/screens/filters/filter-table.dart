@@ -1,14 +1,14 @@
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.enum.dart';
-import 'package:admin_v2/Data/models/meta.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
-import 'package:admin_v2/Presentation/screens/categories/category-create.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
+import 'package:admin_v2/Presentation/screens/filters/filter-create.dart';
+import 'package:admin_v2/Presentation/screens/filters/filter-info.dialog.dart';
 import 'package:admin_v2/Presentation/screens/filters/filter-update.dart';
 import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
-import 'package:admin_v2/Presentation/shared/components/pagination.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +18,11 @@ import '../../shared/app_colors.dart';
 
 SidebarItem getFiltesSidebarItem() {
   return SidebarItem(
+    logo: Icon(
+      Icons.filter_alt_outlined,
+      size: 40,
+      color: kswPrimaryColor,
+    ),
     title: "Filterler",
     view: FiltersTable(),
     getActions: (context) {
@@ -28,32 +33,7 @@ SidebarItem getFiltesSidebarItem() {
             children: [
               BlocConsumer<FilterBloc, FilterState>(
                 listener: (_, state) {
-                  if (state.createStatus == FilterCreateStatus.success) {
-                    Scaffold.of(context)
-                        // ignore: deprecated_member_use
-                        .showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.lightBlue,
-                        behavior: SnackBarBehavior.floating,
-                        duration: Duration(milliseconds: 1000),
-                        content: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 30,
-                          ),
-                          child: new Text(
-                            'Created Successully',
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline3
-                                ?.copyWith(
-                                    color: Colors.white, letterSpacing: 1),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
+              
                 },
                 builder: (context, state) {
                   return SearchFieldInAppBar(
@@ -78,7 +58,7 @@ SidebarItem getFiltesSidebarItem() {
                   primary: Colors.transparent,
                 ),
                 onPressed: () {
-                  showAppDialog(context, CreateCategoryPage());
+                  showAppDialog(context, CreateFliterPage());
                 },
                 child: Text(
                   'Filter döret',
@@ -121,79 +101,109 @@ class _FiltersTableState extends State<FiltersTable> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return BlocBuilder<FilterBloc, FilterState>(builder: (context, state) {
-        return state.listingStatus == FilterListStatus.loading
-            ? Center(
-                child: CircularProgressIndicator(
-                color: kPrimaryColor,
-              ))
-            : Container(
-                padding: const EdgeInsets.all(16),
-                child: Column(
+    return LayoutBuilder(builder: (_, constraints) {
+      return BlocBuilder<FilterBloc, FilterState>(builder: (_, state) {
+        if (state.listingStatus == FilterListStatus.loading) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 100,
+            alignment: Alignment.center,
+            child: Center(
+              child: CircularProgressIndicator(color: kPrimaryColor),
+            ),
+          );
+        }
+        if (state.listingStatus == FilterListStatus.error) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 100,
+            alignment: Alignment.center,
+            child: TryAgainButton(
+              tryAgain: () async {
+                await filterBloc.getAllFilters();
+              },
+            ),
+          );
+        }
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Container(
+              //   height: 50,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.end,
+              //     children: [],
+              //   ),
+              // ),
+              Container(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    // Container(
-                    //   height: 50,
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.end,
-                    //     children: [],
-                    //   ),
-                    // ),
-                    Container(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (selectedFilters.length == 1)
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: Colors.lightBlueAccent,
-                              ),
-                              onPressed: () {
-                                showAppDialog(
-                                  context,
-                                  UpdateFilterPage(
-                                      filter: selectedFilters.first),
-                                );
-                              },
-                              child: Text(
-                                'Uytget',
-                                style: TextStyle(color: Colors.white),
-                              ),
+                    if (selectedFilters.length == 1) ...[
+                      Button(
+                        text: 'Filter barada',
+                        primary: kswPrimaryColor,
+                        textColor: kWhite,
+                        onPressed: () {
+                          showAppDialog(
+                            context,
+                            FilterInfo(
+                              selectedFilterId: selectedFilters.first.id,
                             ),
-                        ],
+                          );
+                        },
                       ),
-                    ),
-                    ScrollableWidget(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: constraints.maxWidth,
-                        ),
-                        child: DataTable(
-                          border: TableBorder.all(
-                            width: 1.0,
-                            color: Colors.grey.shade100,
-                          ),
-                          sortColumnIndex: sortColumnIndex,
-                          sortAscending: sortAscending,
-                          columns: tableColumns,
-                          rows: tableRows(state),
-                        ),
+                      SizedBox(
+                        width: 14,
                       ),
-                    ),
-                    // Pagination(
-                    //   goPrevious: () {},
-                    //   goNext: () {},
-                    //   metaData: Meta(
-                    //     totalItems: 50,
-                    //     totalPages: 5,
-                    //     itemCount: 10,
-                    //     currentPage: 1,
-                    //   ),
-                    // ),
+                      Button(
+                        text: 'Uytget',
+                        primary: kswPrimaryColor,
+                        textColor: kWhite,
+                        onPressed: () async {
+                          await showAppDialog(context,
+                              UpdateFilterPage(filter: selectedFilters.first));
+                          setState(
+                            () {
+                              selectedFilters = [];
+                            },
+                          );
+                        },
+                      ),
+                    ],
                   ],
                 ),
-              );
+              ),
+              ScrollableWidget(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: constraints.maxWidth,
+                  ),
+                  child: DataTable(
+                    border: TableBorder.all(
+                      width: 1.0,
+                      color: Colors.grey.shade100,
+                    ),
+                    sortColumnIndex: sortColumnIndex,
+                    sortAscending: sortAscending,
+                    columns: tableColumns,
+                    rows: tableRows(state),
+                  ),
+                ),
+              ),
+              // Pagination(
+              //   goPrevious: () {},
+              //   goNext: () {},
+              //   metaData: Meta(
+              //     totalItems: 50,
+              //     totalPages: 5,
+              //     itemCount: 10,
+              //     currentPage: 1,
+              //   ),
+              // ),
+            ],
+          ),
+        );
       });
     });
   }
@@ -235,7 +245,7 @@ class _FiltersTableState extends State<FiltersTable> {
               Text("${filter.name_ru}"),
             ),
             DataCell(
-              Text("${filter.type.readableText}"),
+              Text("${filter.type?.readableText}"),
             ),
           ],
         );

@@ -9,7 +9,6 @@ part of 'create-market.model.dart';
 CreateMarketDTO _$CreateMarketDTOFromJson(Map<String, dynamic> json) =>
     CreateMarketDTO(
       title: json['title'] as String,
-      logo: json['logo'] as String?,
       address: json['address'] as String?,
       description: json['description'] as String?,
       phoneNumber: json['phoneNumber'] as String,
@@ -19,7 +18,6 @@ CreateMarketDTO _$CreateMarketDTOFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CreateMarketDTOToJson(CreateMarketDTO instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'logo': instance.logo,
       'address': instance.address,
       'description': instance.description,
       'phoneNumber': instance.phoneNumber,

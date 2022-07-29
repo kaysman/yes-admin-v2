@@ -1,10 +1,16 @@
 import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
-import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
+import 'package:admin_v2/Data/models/gadget/gadget-cart-item.model.dart';
+import 'package:admin_v2/Data/models/product/image.model.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/buttons.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/cards-2_3-horizontal-with-title-as-image.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/gadget-review.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/components/image_select_card.dart';
+import 'package:admin_v2/Presentation/shared/components/info.label.dart';
 import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +37,8 @@ class _Cards16_9HorizontalWithTitleAsImageState
   List<FilePickerResult> pickImages = [];
 
   List<GadgetCartItemModel> cartItems = [];
+  GadgetStatus? status;
+  GadgetLocation? location;
 
   Future<FilePickerResult?> pickImageAndReturn() async {
     try {
@@ -56,47 +64,57 @@ class _Cards16_9HorizontalWithTitleAsImageState
                 child: Column(
                   children: [
                     SizedBox(height: 14),
-                    Card(
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Colors.black38,
-                          width: 0.0,
-                        ),
+                    ImageSelectCard(
+                      editMode: true,
+                      image: selectedTitleImage,
+                      pickImage: () async {
+                        var res = await pickImageAndReturn();
+                        if (res != null) {
+                          setState(() {
+                            selectedTitleImage = res;
+                          });
+                        }
+                      },
+                    ),
+                    SizedBox(height: 14),
+                    RowOfTwoChildren(
+                      child1: InfoWithLabel<GadgetStatus>(
+                        editMode: true,
+                        hintText: 'Gadget status',
+                        label: 'Status',
+                        value: status,
+                        onValueChanged: (v) {
+                          setState(() {
+                            status = v;
+                          });
+                        },
+                        items: GadgetStatus.values
+                            .map(
+                              (e) => DropdownMenuItem<GadgetStatus>(
+                                value: e,
+                                child: Text(e.name),
+                              ),
+                            )
+                            .toList(),
                       ),
-                      child: ListTile(
-                        trailing: OutlinedButton(
-                          onPressed: () async {
-                            var res = await this.pickImageAndReturn();
-                            if (res != null) {
-                              setState(() {
-                                selectedTitleImage = res;
-                              });
-                            }
-                          },
-                          child: Text(
-                            selectedTitleImage == null
-                                ? 'Surat sayla'
-                                : "Täzele",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                          ),
-                        ),
-                        title: Text(
-                          selectedTitleImage == null
-                              ? "e.g abc.jpg"
-                              : selectedTitleImage!.names
-                                  .map((e) => e)
-                                  .toList()
-                                  .join(', '),
-                          style:
-                              Theme.of(context).textTheme.subtitle1!.copyWith(
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                        ),
+                      child2: InfoWithLabel<GadgetLocation>(
+                        editMode: true,
+                        hintText: 'Gadget status',
+                        label: ' Location',
+                        value: location,
+                        onValueChanged: (v) {
+                          setState(() {
+                            location = v;
+                          });
+                        },
+                        items: GadgetLocation.values
+                            .map(
+                              (e) => DropdownMenuItem<GadgetLocation>(
+                                value: e,
+                                child: Text(e.name),
+                              ),
+                            )
+                            .toList(),
                       ),
                     ),
                     SizedBox(height: 14),
@@ -148,9 +166,11 @@ class _Cards16_9HorizontalWithTitleAsImageState
                             // TODO: Validate image states
 
                             CreateGadgetModel model = CreateGadgetModel(
+                              location: location,
+                              status: status,
                               type: HomeGadgetType
                                   .CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE,
-                              apiUrls: this
+                              links: this
                                   .cartItems
                                   .map((e) => e.textController.text)
                                   .toList(),
@@ -183,10 +203,9 @@ class _Cards16_9HorizontalWithTitleAsImageState
             ),
             Expanded(
               flex: 3,
-              child: Card(
-                child: Container(
-                  color: kPrimaryColor,
-                ),
+              child: GadgetReview(
+                imgPath: '16-9-horizontal-title-as-text.png',
+                description: 'Dummy Text',
               ),
             ),
           ],
@@ -201,7 +220,7 @@ class _Cards16_9HorizontalWithTitleAsImageState
     TextEditingController? imageLinkController,
     VoidCallback onImageChanged,
     ValueChanged<int> onDelete,
-    int? index,
+    int index,
   ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14.0),
@@ -210,62 +229,23 @@ class _Cards16_9HorizontalWithTitleAsImageState
           Text("$index"),
           SizedBox(width: 14),
           Expanded(
-            child: Card(
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: Colors.black38,
-                  width: 0.0,
-                ),
-              ),
-              child: ListTile(
-                trailing: OutlinedButton(
-                  onPressed: onImageChanged,
-                  child: Text(
-                    image == null ? 'Surat sayla' : "Täzele",
-                    style: Theme.of(context).textTheme.caption!.copyWith(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                  ),
-                ),
-                title: Text(
-                  image == null
-                      ? "e.g abc.jpg"
-                      : image.names.map((e) => e).toList().join(', '),
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ),
-            ),
-          ),
+              child: ImageSelectCard(
+            editMode: true,
+            image: image,
+            pickImage: onImageChanged,
+          )),
           SizedBox(width: 14),
           Expanded(
             child: LabeledInput(
               editMode: true,
               controller: imageLinkController,
-              label: 'Link',
+              hintText: 'Link',
             ),
           ),
           SizedBox(width: 5),
-          SizedBox(
-            width: 50,
-            height: 50,
-            child: Card(
-              child: IconButton(
-                onPressed: () {
-                  if (index != null) {
-                    onDelete.call(index - 1);
-                  }
-                },
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          )
+          GadgetRemoveBtn(onRemove: () {
+            onDelete.call(index - 1);
+          })
         ],
       ),
     );

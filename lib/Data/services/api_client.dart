@@ -4,18 +4,16 @@ import 'dart:io';
 import 'dart:math';
 import 'package:admin_v2/Data/models/credentials.dart';
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:http_parser/http_parser.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 import '../models/error_log.dart';
 import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
-const baseUrl = 'http://192.168.1.27:3333';
+const baseUrl = 'http://192.168.1.2:3333';
 
 class ApiClient {
   static Client? http;
@@ -142,9 +140,13 @@ class ApiClient {
     Map<String, String>? fields,
     String? type,
     String? subtype,
+    bool? isUpdating,
   }) async {
     try {
-      var request = await MultipartRequest('POST', uri);
+      var request =
+          await MultipartRequest(isUpdating == true ? 'PATCH' : 'POST', uri);
+      request.headers["Content-Type"] =
+          "multipart/form-data"; // * added this but not woking...
       if (fields != null) request.fields.addAll(fields);
       request.files.addAll(files);
       var res = await Response.fromStream(await request.send());

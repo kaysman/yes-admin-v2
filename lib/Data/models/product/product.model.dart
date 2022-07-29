@@ -1,57 +1,56 @@
-import 'package:admin_v2/Data/models/filter/size.dart';
+import 'package:admin_v2/Data/models/brand/brand.model.dart';
+import 'package:admin_v2/Data/models/category/category.model.dart';
+import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
+import 'package:admin_v2/Data/models/market/market.model.dart';
+import 'package:admin_v2/Data/models/product/image.model.dart';
+import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'product.model.g.dart';
 
 @JsonSerializable()
 class ProductEntity {
-  final int id;
-  final String name_tm;
-  final String name_ru;
-  final int ourPrice;
-  final int marketPrice;
-  final int color_id;
-  final int gender_id;
-  final int quantity;
-  final int brand_id;
-  final int category_id;
-  final int market_id;
-  final String code;
+  final int? id;
+  final String? name_tm;
+  final String? name_ru;
+  final int? ourPrice;
+  final int? marketPrice;
+  final int? quantity;
+  final String? code;
   final String? description_tm;
   final String? description_ru;
-  final List<CreateSizeDTO>? sizes;
-  bool isSelected;
+  final CategoryEntity? category;
+  final FilterEntity? color;
+  final FilterEntity? gender;
+  final BrandEntity? brand;
+  final MarketEntity? market;
+  final List<ImageEntity>? images;
+  final List<SizeEntity>? sizes;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  bool? isSelected;
 
   ProductEntity({
     this.isSelected = false,
-    required this.id,
-    required this.name_tm,
-    required this.name_ru,
-    required this.ourPrice,
-    required this.marketPrice,
-    required this.color_id,
-    required this.gender_id,
-    required this.brand_id,
-    required this.category_id,
-    required this.market_id,
-    required this.code,
-    required this.quantity,
+    this.id,
+    this.name_tm,
+    this.name_ru,
+    this.ourPrice,
+    this.marketPrice,
+    this.code,
+    this.quantity,
     this.description_tm,
     this.description_ru,
     this.sizes,
+    this.category,
+    this.color,
+    this.gender,
+    this.brand,
+    this.market,
+    this.images,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  String get colorName {
-    switch (color_id) {
-      case 1:
-        return 'ak';
-      case 2:
-        return 'gara';
-      case 3:
-        return 'sary';
-      default:
-        return '';
-    }
-  }
 
   factory ProductEntity.fromJson(Map<String, dynamic> json) =>
       _$ProductEntityFromJson(json);

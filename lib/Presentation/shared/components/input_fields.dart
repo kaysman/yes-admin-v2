@@ -1,29 +1,57 @@
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
 
 class LabeledInput extends StatelessWidget {
   const LabeledInput({
     Key? key,
     this.controller,
-    required this.label,
+    this.label,
     this.validator,
     this.editMode = false,
+    this.hintText,
   }) : super(key: key);
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
-  final String label;
+  final String? label;
+  final String? hintText;
 
   final bool editMode;
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        enabled: editMode,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          hintText ?? '-',
+          style: Theme.of(context).textTheme.headline5!.copyWith(
+                fontWeight: FontWeight.w500,
+                color: kGrey1Color,
+              ),
+        ),
+        SizedBox(height: 5),
+        TextFormField(
+          controller: controller,
+          validator: validator,
+          decoration: InputDecoration(
+            // hintText: hintText,
+            // hintStyle: Theme.of(context)
+            //     .textTheme
+            //     .subtitle1
+            //     ?.copyWith(color: kGrey2Color),
+            // labelText: label,
+            labelStyle: Theme.of(context).textTheme.subtitle1,
+            enabled: editMode,
+            disabledBorder: kDisabledInputBorder,
+            focusedErrorBorder: kErrorInputBorder,
+            errorBorder: kErrorInputBorder,
+            focusedBorder: kFocusedInputBorder,
+            enabledBorder: kEnabledInputBorder,
+          ),
+        ),
+      ],
     );
   }
 }

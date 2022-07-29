@@ -88,7 +88,7 @@ class _CreateMainPageState extends State<CreateMainPage> {
                       return TwoSmallCards(
                         gadgetBloc: gadgetBloc,
                       );
-
+  
                     case HomeGadgetType.BANNER_SWIPE_WITH_DOTS:
                       return BannerSwipeWithDots(
                         gadgetBloc: gadgetBloc,
@@ -145,9 +145,7 @@ class _CreateMainPageState extends State<CreateMainPage> {
                       );
                     default:
                       return SizedBox();
-
                     // case HomeGadgetType.POPULAR:
-
                   }
                 }(),
               ),

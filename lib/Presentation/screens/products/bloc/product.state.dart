@@ -6,13 +6,29 @@ enum ProductListStatus { idle, loading, silentLoading, error }
 
 enum ProductCreateStatus { idle, loading, error, success }
 
+enum ProductUpdateStatus { idle, loading, error, success }
+
+enum ProductDeleteStatus { idle, loading, error, success }
+
+enum GetProductByIdStatus { idle, loading, error, success }
+
 enum ProductExcelUploadStatus { idle, loading, error, success }
+
+enum ProductImageUploadStatus { idle, loading, error, success }
+
+enum ProductMultiDeleteStatus { idle, loading, error, success }
 
 class ProductState {
   final List<ProductEntity>? products;
+  final ProductEntity? selectedProduct;
   final ProductListStatus? listingStatus;
   final ProductCreateStatus? createStatus;
+  final ProductUpdateStatus? updateStatus;
+  final ProductDeleteStatus? deleteStatus;
+  final GetProductByIdStatus? getProductByIdStatus;
+  final ProductImageUploadStatus? imageUploadStatus;
   final ProductExcelUploadStatus? excelUploadStatus;
+  final ProductMultiDeleteStatus? multiDeleteStatus;
   final String? uploadExcelErrorMessage;
   int? totalProductsCount;
   bool isLastItem;
@@ -23,6 +39,7 @@ class ProductState {
   CurrentPage? currentPage;
 
   ProductState({
+    this.imageUploadStatus = ProductImageUploadStatus.idle,
     this.isLastItem = false,
     this.totalProductsCount,
     this.products,
@@ -33,14 +50,25 @@ class ProductState {
     this.uploadExcelErrorMessage,
     this.listingStatus = ProductListStatus.idle,
     this.createStatus = ProductCreateStatus.idle,
+    this.updateStatus = ProductUpdateStatus.idle,
+    this.deleteStatus = ProductDeleteStatus.idle,
+    this.getProductByIdStatus = GetProductByIdStatus.idle,
+    this.multiDeleteStatus = ProductMultiDeleteStatus.idle,
+    this.selectedProduct,
   });
 
   ProductState copyWith({
     bool? isLastItem,
     int? totalProductsCount,
     List<ProductEntity>? products,
+    ProductEntity? selectedProduct,
     ProductListStatus? listingStatus,
     ProductCreateStatus? createStatus,
+    ProductImageUploadStatus? imageUploadStatus,
+    ProductDeleteStatus? deleteStatus,
+    ProductUpdateStatus? updateStatus,
+    GetProductByIdStatus? getProductByIdStatus,
+    ProductMultiDeleteStatus? multiDeleteStatus,
     FilterForProductDTO? lastFilter,
     ProductExcelUploadStatus? excelStatus,
     String? uploadExcelErrorMessage,
@@ -59,6 +87,12 @@ class ProductState {
       currentPage: currentPage ?? this.currentPage,
       uploadExcelErrorMessage:
           uploadExcelErrorMessage ?? this.uploadExcelErrorMessage,
+      updateStatus: updateStatus ?? this.updateStatus,
+      deleteStatus: deleteStatus ?? this.deleteStatus,
+      getProductByIdStatus: getProductByIdStatus ?? this.getProductByIdStatus,
+      selectedProduct: selectedProduct ?? this.selectedProduct,
+      imageUploadStatus: imageUploadStatus ?? this.imageUploadStatus,
+      multiDeleteStatus: multiDeleteStatus ?? this.multiDeleteStatus,
     );
   }
 }

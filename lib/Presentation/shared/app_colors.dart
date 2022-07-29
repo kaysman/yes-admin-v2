@@ -8,6 +8,12 @@ final kScaffoldBgColor = Colors.grey[300];
 const kText1Color = Color(0xff000000);
 const kText2Color = Color(0xff333333);
 
+const kGrey1Color = Color(0xff828282);
+const kGrey2Color = Color(0xffBDBDBD);
+const kGrey3Color = Color(0xffE0E0E0);
+const kGrey4Color = Color(0xffF2F2F2);
+const kGrey5Color = Color(0xffF7F7F7);
+
 const kWhite = Color(0xffFFFFFF);
 const kBlack = Color(0xff000000);
 
@@ -74,3 +80,18 @@ class AppColors {
   static const Color shimmerHighlight = Color(0xffF3F4F4);
   static const Color danger = Color(0xffdf4759);
 }
+
+// Primary color swatch
+Map<int, Color> primarySwatch = {
+  50: const Color.fromRGBO(53, 184, 190, .1),
+  100: const Color.fromRGBO(53, 184, 190, .2),
+  200: const Color.fromRGBO(53, 184, 190, .3),
+  300: const Color.fromRGBO(53, 184, 190, .4),
+  400: const Color.fromRGBO(53, 184, 190, .5),
+  500: const Color.fromRGBO(53, 184, 190, .6),
+  600: const Color.fromRGBO(53, 184, 190, .7),
+  700: const Color.fromRGBO(53, 184, 190, .8),
+  800: const Color.fromRGBO(53, 184, 190, .9),
+  900: const Color.fromRGBO(53, 184, 190, 1),
+};
+MaterialColor kswPrimaryColor = MaterialColor(0xFF35B8BE, primarySwatch);

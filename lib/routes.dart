@@ -14,12 +14,14 @@ Route<dynamic> onGenerateRoutes(RouteSettings settings) {
     case RegisterUserPage.routeName:
       return MaterialPageRoute(
         settings: RouteSettings(name: settings.name),
-        builder: (context) => RegisterUserPage(),
+        //TODO: route changed
+        builder: (context) => IndexScreen(),
       );
     case LoginUserPage.routeName:
       return MaterialPageRoute(
         settings: RouteSettings(name: settings.name),
-        builder: (context) => LoginUserPage(),
+        //TODO: route changed
+        builder: (context) => IndexScreen(),
       );
 
     default:
