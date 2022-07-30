@@ -246,6 +246,10 @@ class _BrandsTableState extends State<BrandsTable> {
                     )
                   : CircleAvatar(
                       radius: 20,
+                      onBackgroundImageError: (a, b) => CircleAvatar(
+                        radius: 20,
+                        backgroundColor: kswPrimaryColor,
+                      ),
                       backgroundImage: Image.network(brand.fullPathLogo!).image,
                     ),
             ),

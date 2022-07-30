@@ -16,7 +16,7 @@ UpdateGadgetModel _$UpdateGadgetModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       status: $enumDecodeNullable(_$GadgetStatusEnumMap, json['status']),
       location: $enumDecodeNullable(_$GadgetLocationEnumMap, json['location']),
-      type: $enumDecodeNullable(_$HomeGadgetTypeEnumMap, json['type']),
+      type: $enumDecodeNullable(_$GadgetTypeEnumMap, json['type']),
       productIds:
           (json['productIds'] as List<dynamic>?)?.map((e) => e as int).toList(),
       queue: json['queue'] as int?,
@@ -27,7 +27,7 @@ UpdateGadgetModel _$UpdateGadgetModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UpdateGadgetModelToJson(UpdateGadgetModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'type': _$HomeGadgetTypeEnumMap[instance.type],
+      'type': _$GadgetTypeEnumMap[instance.type],
       'links': instance.links,
       'items': instance.items,
       'productIds': instance.productIds,
@@ -47,27 +47,27 @@ const _$GadgetLocationEnumMap = {
   GadgetLocation.CATEGORY: 'CATEGORY',
 };
 
-const _$HomeGadgetTypeEnumMap = {
-  HomeGadgetType.TWO_SMALL_CARDS_HORIZONTAL: 'TWO_SMALL_CARDS_HORIZONTAL',
-  HomeGadgetType.BANNER_SWIPE_WITH_DOTS: 'BANNER_SWIPE_WITH_DOTS',
-  HomeGadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
-      'TWO_TO_TWO_WITH_TITLE_AS_IMAGE',
-  HomeGadgetType.BANNER_FOR_MEN_AND_WOMEN: 'BANNER_FOR_MEN_AND_WOMEN',
-  HomeGadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
+const _$GadgetTypeEnumMap = {
+  GadgetType.TWO_SMALL_CARDS_HORIZONTAL: 'TWO_SMALL_CARDS_HORIZONTAL',
+  GadgetType.BANNER_SWIPE_WITH_DOTS: 'BANNER_SWIPE_WITH_DOTS',
+  GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE: 'TWO_TO_TWO_WITH_TITLE_AS_IMAGE',
+  GadgetType.BANNER_FOR_MEN_AND_WOMEN: 'BANNER_FOR_MEN_AND_WOMEN',
+  GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
       'TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT',
-  HomeGadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+  GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
       'CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT',
-  HomeGadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+  GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
       'CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE',
-  HomeGadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+  GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
       'CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE',
-  HomeGadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
+  GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
       'THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT',
-  HomeGadgetType.ONE_IMAGE_WITH_FULL_WIDTH: 'ONE_IMAGE_WITH_FULL_WIDTH',
-  HomeGadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+  GadgetType.ONE_IMAGE_WITH_FULL_WIDTH: 'ONE_IMAGE_WITH_FULL_WIDTH',
+  GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
       'CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT',
-  HomeGadgetType.POPULAR: 'POPULAR',
-  HomeGadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+  GadgetType.POPULAR: 'POPULAR',
+  GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
       'TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT',
-  HomeGadgetType.CIRCLE_ITEMS: 'CIRCLE_ITEMS',
+  GadgetType.CIRCLE_ITEMS: 'CIRCLE_ITEMS',
+  GadgetType.CATEGORY_BANNER: 'CATEGORY_BANNER',
 };

@@ -7,7 +7,7 @@ part 'update-gadget.model.g.dart';
 @JsonSerializable()
 class UpdateGadgetModel {
   final int? id;
-  final HomeGadgetType? type;
+  final GadgetType? type;
   final List<GadgetLink>? links;
   final List<GadgetImage>? items;
   final List<int>? productIds;

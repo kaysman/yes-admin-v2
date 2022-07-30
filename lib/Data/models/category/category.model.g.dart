@@ -8,6 +8,7 @@ part of 'category.model.dart';
 
 CategoryEntity _$CategoryEntityFromJson(Map<String, dynamic> json) =>
     CategoryEntity(
+      parentName: json['parentName'] as String?,
       subcategories: (json['subcategories'] as List<dynamic>?)
           ?.map((e) => CategoryEntity.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -37,6 +38,7 @@ Map<String, dynamic> _$CategoryEntityToJson(CategoryEntity instance) =>
       'description_tm': instance.description_tm,
       'description_ru': instance.description_ru,
       'parentId': instance.parentId,
+      'parentName': instance.parentName,
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
       'products': instance.products,

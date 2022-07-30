@@ -6,6 +6,7 @@ import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/components/image_select_card.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
+import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:file_picker/file_picker.dart';
@@ -254,7 +255,7 @@ class _ImageSelectViewState extends State<ImageSelectView> {
                   child: GridView.builder(
                       itemCount: _selectedImage?.count ?? 0,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                        crossAxisCount: 5,
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                         // childAspectRatio: 1 / 2,
@@ -270,28 +271,24 @@ class _ImageSelectViewState extends State<ImageSelectView> {
                                 File(images![index].path),
                                 width: double.infinity,
                                 height: double.infinity,
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                               Positioned(
-                                top: 0,
-                                right: 0,
-                                child: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                top: 2,
+                                right: 2,
+                                child: SmallCircleButton(
+                                  child: Icon(
+                                    shadows: kBoxShadow,
+                                    Icons.close,
+                                    size: 14,
                                   ),
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    splashRadius: 20,
-                                    icon: Icon(
-                                      Icons.close,
-                                      size: 15,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
+                                  onTap: () {
+                                    setState(
+                                      () {
                                         _selectedImage?.files.removeAt(index);
-                                      });
-                                    },
-                                  ),
+                                      },
+                                    );
+                                  },
                                 ),
                               ),
                             ],
@@ -310,18 +307,33 @@ class _ImageSelectViewState extends State<ImageSelectView> {
               SizedBox(
                 height: 24,
               ),
-              Button(
-                text: 'Upload',
-                primary: kswPrimaryColor,
-                textColor: kWhite,
-                isLoading:
-                    state.imageUploadStatus == ProductImageUploadStatus.loading,
-                onPressed: () async {
-                  await context.read<ProductBloc>().uploadImage(
-                        _selectedImage!.files.first.name,
-                        _selectedImage!.files.first.bytes!.toList(),
-                      );
-                },
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Button(
+                    text: 'Cancel',
+                    hasBorder: true,
+                    borderColor: kGrey5Color,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  Button(
+                    text: 'Upload',
+                    primary: kswPrimaryColor,
+                    textColor: kWhite,
+                    isLoading: state.imageUploadStatus ==
+                        ProductImageUploadStatus.loading,
+                    onPressed: () async {
+                      await context
+                          .read<ProductBloc>()
+                          .uploadImage(_selectedImage?.files ?? []);
+                    },
+                  )
+                ],
               )
             ],
           ),

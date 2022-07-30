@@ -1,5 +1,6 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/category/category.model.dart';
+import 'package:admin_v2/Data/models/category/sub.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.enum.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
@@ -57,7 +58,7 @@ class ProductCerateInfo extends StatefulWidget {
   final ValueChanged<FilterEntity> onColorChanged;
   final ValueChanged<List<FilterEntity>> onSizeChanged;
   final ValueChanged<BrandEntity> onBrandChanged;
-  final ValueChanged<CategoryEntity> onCategoryChanged;
+  final ValueChanged<SubItem> onCategoryChanged;
   final ValueChanged<FilterEntity> onGenderChanged;
   final ValueChanged<MarketEntity> onMarketChanged;
 
@@ -72,7 +73,7 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
   FilterEntity? color;
   FilterEntity? gender;
   FilterEntity? size;
-  CategoryEntity? category;
+  SubItem? category;
   BrandEntity? brand;
 
   List<FilterEntity> _selectedSizes = [];
@@ -276,7 +277,11 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
               child1: BlocBuilder<CategoryBloc, CategoryState>(
                 builder: (context, state) {
                   var categories = state.categories;
-                  return InfoWithLabel<CategoryEntity>(
+
+                  var subs = getSubs(categories);
+                  print(subs);
+
+                  return InfoWithLabel<SubItem>(
                     label: 'Select caategory *',
                     editMode: true,
                     validator: notSelectedItem,
@@ -290,10 +295,19 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
                         category = v;
                       });
                     },
-                    items: categories?.map((type) {
+                    items: subs.map((type) {
                       return DropdownMenuItem(
                         value: type,
-                        child: Text(type.title_tm ?? ''),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(type.name ?? ''),
+                            Text(
+                              type.parentName ?? '-',
+                              style: TextStyle(color: kGrey2Color),
+                            )
+                          ],
+                        ),
                       );
                     }).toList(),
                   );
@@ -431,5 +445,18 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
         ),
       ),
     );
+  }
+
+  List<SubItem> getSubs(List<CategoryEntity>? main) {
+    List<SubItem> subs = [];
+    if (main != null) {
+      for (var element in main) {
+        subs.addAll(element.subcategories?.map((e) {
+              return SubItem(e.id!, e.title_tm, element.title_tm);
+            }) ??
+            []);
+      }
+    }
+    return subs;
   }
 }

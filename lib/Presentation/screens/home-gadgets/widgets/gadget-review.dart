@@ -20,7 +20,7 @@ class GadgetReview extends StatelessWidget {
             Expanded(
               flex: 8,
               child: Image.asset(
-                'assets/${imgPath}',
+                imgPath,
                 fit: BoxFit.scaleDown,
                 width: double.infinity,
               ),

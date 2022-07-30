@@ -10,7 +10,7 @@ import 'package:http/http.dart';
 
 class GadgetService {
   static Future<ApiResponse> createHomeGadget(
-    List<FilePickerResult> files,
+    List<FilePickerResult?> files,
     Map<String, String> fields,
   ) async {
     var uri = Uri.parse(baseUrl + '/gadgets/create');
@@ -21,8 +21,8 @@ class GadgetService {
         files
             .map((e) => MultipartFile.fromBytes(
                   'images',
-                  e.files.first.bytes!.toList(),
-                  filename: e.names.first,
+                  e?.files.first.bytes!.toList() ?? [],
+                  filename: e?.names.first,
                   // contentType: MediaType("image", "xlsx"),
                 ))
             .toList(),

@@ -63,7 +63,7 @@ class GadgetBloc extends Cubit<GadgetState> {
   GadgetBloc() : super(GadgetState());
 
   createHomeGadget(
-    List<FilePickerResult> files,
+    List<FilePickerResult?> files,
     Map<String, String> fields,
   ) async {
     emit(state.copyWith(createStatus: GadgetCreateStatus.loading));

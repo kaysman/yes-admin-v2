@@ -1,6 +1,5 @@
-import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/gadget/image.model.dart';
-import 'package:admin_v2/Data/models/gadget/link.model.dart';
+import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'gadget.model.g.dart';
@@ -9,9 +8,8 @@ part 'gadget.model.g.dart';
 class GadgetEntity with EquatableMixin {
   final int? id;
   final String? type;
-  final List<GadgetLink>? links;
   final List<GadgetImage>? items;
-  final List<int>? productIds;
+  final List<ProductEntity>? products;
   final int? queue;
   final String? title;
   final String? status;
@@ -19,11 +17,10 @@ class GadgetEntity with EquatableMixin {
 
   GadgetEntity({
     this.items,
-    this.links,
     this.status,
     this.location,
     this.type,
-    this.productIds,
+    this.products,
     this.queue,
     this.title,
     this.id,

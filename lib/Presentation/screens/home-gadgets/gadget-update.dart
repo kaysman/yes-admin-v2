@@ -23,7 +23,7 @@ class UpdateGadGetPage extends StatefulWidget {
 class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
   late GadgetBloc gadgetBloc;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  HomeGadgetType? type;
+  GadgetType? type;
   GadgetLocation? location;
   GadgetStatus? status;
   final titleController = TextEditingController();

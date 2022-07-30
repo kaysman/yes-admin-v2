@@ -15,13 +15,16 @@ class CategoryBloc extends Cubit<CategoryState> {
     emit(state.copyWith(createStatus: CategoryCreateStatus.loading));
     try {
       var res = await CategoryService.createCategory(data);
-      List<CategoryEntity> l =
-          List<CategoryEntity>.from(state.categories ?? []);
-      l.add(res!);
-      emit(state.copyWith(
-        categories: l,
-        createStatus: CategoryCreateStatus.success,
-      ));
+      // List<CategoryEntity> l =
+      //     List<CategoryEntity>.from(state.categories ?? []);
+      // l.add(res!);
+      if (res.success == true) {
+        emit(state.copyWith(
+          // categories: l,
+          createStatus: CategoryCreateStatus.success,
+        ));
+        getAllCategories();
+      }
     } catch (_) {
       print(_);
       emit(state.copyWith(createStatus: CategoryCreateStatus.error));

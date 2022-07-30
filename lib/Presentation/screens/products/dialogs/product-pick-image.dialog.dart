@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
+import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -43,14 +44,8 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
       setState(() {
         if (_selectedImage == null) {
           _selectedImage = result;
-          // _selectedImages = result.paths.map((path) => File(path!)).toList();
         } else if (_selectedImage != null) {
-          // _selectedImages.add(result);
           _selectedImage?.files.addAll(result.files);
-          // var images = resul;
-          // _selectedImages = result;
-          // var images = result.paths.map((path) => File(path!)).toList();
-          // _selectedImages?.addAll(images);
         }
       });
     } on PlatformException catch (e) {
@@ -96,7 +91,8 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
               child: GridView.builder(
                   itemCount: _selectedImage?.count ?? 0,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 5,
+                    childAspectRatio: 2 / 3,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -111,30 +107,41 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
                             File(images![index].path),
                             width: double.infinity,
                             height: double.infinity,
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                           ),
                           Positioned(
-                            top: 0,
-                            right: 0,
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: IconButton(
-                                padding: EdgeInsets.zero,
-                                splashRadius: 20,
-                                icon: Icon(
+                              top: 2,
+                              right: 2,
+                              child: SmallCircleButton(
+                                child: Icon(
                                   Icons.close,
-                                  size: 15,
+                                  size: 12,
+                                  shadows: kBoxShadow,
                                 ),
-                                onPressed: () {
+                                onTap: () {
                                   setState(() {
                                     _selectedImage?.files.removeAt(index);
                                   });
                                 },
+                              )
+                              // Card(
+
+                              //   shape: RoundedRectangleBorder(
+                              //     borderRadius: BorderRadius.circular(20),
+                              //   ),
+                              //   child: IconButton(
+                              //     padding: EdgeInsets.zero,
+                              //     splashRadius: 20,
+                              //     icon: Icon(
+                              //       Icons.close,
+                              //       size: 10,
+                              //     ),
+                              //     onPressed: () {
+
+                              //     },
+                              //   ),
+                              // ),
                               ),
-                            ),
-                          ),
                         ],
                       ),
                     );
@@ -211,15 +218,6 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
               SizedBox(width: 16),
               Row(
                 children: [
-                  // Button(
-                  //   text: 'Delete',
-                  //   hasBorder: true,
-                  //   textColor: Colors.redAccent,
-                  //   borderColor: Colors.redAccent,
-                  //   isLoading: false,
-                  //   onPressed: widget.onDelete,
-                  // ),
-                  // SizedBox(width: 16),
                   Button(
                     primary: kswPrimaryColor,
                     textColor: kWhite,

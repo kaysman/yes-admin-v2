@@ -233,9 +233,9 @@ class _CategoriesTableState extends State<CategoriesTable> {
           },
           cells: [
             DataCell(Text("${category.id ?? '-'} ")),
-            DataCell(Text("${category.title_tm  ?? '-'}")),
+            DataCell(Text("${category.title_tm ?? '-'}")),
             DataCell(Text("${category.title_ru ?? '-'} ")),
-            DataCell(Text("${category.parentId ?? '-' } ")),
+            DataCell(Text("${category.parentId ?? '-'} ")),
             DataCell(
               Wrap(
                 spacing: 5,
@@ -245,8 +245,8 @@ class _CategoriesTableState extends State<CategoriesTable> {
                     [],
               ),
             ),
-            DataCell(Text("${category.description_tm ?? '-'} ?? '-'")),
-            DataCell(Text("${category.description_ru ?? '-'} ?? '-'")),
+            DataCell(Text("${category.description_tm ?? '-'}")),
+            DataCell(Text("${category.description_ru ?? '-'}")),
           ],
         );
       },

@@ -10,13 +10,16 @@ class LabeledInput extends StatelessWidget {
     this.validator,
     this.editMode = false,
     this.hintText,
+    this.onChanged,
+    this.initialValue,
   }) : super(key: key);
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String? label;
   final String? hintText;
-
+  final ValueChanged<String?>? onChanged;
+  final String? initialValue;
   final bool editMode;
 
   @override
@@ -33,8 +36,10 @@ class LabeledInput extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextFormField(
+          initialValue: this.initialValue,
           controller: controller,
           validator: validator,
+          onChanged: this.onChanged,
           decoration: InputDecoration(
             // hintText: hintText,
             // hintStyle: Theme.of(context)

@@ -13,7 +13,7 @@ class ProductBloc extends Cubit<ProductState> {
   ProductBloc() : super(ProductState());
 
   createProduct(
-    List<FilePickerResult> files,
+    List<PlatformFile> files,
     Map<String, String> fields,
   ) async {
     emit(state.copyWith(createStatus: ProductCreateStatus.loading));
@@ -178,10 +178,10 @@ class ProductBloc extends Cubit<ProductState> {
     }
   }
 
-  uploadImage(String filename, List<int> bytes) async {
+  uploadImage(List<PlatformFile> files) async {
     emit(state.copyWith(imageUploadStatus: ProductImageUploadStatus.loading));
     try {
-      var res = await ProductService.uploadImage(filename, bytes);
+      var res = await ProductService.uploadImage(files);
       if (res.success == true) {
         emit(state.copyWith(
             imageUploadStatus: ProductImageUploadStatus.success));

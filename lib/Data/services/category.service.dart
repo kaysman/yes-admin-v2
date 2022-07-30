@@ -7,7 +7,7 @@ import '../models/category/update-category.model.dart';
 import 'api_client.dart';
 
 class CategoryService {
-  static Future<CategoryEntity?> createCategory(CreateCategoryDTO data) async {
+  static Future<ApiResponse> createCategory(CreateCategoryDTO data) async {
     var uri = Uri.parse(baseUrl + '/categories/create');
     try {
       var res = await ApiClient.instance.post(
@@ -15,7 +15,7 @@ class CategoryService {
         data: jsonEncode(data.toJson()),
         headers: header(),
       );
-      return CategoryEntity.fromJson(res.data);
+      return res;
     } catch (_) {
       print(_);
       throw _;
@@ -50,7 +50,7 @@ class CategoryService {
     var uri = Uri.parse(url);
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
-      // print(res.data.toString());
+      print(res.data.toString());
 
       return (res.data as List)
           .map((json) => CategoryEntity.fromJson(json as Map<String, dynamic>))

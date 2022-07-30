@@ -1,4 +1,4 @@
-enum HomeGadgetType {
+enum GadgetType {
   // 1. TWO SMALL CARDS LIED HORIZONTALLY. WITHOUT SCROLL, NEED 2 APIS.
   TWO_SMALL_CARDS_HORIZONTAL,
 
@@ -39,9 +39,126 @@ enum HomeGadgetType {
   // (N NUMBER OF PRODUCTS MUST BE SELECTED TO BE DISPLAYED).
   TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT,
 
+  // 14
   CIRCLE_ITEMS,
+
+  //15
+  CATEGORY_BANNER
 }
 
 enum GadgetStatus { ACTIVE, INACTIVE }
 
 enum GadgetLocation { HOME, CATEGORY }
+
+extension AddOn on GadgetType {
+  String get previewImagePath {
+    switch (this) {
+      case GadgetType.TWO_SMALL_CARDS_HORIZONTAL:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.BANNER_SWIPE_WITH_DOTS:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.BANNER_FOR_MEN_AND_WOMEN:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.ONE_IMAGE_WITH_FULL_WIDTH:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.POPULAR:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.CIRCLE_ITEMS:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      case GadgetType.CATEGORY_BANNER:
+        return 'assets/16-16-horizontal-title-as-text.png';
+      default:
+        return 'assets/16-16-horizontal-title-as-text.png';
+    }
+  }
+
+  String get previewDescription {
+    switch (this) {
+      case GadgetType.TWO_SMALL_CARDS_HORIZONTAL:
+        return 'TWO_SMALL_CARDS_HORIZONTAL ';
+      case GadgetType.BANNER_SWIPE_WITH_DOTS:
+        return 'BANNER_SWIPE_WITH_DOTS ';
+      case GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
+        return ' TWO_TO_TWO_WITH_TITLE_AS_IMAGE';
+      case GadgetType.BANNER_FOR_MEN_AND_WOMEN:
+        return 'BANNER_FOR_MEN_AND_WOMEN ';
+      case GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
+        return ' TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT';
+      case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 'CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT ';
+      case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+        return 'CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE ';
+      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+        return 'CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE ';
+      case GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
+        return ' THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT';
+      case GadgetType.ONE_IMAGE_WITH_FULL_WIDTH:
+        return 'ONE_IMAGE_WITH_FULL_WIDTH ';
+      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 'CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT ';
+      case GadgetType.POPULAR:
+        return ' POPULAR';
+      case GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 'TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT ';
+      case GadgetType.CIRCLE_ITEMS:
+        return 'CIRCLE_ITEMS ';
+      case GadgetType.CATEGORY_BANNER:
+        return ' CATEGORY_BANNER';
+      default:
+        return '';
+    }
+  }
+
+  int get itemCount {
+    switch (this) {
+      case GadgetType.TWO_SMALL_CARDS_HORIZONTAL:
+        return 2;
+      case GadgetType.BANNER_SWIPE_WITH_DOTS:
+        return 1;
+      case GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
+        return 4;
+      case GadgetType.BANNER_FOR_MEN_AND_WOMEN:
+        return 1;
+      case GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
+        return 4;
+      case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 1;
+      case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+        return 1;
+      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
+        return 1;
+      case GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
+        return 9;
+      case GadgetType.ONE_IMAGE_WITH_FULL_WIDTH:
+        return 1;
+      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 1;
+      case GadgetType.POPULAR:
+        return 1;
+      case GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
+        return 1;
+      case GadgetType.CIRCLE_ITEMS:
+        return 1;
+      case GadgetType.CATEGORY_BANNER:
+        return 1;
+      default:
+        return 1;
+    }
+  }
+}

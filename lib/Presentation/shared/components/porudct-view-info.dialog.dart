@@ -72,10 +72,10 @@ class ProductViewInfoDialog extends StatelessWidget {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                  crossAxisCount: 4,
                   mainAxisSpacing: 5,
                   crossAxisSpacing: 5,
-                  // childAspectRatio: 2.5,
+                  childAspectRatio: 1.8 / 2,
                 ),
                 children: List.generate(
                   images.isEmpty ? 1 : images.length,

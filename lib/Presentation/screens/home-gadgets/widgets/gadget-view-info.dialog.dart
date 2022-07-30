@@ -67,8 +67,8 @@ class GadgetViewInfoDialog extends StatelessWidget {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
+                  crossAxisCount: 4,
+                  childAspectRatio: 1.8 / 2,
                   mainAxisSpacing: 5,
                   crossAxisSpacing: 5,
                 ),

@@ -1,5 +1,6 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/category/category.model.dart';
+import 'package:admin_v2/Data/models/category/sub.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
 import 'package:admin_v2/Data/models/product/create-product.model.dart';
@@ -33,7 +34,7 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
   late MarketBloc marketBloc;
   late FilterBloc filterBloc;
   GlobalKey<FormState> productCreateFormKey = GlobalKey<FormState>();
-  List<FilePickerResult> _selectedImages = [];
+  List<PlatformFile> _selectedImages = [];
   final _pageViewController = PageController();
   bool saveLoading = false;
   final titleController_tm = TextEditingController();
@@ -47,7 +48,7 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
   FilterEntity? color;
   FilterEntity? gender;
   List<CreateSizeDTO> sizes = [];
-  CategoryEntity? category;
+  SubItem? category;
   BrandEntity? brand;
   MarketEntity? market;
 
@@ -69,9 +70,9 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
       brandBloc.getAllBrands();
     }
     categoryBloc = context.read<CategoryBloc>();
-    if (categoryBloc.state.categories == null) {
-      categoryBloc.getAllCategories();
-    }
+    // if (categoryBloc.state.categories == null) {
+    categoryBloc.getAllCategories();
+    // }
 
     marketBloc = context.read<MarketBloc>();
     if (marketBloc.state.markets == null) {
@@ -159,7 +160,7 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
               ProductPickIMages(
                 onSelectedIMages: (v) {
                   setState(() {
-                    _selectedImages.add(v);
+                    _selectedImages = v.files;
                   });
                 },
                 onSave: onSave,
@@ -183,13 +184,14 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
       gender_id: gender!.id!,
       code: codeController.text,
       brand_id: brand!.id,
-      category_id: category!.id!,
+      category_id: category!.id,
       market_id: market!.id!,
       description_ru: descriptionController_ru.text,
       description_tm: descriptionController_tm.text,
       sizes: sizes,
     );
     if (_selectedImages.isNotEmpty) {
+      // print('Saylanan suart: ${_selectedImages.first.files.length}');
       productBloc.createProduct(_selectedImages, _data.toJson());
     }
   }

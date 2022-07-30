@@ -13,7 +13,7 @@ import 'api_client.dart';
 
 class ProductService {
   static Future<ProductEntity> createProduct(
-    List<FilePickerResult> files,
+    List<PlatformFile> files,
     Map<String, String> fields,
   ) async {
     var uri = Uri.parse(baseUrl + '/products/create');
@@ -25,9 +25,8 @@ class ProductService {
             .map(
               (e) => MultipartFile.fromBytes(
                 'images',
-                e.files.first.bytes!,
-                filename: e.names.first,
-                contentType: MediaType('image', 'jpg'),
+                e.bytes?.toList() ?? [],
+                filename: e.name,
               ),
             )
             .toList(),
@@ -148,20 +147,26 @@ class ProductService {
     }
   }
 
-  static Future<ApiResponse> uploadImage(
-      String filename, List<int> bytes) async {
+  static Future<ApiResponse> uploadImage(List<PlatformFile> files) async {
     var uri = Uri.parse(baseUrl + '/products/uploadImages');
     try {
       var res = await ApiClient.instance.multiPartRequest(
         uri,
-        [
-          MultipartFile.fromBytes(
-            'images',
-            bytes,
-            filename: filename,
-            // contentType: MediaType("excel", "xlsx"),
-          ),
-        ],
+        files
+            .map((e) => MultipartFile.fromBytes(
+                  'images',
+                  e.bytes?.toList() ?? [],
+                  filename: e.name,
+                ))
+            .toList(),
+        // [
+        //   MultipartFile.fromBytes(
+        //     'images',
+        //     bytes,
+        //     filename: filename,
+        //     // contentType: MediaType("excel", "xlsx"),
+        //   ),
+        // ],
       );
       print(res.data);
       return res;

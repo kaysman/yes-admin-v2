@@ -161,13 +161,16 @@ class _ProductsTableState extends State<ProductsTable> {
                                 primary: kswPrimaryColor,
                                 textColor: kWhite,
                                 onPressed: () async {
-                                  showAppDialog(
+                                  await showAppDialog(
                                     context,
                                     ProductInfo(
                                       selectedProductId:
                                           selectedProducts.first.id,
                                     ),
                                   );
+                                  setState(() {
+                                    selectedProducts = [];
+                                  });
                                 },
                               ),
                               SizedBox(
