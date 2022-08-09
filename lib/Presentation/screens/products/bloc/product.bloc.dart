@@ -66,6 +66,7 @@ class ProductBloc extends Cubit<ProductState> {
       emit(state.copyWith(deleteStatus: ProductDeleteStatus.error));
     }
   }
+
   multiDeleteProduct(DeleteMultiProductModel data) async {
     emit(state.copyWith(multiDeleteStatus: ProductMultiDeleteStatus.loading));
     try {
@@ -175,6 +176,7 @@ class ProductBloc extends Cubit<ProductState> {
         excelStatus: ProductExcelUploadStatus.error,
         uploadExcelErrorMessage: e.toString(),
       ));
+      print(e);
     }
   }
 
@@ -197,6 +199,7 @@ class ProductBloc extends Cubit<ProductState> {
         imageUploadStatus: ProductImageUploadStatus.error,
         uploadExcelErrorMessage: e.toString(),
       ));
+      print(e);
     }
   }
 }

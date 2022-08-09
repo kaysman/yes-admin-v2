@@ -147,7 +147,7 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
                   setState(() {
                     sizes = v
                         .map((e) =>
-                            CreateSizeDTO(size_id: e.id!, count: e.count))
+                            CreateSizeDTO(size_id: e.id!, count: e.count,))
                         .toList();
                   });
                 },

@@ -18,6 +18,7 @@ import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
 import 'package:admin_v2/Presentation/screens/login/bloc/login.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
+import 'package:admin_v2/Presentation/screens/orders/order.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/environment.dart';
 import 'package:admin_v2/main.dart';
@@ -100,6 +101,7 @@ class AppService {
         BlocProvider<ProductBloc>(create: (context) => ProductBloc()),
         BlocProvider<LoginBloc>(create: (context) => LoginBloc(authBloc)),
         BlocProvider<GadgetBloc>(create: (context) => GadgetBloc()),
+        BlocProvider<OrderBloc>(create: (context) => OrderBloc()),
 
         // BlocProvider<ConnectivityBloc>(create: (context) => connectivityBloc),
       ], child: App(initialRoute: initialRoute)),

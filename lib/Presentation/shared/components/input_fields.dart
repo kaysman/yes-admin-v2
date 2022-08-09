@@ -36,7 +36,6 @@ class LabeledInput extends StatelessWidget {
         ),
         SizedBox(height: 5),
         TextFormField(
-          initialValue: this.initialValue,
           controller: controller,
           validator: validator,
           onChanged: this.onChanged,

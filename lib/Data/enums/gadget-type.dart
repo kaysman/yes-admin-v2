@@ -57,8 +57,7 @@ extension AddOn on GadgetType {
         return 'assets/16-16-horizontal-title-as-text.png';
       case GadgetType.BANNER_SWIPE_WITH_DOTS:
         return 'assets/16-16-horizontal-title-as-text.png';
-      case GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
-        return 'assets/16-16-horizontal-title-as-text.png';
+
       case GadgetType.BANNER_FOR_MEN_AND_WOMEN:
         return 'assets/16-16-horizontal-title-as-text.png';
       case GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
@@ -67,16 +66,14 @@ extension AddOn on GadgetType {
         return 'assets/16-16-horizontal-title-as-text.png';
       case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
         return 'assets/16-16-horizontal-title-as-text.png';
-      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
-        return 'assets/16-16-horizontal-title-as-text.png';
+
       case GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
         return 'assets/16-16-horizontal-title-as-text.png';
       case GadgetType.ONE_IMAGE_WITH_FULL_WIDTH:
         return 'assets/16-16-horizontal-title-as-text.png';
       case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
         return 'assets/16-16-horizontal-title-as-text.png';
-      case GadgetType.POPULAR:
-        return 'assets/16-16-horizontal-title-as-text.png';
+
       case GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
         return 'assets/16-16-horizontal-title-as-text.png';
       case GadgetType.CIRCLE_ITEMS:
@@ -94,8 +91,7 @@ extension AddOn on GadgetType {
         return 'TWO_SMALL_CARDS_HORIZONTAL ';
       case GadgetType.BANNER_SWIPE_WITH_DOTS:
         return 'BANNER_SWIPE_WITH_DOTS ';
-      case GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
-        return ' TWO_TO_TWO_WITH_TITLE_AS_IMAGE';
+
       case GadgetType.BANNER_FOR_MEN_AND_WOMEN:
         return 'BANNER_FOR_MEN_AND_WOMEN ';
       case GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
@@ -104,16 +100,14 @@ extension AddOn on GadgetType {
         return 'CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_TEXT ';
       case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
         return 'CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE ';
-      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
-        return 'CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE ';
+
       case GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
         return ' THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT';
       case GadgetType.ONE_IMAGE_WITH_FULL_WIDTH:
         return 'ONE_IMAGE_WITH_FULL_WIDTH ';
       case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
         return 'CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT ';
-      case GadgetType.POPULAR:
-        return ' POPULAR';
+
       case GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
         return 'TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT ';
       case GadgetType.CIRCLE_ITEMS:
@@ -131,8 +125,7 @@ extension AddOn on GadgetType {
         return 2;
       case GadgetType.BANNER_SWIPE_WITH_DOTS:
         return 1;
-      case GadgetType.TWO_TO_TWO_WITH_TITLE_AS_IMAGE:
-        return 4;
+
       case GadgetType.BANNER_FOR_MEN_AND_WOMEN:
         return 1;
       case GadgetType.TWO_TO_TWO_GRID_WITH_TITLE_AS_TEXT:
@@ -141,16 +134,14 @@ extension AddOn on GadgetType {
         return 1;
       case GadgetType.CARDS_16_9_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
         return 1;
-      case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_IMAGE:
-        return 1;
+        ;
       case GadgetType.THREE_TO_THREE_GRID_WITH_TITLE_AS_TEXT:
         return 9;
       case GadgetType.ONE_IMAGE_WITH_FULL_WIDTH:
         return 1;
       case GadgetType.CARDS_2_3_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
         return 1;
-      case GadgetType.POPULAR:
-        return 1;
+
       case GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
         return 1;
       case GadgetType.CIRCLE_ITEMS:

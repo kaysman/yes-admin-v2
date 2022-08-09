@@ -1,5 +1,6 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/category/category.model.dart';
+import 'package:admin_v2/Data/models/category/sub.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.enum.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
@@ -20,6 +21,7 @@ import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
+import 'package:admin_v2/main.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,7 +63,7 @@ class ProductUpdateInfo extends StatefulWidget {
   final ValueChanged<FilterEntity> onColorChanged;
   final ValueChanged<List<SizeEntity>> onSizeChanged;
   final ValueChanged<BrandEntity> onBrandChanged;
-  final ValueChanged<CategoryEntity> onCategoryChanged;
+  final ValueChanged<SubItem> onCategoryChanged;
   final ValueChanged<FilterEntity> onGenderChanged;
   final ValueChanged<MarketEntity> onMarketChanged;
 
@@ -76,7 +78,7 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
   FilterEntity? color;
   FilterEntity? gender;
   FilterEntity? size;
-  CategoryEntity? category;
+  SubItem? category;
   BrandEntity? brand;
   TextEditingController sizeCountController = TextEditingController();
 
@@ -94,7 +96,6 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
     _selectedSizes = widget.product.sizes!;
     brand = widget.product.brand;
     market = widget.product.market;
-    category = widget.product.category;
 
     filterBloc = BlocProvider.of<FilterBloc>(context);
     if (filterBloc.state.filters == null) {
@@ -103,11 +104,53 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
     categoryBloc = BlocProvider.of<CategoryBloc>(context);
     if (categoryBloc.state.categories == null) {
       categoryBloc.getAllCategories();
+      category = getSubItem(
+          categoryBloc.state.categories ?? [], widget.product.category?.id);
     }
+    category = getSubItem(
+        categoryBloc.state.categories ?? [], widget.product.category?.id);
     brandBloc = BlocProvider.of<BrandBloc>(context);
     if (brandBloc.state.brands == null) {
       brandBloc.getAllBrands();
     }
+  }
+
+  // var subs = getSubs(widget.product.category);
+
+  // SubItem? getSub(CategoryEntity? main){
+  //   if(main!=null){
+  //     for (var sub in main.subcategories ?? []) {
+  //       if(main.subcategories!.isNotEmpty){
+
+  //       }
+  //     }
+  //   }
+  // }
+
+  SubItem? getSubItem(List<CategoryEntity>? mainList, int? subId) {
+    if (mainList != null) {
+      for (var main in mainList) {
+        if (mainList.isNotEmpty && main.subcategories?.isNotEmpty == true) {
+          var sub = main.subcategories?.firstWhere((el) => el.id == subId);
+          var subItem = SubItem(sub?.id ?? 0, sub?.title_tm, main.title_tm);
+          return subItem;
+        }
+      }
+    }
+    return null;
+  }
+
+  List<SubItem> getSubs(List<CategoryEntity>? main) {
+    List<SubItem> subs = [];
+    if (main != null) {
+      for (var element in main) {
+        subs.addAll(element.subcategories?.map((e) {
+              return SubItem(e.id!, e.title_tm, element.title_tm);
+            }) ??
+            []);
+      }
+    }
+    return subs;
   }
 
   @override
@@ -277,8 +320,10 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
               child1: BlocBuilder<CategoryBloc, CategoryState>(
                 builder: (context, state) {
                   var categories = state.categories;
+
+                  var subs = getSubs(categories);
                   print(categories);
-                  return InfoWithLabel<CategoryEntity>(
+                  return InfoWithLabel<SubItem>(
                     label: 'Select caategory *',
                     editMode: editMode,
                     hintText: 'Select caategory *',
@@ -289,11 +334,28 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                         category = v;
                       });
                     },
-                    items: categories?.map(
+                    items: subs.map(
                       (type) {
                         return DropdownMenuItem(
                           value: type,
-                          child: Text(type.title_tm ?? ''),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                type.name ?? '-',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                              Text(
+                                type.parentName ?? '-',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    ?.copyWith(
+                                      color: kGrey3Color,
+                                    ),
+                              )
+                            ],
+                          ),
                         );
                       },
                     ).toList(),

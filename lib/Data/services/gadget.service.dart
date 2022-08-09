@@ -15,8 +15,7 @@ class GadgetService {
   ) async {
     var uri = Uri.parse(baseUrl + '/gadgets/create');
     try {
-      print(fields);
-      var res = await ApiClient.instance.multiPartRequest(
+      return await ApiClient.instance.multiPartRequest(
         uri,
         files
             .map((e) => MultipartFile.fromBytes(
@@ -28,10 +27,8 @@ class GadgetService {
             .toList(),
         fields: fields,
       );
-      return res;
-    } catch (_) {
-      print(_);
-      throw _;
+    } catch (err) {
+      throw err;
     }
   }
 

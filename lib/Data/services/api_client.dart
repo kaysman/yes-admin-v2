@@ -13,7 +13,7 @@ import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
-const baseUrl = 'http://192.168.1.2:3333';
+const baseUrl = 'http://192.168.1.5:3333';
 
 class ApiClient {
   static Client? http;
@@ -150,10 +150,13 @@ class ApiClient {
       if (fields != null) request.fields.addAll(fields);
       request.files.addAll(files);
       var res = await Response.fromStream(await request.send());
-      print(res.body);
-      return ApiResponse.fromJson(json.decode(res.body));
+      var decoded = ApiResponse.fromJson(json.decode(res.body));
+      if (decoded.success == true) {
+        return decoded;
+      } else {
+        throw Exception(decoded.message);
+      }
     } catch (_) {
-      print(_);
       throw _;
     }
   }

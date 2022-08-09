@@ -321,67 +321,77 @@ class _ProductsTableState extends State<ProductsTable> {
     if (state.products == null) return [];
 
     return List.generate(
-      state.products!.length,
+      state.products?.length ?? 0,
       (index) {
-        var product = state.products![index];
-        var productQuantity = getSum(product.sizes);
+        var product = state.products?[index];
+        var productQuantity = getSum(product?.sizes);
         return DataRow(
           selected: selectedProducts.contains(product),
           onSelectChanged: (v) {
             setState(() {
-              if (!selectedProducts.contains(product)) {
-                selectedProducts.add(product);
-              } else {
-                selectedProducts.remove(product);
+              if (product != null) {
+                if (!selectedProducts.contains(product)) {
+                  selectedProducts.add(product);
+                } else {
+                  selectedProducts.remove(product);
+                }
               }
             });
           },
           cells: [
-            DataCell(Text("${product.id}")),
-            DataCell(Text("${product.code}")),
-            DataCell(Text("${product.name_tm}")),
-            DataCell(Text("${product.name_ru}")),
-            DataCell(Wrap(
-                children: product.images!
-                    .map(
-                      (e) => e.getFullPathImage == null
-                          ? CircleAvatar(
-                              radius: 20,
-                              backgroundColor: kswPrimaryColor,
+            DataCell(Text("${product?.id ?? '-'}")),
+            DataCell(Text("${product?.code ?? '-'}")),
+            DataCell(Text("${product?.name_tm ?? '-'} ")),
+            DataCell(Text("${product?.name_ru ?? '-'}")),
+            DataCell(
+              Wrap(
+                children: product?.images == null
+                    ? []
+                    : product?.images!
+                            .map(
+                              (e) => e.getFullPathImage == null
+                                  ? CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: kswPrimaryColor,
+                                    )
+                                  : CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage:
+                                          Image.network(e.getFullPathImage!)
+                                              .image,
+                                    ),
                             )
-                          : CircleAvatar(
-                              radius: 20,
-                              backgroundImage:
-                                  Image.network(e.getFullPathImage!).image,
-                            ),
-                    )
-                    .toList())),
-            DataCell(Text("${product.ourPrice}")),
-            DataCell(Text("${product.marketPrice}")),
-            DataCell(Text("${product.color?.name_tm}")),
-            DataCell(Text("${product.gender?.name_tm}")),
-            DataCell(Text("${productQuantity}")),
-            DataCell(Text("${product.brand?.name}")),
-            DataCell(Text("${product.category?.title_tm}")),
-            DataCell(Text("${product.market?.title}")),
-            DataCell(Text("${product.description_tm}")),
-            DataCell(Text("${product.description_ru}")),
+                            .toList() ??
+                        [],
+              ),
+            ),
+            DataCell(Text("${product?.ourPrice ?? '-'}")),
+            DataCell(Text("${product?.marketPrice ?? '-'}")),
+            DataCell(Text("${product?.color?.name_tm ?? '-'}")),
+            DataCell(Text("${product?.gender?.name_tm ?? '-'}")),
+            DataCell(Text("${productQuantity ?? '-'}")),
+            DataCell(Text("${product?.brand?.name ?? '-'}")),
+            DataCell(Text("${product?.category?.title_tm ?? '-'}")),
+            DataCell(Text("${product?.market?.title ?? '-'}")),
+            DataCell(Text("${product?.description_tm ?? '-'}")),
+            DataCell(Text("${product?.description_ru ?? '-'}")),
           ],
         );
       },
     );
   }
 
-  int getSum(List<SizeEntity>? sizes) {
+  int? getSum(List<SizeEntity>? sizes) {
     List<int> my = [];
-    if (sizes != null) {
+    if (sizes != null && sizes.isNotEmpty) {
       for (var size in sizes) {
         my.add(size.quantity!);
       }
+      var sum = my.reduce((a, b) => a + b);
+      return sum;
     }
-    var sum = my.reduce((a, b) => a + b);
 
-    return sum;
+    return null;
   }
 }
 

@@ -159,14 +159,6 @@ class ProductService {
                   filename: e.name,
                 ))
             .toList(),
-        // [
-        //   MultipartFile.fromBytes(
-        //     'images',
-        //     bytes,
-        //     filename: filename,
-        //     // contentType: MediaType("excel", "xlsx"),
-        //   ),
-        // ],
       );
       print(res.data);
       return res;

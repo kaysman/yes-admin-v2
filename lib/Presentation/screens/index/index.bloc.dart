@@ -2,6 +2,7 @@ import 'package:admin_v2/Presentation/screens/brands/brand-table.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-table.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/gadget-table.dart';
 import 'package:admin_v2/Presentation/screens/index/index.screen.dart';
+import 'package:admin_v2/Presentation/screens/orders/order-table.dart';
 import 'package:admin_v2/Presentation/screens/products/product-table.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -78,17 +79,18 @@ List<SidebarItem> sidebars = [
           ),
         ];
       }),
-  SidebarItem(
-    title: "Zakazlar",
-    logo: SvgPicture.asset(
-      'assets/bag.svg',
-      width: 30,
-      height: 30,
-      fit: BoxFit.contain,
-      color: kswPrimaryColor,
-    ),
-    view: Container(),
-  ),
+      getOrdersSideBarItem(),
+  // SidebarItem(
+  //   title: "Zakazlar",
+  //   logo: SvgPicture.asset(
+  //     'assets/bag.svg',
+  //     width: 30,
+  //     height: 30,
+  //     fit: BoxFit.contain,
+  //     color: kswPrimaryColor,
+  //   ),
+  //   view: Container(),
+  // ),
   getMainPageSidebarItem(),
   getProductSidebarItem(),
 ];

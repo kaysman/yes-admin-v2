@@ -24,22 +24,29 @@ class CreateGadgetModel {
     this.location,
     this.type,
     this.productIds,
-    this.queue,
+    this.queue = 1,
     this.title,
   });
 
   // factory CreateGadgetModel.fromJson(Map<String, dynamic> json) =>
   //     _$CreateGadgetModelFromJson(json);
 
-  Map<String, String> toJson() => <String, String>{
-        'type': _$GadgetTypeEnumMap[this.type].toString(),
-        'links': json.encode(this.links.map((e) => e.toJson()).toList()),
-        'productIds': json.encode(this.productIds),
-        'queue': this.queue.toString(),
-        'title': this.title.toString(),
-        'status': _$GadgetStatusEnumMap[this.status].toString(),
-        'location': _$GadgetLocationEnumMap[this.location].toString()
-      };
+  Map<String, String> toJson() {
+    Map<String, String> data = <String, String>{
+      'type': _$GadgetTypeEnumMap[this.type].toString(),
+      'links': json.encode(this.links.map((e) => e.toJson()).toList()),
+      'productIds': json.encode(this.productIds),
+      'categories': json.encode(this.categories),
+      'queue': this.queue.toString(),
+      'status': _$GadgetStatusEnumMap[this.status].toString(),
+      'location': _$GadgetLocationEnumMap[this.location].toString()
+    };
+
+    if (title != null) {
+      data['title'] = title!;
+    }
+    return data;
+  }
 
   // factory CreateGadgetModel.fromJson(Map<String, dynamic> json) =>
   //     CreateGadgetModel(
@@ -114,4 +121,5 @@ const _$GadgetTypeEnumMap = {
   GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT:
       'TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT',
   GadgetType.CIRCLE_ITEMS: 'CIRCLE_ITEMS',
+  GadgetType.CATEGORY_BANNER: 'CATEGORY_BANNER',
 };

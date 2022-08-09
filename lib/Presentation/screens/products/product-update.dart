@@ -2,9 +2,7 @@ import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
-import 'package:admin_v2/Data/models/product/create-product.model.dart';
 import 'package:admin_v2/Data/models/product/product.model.dart';
-import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Data/models/product/update-product.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
@@ -12,8 +10,6 @@ import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
-import 'package:admin_v2/Presentation/screens/products/dialogs/product-create-info.dialog.dart';
-import 'package:admin_v2/Presentation/screens/products/dialogs/product-pick-image.dialog.dart';
 import 'package:admin_v2/Presentation/screens/products/dialogs/product-update-img.dialog.dart';
 import 'package:admin_v2/Presentation/screens/products/dialogs/product-update-info.dialog.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
@@ -167,7 +163,10 @@ class _ProductUpdateDialogState extends State<ProductUpdateDialog> {
                 },
                 onCategoryChanged: (v) {
                   setState(() {
-                    category = v;
+                    category = CategoryEntity(
+                      id: v.id,
+                      title_tm: v.name,
+                    );
                   });
                 },
                 onColorChanged: (v) {

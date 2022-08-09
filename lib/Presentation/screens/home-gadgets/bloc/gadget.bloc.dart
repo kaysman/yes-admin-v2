@@ -70,14 +70,11 @@ class GadgetBloc extends Cubit<GadgetState> {
     try {
       var res = await GadgetService.createHomeGadget(files, fields);
       if (res.success == true) {
-        emit(state.copyWith(
-          createStatus: res.success == true
-              ? GadgetCreateStatus.success
-              : GadgetCreateStatus.idle,
-        ));
+        emit(state.copyWith(createStatus: GadgetCreateStatus.success));
         getAllGadgets();
       }
     } catch (e) {
+      print(e);
       emit(state.copyWith(
         createStatus: GadgetCreateStatus.error,
         errorMessage: e.toString(),
@@ -120,6 +117,7 @@ class GadgetBloc extends Cubit<GadgetState> {
       print(_);
     }
   }
+
   deleteGadget(int id) async {
     emit(state.copyWith(deleteStatus: GadgetDeleteStatus.loading));
     try {
