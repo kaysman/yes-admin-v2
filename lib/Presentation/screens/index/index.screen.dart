@@ -1,5 +1,6 @@
 import 'package:admin_v2/Presentation/screens/index/drawer.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
+import 'package:admin_v2/Presentation/screens/ready-to-use-widgets/at-search-input.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,8 +73,14 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Dahsboard'),
+    return Container(
+      alignment: Alignment.center,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        height: MediaQuery.of(context).size.height * .3,
+        width: MediaQuery.of(context).size.width * .3,
+        child: AtSearchInput(),
+      ),
     );
   }
 }

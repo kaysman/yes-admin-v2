@@ -16,7 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../shared/app_colors.dart';
 
-SidebarItem getFiltesSidebarItem() {
+SidebarItem getFiltersSidebarItem() {
   return SidebarItem(
     logo: Icon(
       Icons.filter_alt_outlined,

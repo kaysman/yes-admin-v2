@@ -47,11 +47,12 @@ List<SidebarItem> sidebars = [
       fit: BoxFit.contain,
       color: kswPrimaryColor,
     ),
+    // view: DashBoard(),
     view: DashBoard(),
   ),
   getMarketSidebarItem(),
   getBrandSidebarItem(),
-  getFiltesSidebarItem(),
+  getFiltersSidebarItem(),
   getCategoriesdebarItem(),
   SidebarItem(
       title: "Aksiýalar",
