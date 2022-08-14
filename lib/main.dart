@@ -1,16 +1,15 @@
 import 'package:admin_v2/Data/services/app.service.dart';
-import 'package:admin_v2/Presentation/screens/login/register-user.dart';
 import 'package:admin_v2/Presentation/shared/theming.dart';
-import 'package:admin_v2/routes.dart';
 import 'package:flutter/material.dart';
 import 'Data/services/notification.service.dart';
+import 'Presentation/screens/ready-to-use-widgets/page.dart';
 import 'Presentation/shared/components/app_observer.dart';
 import 'Presentation/shared/components/scrollable.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await Firebase.initializeApp();
-  await NotificationService.initializeLocalNotifications();
+  // await NotificationService.initializeLocalNotifications();
   await AppService.instance.setEnvironment();
   await AppService.instance.generateUDID();
   await AppService.instance.generateColorSet();
@@ -56,8 +55,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
       theme: AppTheme.lightTheme(context),
-      onGenerateRoute: onGenerateRoutes,
-      initialRoute: RegisterUserPage.routeName,
+      // onGenerateRoute: onGenerateRoutes,
+      // initialRoute: RegisterUserPage.routeName,
+      home: CustomWidgets(),
       builder: (context, home) => AppObserver(
         navigatorKey: navigatorKey,
         child: home,

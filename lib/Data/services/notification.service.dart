@@ -36,8 +36,6 @@ extension TypeExtension on NotificationTypes {
 class NotificationService {
   // INITIALIZE
   static initializeLocalNotifications() async {
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('notification_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
       requestBadgePermission: false,
       requestAlertPermission: false,
@@ -47,26 +45,8 @@ class NotificationService {
         didReceiveLocalNotificationSubject.add(ReceivedNotification(
             id: id, title: title, body: body, payload: payload));
       },
-      // notificationCategories: [
-      //   IOSNotificationCategory(
-      //     'timer',
-      //     actions: <IOSNotificationAction>[
-      //       IOSNotificationAction.plain('1', 'Stop Timer',
-      //           options: <IOSNotificationActionOption>{
-      //             IOSNotificationActionOption.destructive
-      //           }),
-      //     ],
-      //     options: <IOSNotificationCategoryOption>{
-      //       IOSNotificationCategoryOption.hiddenPreviewShowTitle,
-      //       IOSNotificationCategoryOption.hiddenPreviewShowSubtitle,
-      //       IOSNotificationCategoryOption.allowAnnouncement,
-      //       IOSNotificationCategoryOption.allowInCarPlay,
-      //     },
-      //   )
-      // ]
     );
     var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
       macOS: const MacOSInitializationSettings(
         requestBadgePermission: false,

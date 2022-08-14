@@ -65,6 +65,8 @@ dependencies:
   expandable_page_view: ^1.0.14
   dropdown_search: ^5.0.2
   card_swiper: ^2.0.4
+  flutter_mentions: ^2.0.1
+  flutter_portal: ^1.1.1
 
 
 
