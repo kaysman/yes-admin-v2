@@ -1,4 +1,5 @@
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:flutter/material.dart';
 
 class AtSearchInput extends StatefulWidget {
@@ -10,14 +11,17 @@ class AtSearchInput extends StatefulWidget {
 
 class _AtSearchInputState extends State<AtSearchInput> {
   bool isHasAtCharacter = false;
+  double space = 0.0;
 
   List<String> hasItems = ['@Dani', '@Atabek', '@Sultan', '@Aman'];
   List<String> filteredItems = [];
 
   @override
   Widget build(BuildContext context) {
+    double maxWidth = MediaQuery.of(context).size.width * .3;
     return Container(
-      padding: const EdgeInsets.all(14),
+      width: maxWidth,
+      padding: const EdgeInsets.all(10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border.all(
@@ -44,14 +48,16 @@ class _AtSearchInputState extends State<AtSearchInput> {
 
                   setState(
                     () {
+                      var _space = v.split('').length.toDouble() * 10;
+                      space = _space < maxWidth - 150 ? _space : maxWidth - 150;
                       for (var val in allInputValues) {
                         isHasAtCharacter = atHasValues.contains(val);
                         if (isHasAtCharacter) {
                           filteredItems = hasItems
                               .where(
-                                (el) => el
-                                    .toLowerCase()
-                                    .contains(val.toLowerCase()),
+                                (el) => el.toLowerCase().contains(
+                                      val.toLowerCase(),
+                                    ),
                               )
                               .toList();
                         }
@@ -63,33 +69,38 @@ class _AtSearchInputState extends State<AtSearchInput> {
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
                   hintText: 'type something...',
+                  hoverColor: kWhite,
                 ),
               ),
-              if (isHasAtCharacter) ...[
+              if (isHasAtCharacter && filteredItems.length >= 1) ...[
                 Positioned(
                   top: 50,
+                  left: space,
                   child: Container(
-                    padding: const EdgeInsets.all(8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: .5, horizontal: 3),
                     decoration: BoxDecoration(
                       color: kWhite,
-                      border: Border.all(color: kGrey3Color),
+                      boxShadow: kBoxShadowLow,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(
                       children: filteredItems
                           .map(
                             (e) => Container(
+                              width: maxWidth * .2,
                               decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(
-                                    color: kGrey3Color,
-                                  ),
-                                ),
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.blue.withOpacity(.2),
                               ),
-                              padding: const EdgeInsets.all(4),
-                              margin: const EdgeInsets.symmetric(vertical: 5),
-                              child: Text(e.substring(1)),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 2, horizontal: 10),
+                              margin: const EdgeInsets.symmetric(vertical: 2),
+                              child: Text(
+                                e.substring(1),
+                              ),
                             ),
                           )
                           .toList(),
@@ -100,7 +111,7 @@ class _AtSearchInputState extends State<AtSearchInput> {
             ],
           ),
           SizedBox(
-            height: 8,
+            height: 4,
           ),
           Divider(
             color: kGrey3Color,

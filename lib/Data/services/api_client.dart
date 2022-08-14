@@ -13,7 +13,7 @@ import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
-const baseUrl = 'http://192.168.1.4:3333';
+const baseUrl = 'http://192.168.1.3:3333';
 
 class ApiClient {
   static Client? http;
