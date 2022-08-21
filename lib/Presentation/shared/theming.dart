@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 class AppTheme {
-  static ThemeData lightTheme(BuildContext context) {
+  static ThemeData? lightTheme(BuildContext context) {
     return ThemeData(
       primarySwatch: kswPrimaryColor,
       scaffoldBackgroundColor: kWhite,

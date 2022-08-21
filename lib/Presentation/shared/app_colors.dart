@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 const kPrimaryColor = Colors.blue;
 const kSecondaryColor = Color(0xffEBF7F9);
@@ -19,7 +18,7 @@ const kBlack = Color(0xff000000);
 
 enum AppTheme { light, dark, darker }
 
-extension EnvExetension on AppTheme {
+extension EnvExtension on AppTheme {
   // ThemeData get data => themes[this];
   Color? get headerColor => headerColors[this];
   Color? get baseColor => baseColors[this];

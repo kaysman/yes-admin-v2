@@ -1,8 +1,6 @@
 import 'package:admin_v2/Data/services/app.service.dart';
-import 'package:admin_v2/Presentation/screens/login/register-user.dart';
-import 'package:admin_v2/Presentation/shared/theming.dart';
-import 'package:admin_v2/routes.dart';
-import 'package:flutter/material.dart';
+import 'package:admin_v2/Presentation/screens/example/index.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'Data/services/notification.service.dart';
 import 'Presentation/shared/components/app_observer.dart';
 import 'Presentation/shared/components/scrollable.dart';
@@ -50,14 +48,13 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      color: Colors.white,
+    return FluentApp(
       scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
-      theme: AppTheme.lightTheme(context),
-      onGenerateRoute: onGenerateRoutes,
-      initialRoute: RegisterUserPage.routeName,
+      // onGenerateRoute: onGenerateRoutes,
+      // initialRoute: RegisterUserPage.routeName,
+      home: Index(),
       builder: (context, home) => AppObserver(
         navigatorKey: navigatorKey,
         child: home,
