@@ -89,7 +89,7 @@ class BrandBloc extends Cubit<BrandState> {
       var res = await BrandService.deleteBrand(id);
       if (res.success == true) {
         emit(state.copyWith(brandDeleteStatus: BrandDeleteStatus.success));
-        getAllBrands();
+        await getAllBrands();
       }
     } catch (_) {
       print(_);

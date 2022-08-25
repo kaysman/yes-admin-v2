@@ -1,10 +1,10 @@
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 
-class SizefilterItem extends StatelessWidget {
+class SizefilterItem extends StatefulWidget {
   const SizefilterItem({
     Key? key,
     this.item,
@@ -19,9 +19,22 @@ class SizefilterItem extends StatelessWidget {
   final VoidCallback onCLear;
 
   @override
+  State<SizefilterItem> createState() => _SizefilterItemState();
+}
+
+class _SizefilterItemState extends State<SizefilterItem> {
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.text = '1';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: kswPrimaryColor.withOpacity(.2),
@@ -33,34 +46,28 @@ class SizefilterItem extends StatelessWidget {
             width: 10,
           ),
           Text(
-            itemForUpdate == null
-                ? item?.name_tm ?? '-'
-                : itemForUpdate?.name_tm ?? '-',
+            widget.itemForUpdate == null
+                ? widget.item?.name_tm ?? '-'
+                : widget.itemForUpdate?.name_tm ?? '-',
           ),
           SizedBox(
             width: 5,
           ),
           SizedBox(
-            height: 28,
             width: 50,
-            child: TextFormField(
-              initialValue: '1',
-              onChanged: onChangeCount,
-              decoration: InputDecoration(
-                hintText: '1',
-                border: kEnabledInputBorder,
-                enabledBorder: kEnabledInputBorder,
-                focusedBorder: kFocusedInputBorder,
-                errorBorder: kErrorInputBorder,
+            child: TextBox(
+              controller: _controller,
+              onChanged: widget.onChangeCount,
+              foregroundDecoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.transparent,
+                ),
               ),
             ),
           ),
           IconButton(
-            onPressed: this.onCLear,
-            splashRadius: 5,
-            icon: Icon(Icons.close),
-            iconSize: 14,
-            padding: EdgeInsets.zero,
+            onPressed: this.widget.onCLear,
+            icon: Icon(FluentIcons.remove),
           ),
         ],
       ),

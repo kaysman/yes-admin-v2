@@ -1,6 +1,13 @@
+import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
+import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/tiles_box.dart';
+import 'package:admin_v2/Presentation/screens/products/dialogs/product-create-info.dialog.dart';
 import 'package:faker/faker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../brands/bloc/brand.state.dart';
+import '../categories/bloc/category..bloc.dart';
 
 class Person {
   String name;
@@ -28,9 +35,17 @@ class _FluentDashboardState extends State<FluentDashboard>
   final faker = Faker();
 
   late AnimationController animationController;
+  late BrandBloc brandBloc;
+  late CategoryBloc categoryBloc;
 
   @override
   void initState() {
+    categoryBloc = BlocProvider.of<CategoryBloc>(context);
+    brandBloc = BlocProvider.of<BrandBloc>(context);
+
+    brandBloc.getAllBrands();
+    categoryBloc.getAllCategories();
+
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 4),
@@ -56,49 +71,120 @@ class _FluentDashboardState extends State<FluentDashboard>
     return ScaffoldPage(
       padding: EdgeInsets.zero,
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 24),
+              child: Text(
+                'Dashboard',
+                style: FluentTheme.of(context).typography.title,
+              )),
           Expanded(
-            flex: 2,
-            child: Row(
+            child: GridView.count(
+              padding: EdgeInsets.all(20),
+              crossAxisCount: 3,
+              crossAxisSpacing: 14,
+              mainAxisSpacing: 14,
               children: [
-                Expanded(
-                    // flex: 2,
-                    child: TilesBox(
-                  faker: faker,
-                  title: 'Brands',
-                  color: Color.fromARGB(255, 199, 252, 138),
-                  controller: animationController,
-                )),
-                Expanded(
-                    // flex: 2,
-                    child: TilesBox(
-                  faker: faker,
-                  title: 'Markets',
-                  color: Color.fromARGB(255, 219, 231, 255),
-                  controller: animationController,
-                )),
-                Expanded(
-                    // flex: 2,
-                    child: TilesBox(
-                  faker: faker,
+                BlocBuilder<BrandBloc, BrandState>(
+                  builder: (context, state) {
+                    var brand = state.brands != null && state.brands!.isNotEmpty
+                        ? state.brands?.first
+                        : null;
+                    return TilesBox(
+                      title: 'Brands',
+                      faker: faker,
+                      brand: brand,
+                      color: Colors.red,
+                      controller: animationController,
+                    );
+                  },
+                ),
+                BlocBuilder<CategoryBloc, CategoryState>(
+                  builder: (context, state) {
+                    var subs = getSubs(state.categories);
+                    return TilesBox(
+                      faker: faker,
+                      title: 'Categories',
+                      category: subs.isNotEmpty ? subs.first : null,
+                      color: Colors.green,
+                      controller: animationController,
+                    );
+                  },
+                ),
+                TilesBox(
                   title: 'Filters',
-                  color: Color.fromARGB(255, 255, 246, 237),
+                  faker: faker,
+                  color: Colors.teal,
                   controller: animationController,
-                )),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Row(
-              children: [
-                Expanded(child: Container(color: Colors.white)),
-                Expanded(child: Container(color: Colors.warningPrimaryColor)),
+                ),
+                TilesBox(
+                  title: 'Markets',
+                  faker: faker,
+                  color: Colors.orange,
+                  controller: animationController,
+                ),
+                TilesBox(
+                  title: 'Products',
+                  faker: faker,
+                  color: Colors.purple,
+                  controller: animationController,
+                ),
+                TilesBox(
+                  title: 'Orders',
+                  faker: faker,
+                  color: Colors.magenta,
+                  controller: animationController,
+                ),
               ],
             ),
           ),
         ],
       ),
+      // Column(
+      //   children: [
+      //     Expanded(
+      //       flex: 2,
+      //       child: Row(
+      //         children: [
+      //           Expanded(
+      //               // flex: 2,
+      //               child: TilesBox(
+      //             faker: faker,
+      //             title: 'Brands',
+      //             color: Color.fromARGB(255, 199, 252, 138),
+      //             controller: animationController,
+      //           )),
+      //           Expanded(
+      //               // flex: 2,
+      //               child: TilesBox(
+      //             faker: faker,
+      //             title: 'Markets',
+      //             color: Color.fromARGB(255, 219, 231, 255),
+      //             controller: animationController,
+      //           )),
+      //           Expanded(
+      //               // flex: 2,
+      //               child: TilesBox(
+      //             faker: faker,
+      //             title: 'Filters',
+      //             color: Color.fromARGB(255, 255, 246, 237),
+      //             controller: animationController,
+      //           )),
+      //         ],
+      //       ),
+      //     ),
+      //     Expanded(
+      //       flex: 3,
+      //       child: Row(
+      //         children: [
+      //           Expanded(child: Container(color: Colors.white)),
+      //           Expanded(child: Container(color: Colors.warningPrimaryColor)),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 }

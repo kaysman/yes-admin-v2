@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
+
+import 'package:fluent_ui/fluent_ui.dart';
 
 class ProgressIndicatorSmall extends StatelessWidget {
   final Color color;
@@ -14,8 +16,8 @@ class ProgressIndicatorSmall extends StatelessWidget {
       child: SizedBox(
         height: 15,
         width: 15,
-        child: CircularProgressIndicator(
-          color: color,
+        child: ProgressRing(
+          // color: color,
           strokeWidth: 2,
         ),
       ),

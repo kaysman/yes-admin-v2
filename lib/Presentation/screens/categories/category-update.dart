@@ -1,15 +1,14 @@
 import 'package:admin_v2/Data/models/category/category.model.dart';
-import 'package:admin_v2/Data/models/category/create-category.model.dart';
 import 'package:admin_v2/Data/models/category/update-category.model.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
-import 'package:admin_v2/Presentation/shared/components/info.label.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UpdateCategoryPage extends StatefulWidget {
@@ -30,6 +29,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
   final descriptionController_tm = TextEditingController();
   final descriptionController_ru = TextEditingController();
   bool editMode = false;
+  bool isUpdate = false;
 
   @override
   void initState() {
@@ -53,145 +53,109 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CategoryBloc, CategoryState>(
-      listenWhen: (s1, s2) =>
-          s1.updateStatus != s2.updateStatus ||
-          s1.deleteStatus != s2.deleteStatus,
-      listener: (context, state) {
-        if (state.updateStatus == CategoryUpdateStatus.success) {
-          print(state.updateStatus);
-          showSnackBar(context, Text('Updated successfully'),
-              type: SnackbarType.success);
-          Navigator.of(context).pop();
-        }
-        if (state.deleteStatus == CategoryDeleteStatus.success) {
-          print(state.deleteStatus);
-          showSnackBar(context, Text('Deleted successfully'),
-              type: SnackbarType.success);
-          Navigator.of(context).pop();
-        }
-      },
-      builder: (context, state) {
-        var categories = state.categories;
-        return Container(
-          width: MediaQuery.of(context).size.width * 0.45,
-          child: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "Kategoriya uytget".toUpperCase(),
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                  SizedBox(height: 12),
-                  OutlinedButton(
-                    onPressed: () => setState(() => editMode = !editMode),
-                    child: Text(
-                      editMode ? "Cancel" : "Üýtget",
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  LabeledInput(
-                    controller: titleController_tm,
-                    hintText: "Kategoriyanyn ady-tm *",
-                    validator: emptyField,
-                    editMode: editMode,
-                  ),
-                  SizedBox(height: 14),
-                  LabeledInput(
-                    editMode: editMode,
-                    controller: titleController_ru,
-                    hintText: "Kategoriyanyn ady-ru",
-                  ),
-                  SizedBox(height: 14),
-                  InfoWithLabel<CategoryEntity>(
-                    label: 'Easy kategoriya',
-                    editMode: true,
-                    validator: notSelectedItem,
-                    hintText: 'Select caategory *',
-                    value: category,
-                    onValueChanged: (v) {
-                      setState(() {
-                        category = v;
-                      });
-                    },
-                    items: categories?.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type.title_tm ?? ''),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 14),
-                  LabeledInput(
-                    editMode: editMode,
-                    controller: descriptionController_tm,
-                    hintText: "Barada-tm",
-                  ),
-                  SizedBox(height: 14),
-                  LabeledInput(
-                    controller: descriptionController_ru,
-                    hintText: "Barada-ru",
-                    editMode: editMode,
-                  ),
-                  SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Button(
-                        text: 'Delete',
-                        textColor: Colors.redAccent,
-                        borderColor: Colors.redAccent,
-                        hasBorder: true,
-                        isLoading:
-                            state.deleteStatus == CategoryDeleteStatus.loading,
-                        onPressed: () {
-                          if (widget.category.id != null) {
-                            categoryBloc.deleteCategory(widget.category.id!);
-                          }
-                        },
-                      ),
-                      SizedBox(width: 16),
-                      Button(
-                        text: "Update",
-                        primary: kswPrimaryColor,
-                        textColor: kWhite,
-                        isLoading:
-                            state.updateStatus == CategoryUpdateStatus.loading,
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            UpdateCategoryDTO data = UpdateCategoryDTO(
-                                id: widget.category.id,
-                                description_tm: checkIfChangedAndReturn(
-                                    getOldDescriptionTm,
-                                    descriptionController_ru.text),
-                                title_tm: checkIfChangedAndReturn(
-                                    getOldTitileTm, titleController_tm.text),
-                                title_ru: checkIfChangedAndReturn(
-                                    getOldTitileRu, titleController_ru.text),
-                                description_ru: checkIfChangedAndReturn(
-                                    getOldDescriptionRu,
-                                    descriptionController_tm.text),
-                                parentId: checkIfChangedAndReturn(
-                                  getOldParentId,
-                                  category?.id,
-                                ));
-
-                            await categoryBloc.updateCategory(data);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.45,
+      child: Form(
+        key: formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Kategoriya uytget".toUpperCase(),
+                style: FluentTheme.of(context).typography.body,
               ),
-            ),
+              SizedBox(height: 12),
+              OutlinedButton(
+                onPressed: () => setState(() => editMode = !editMode),
+                child: Text(
+                  editMode ? "Cancel" : "Üýtget",
+                ),
+              ),
+              SizedBox(height: 20),
+              FluentLabeledInput(
+                controller: titleController_tm,
+                label: "Kategoriyanyn ady-tm *",
+                isTapped: isUpdate, // !
+                isEditMode: editMode,
+              ),
+              SizedBox(height: 14),
+              FluentLabeledInput(
+                isEditMode: editMode,
+                isTapped: false,
+                controller: titleController_ru,
+                label: "Kategoriyanyn ady-ru",
+              ),
+              SizedBox(height: 14),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                builder: (context, state) {
+                  var categories = state.categories;
+                  return CustomAutoSuggestedBox(
+                    items: categories?.map((e) => e.title_tm ?? '-').toList() ??
+                        [],
+                    onChanged: (v) {
+                      var selectedItems = categories?.where(
+                          (el) => v?.contains(el.title_tm ?? '-') == true);
+                      if (selectedItems?.isNotEmpty == true) {
+                        setState(
+                          () {
+                            category = selectedItems?.first;
+                          },
+                        );
+                      }
+                    },
+                    label: 'Esasy kategoriya',
+                    isEditMode: editMode,
+                  );
+                },
+              ),
+              SizedBox(height: 14),
+              FluentLabeledInput(
+                isEditMode: editMode,
+                controller: descriptionController_tm,
+                label: "Barada-tm",
+                isTapped: false,
+              ),
+              SizedBox(height: 14),
+              FluentLabeledInput(
+                controller: descriptionController_ru,
+                label: "Barada-ru",
+                isEditMode: editMode,
+                isTapped: false,
+              ),
+              SizedBox(height: 24),
+              f.Button(
+                text: "Update",
+                primary: kswPrimaryColor,
+                textColor: kWhite,
+                onPressed: () {
+                  setState(() {
+                    isUpdate = true;
+                  });
+                  UpdateCategoryDTO data = UpdateCategoryDTO(
+                    id: widget.category.id,
+                    description_tm: checkIfChangedAndReturn(
+                        getOldDescriptionTm, descriptionController_ru.text),
+                    title_tm: checkIfChangedAndReturn(
+                        getOldTitileTm, titleController_tm.text),
+                    title_ru: checkIfChangedAndReturn(
+                        getOldTitileRu, titleController_ru.text),
+                    description_ru: checkIfChangedAndReturn(
+                        getOldDescriptionRu, descriptionController_tm.text),
+                    parentId: checkIfChangedAndReturn(
+                      getOldParentId,
+                      category?.id,
+                    ),
+                  );
+                  Navigator.of(context).pop(data);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

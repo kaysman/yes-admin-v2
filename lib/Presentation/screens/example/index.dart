@@ -1,4 +1,6 @@
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 
 import 'dashboard.dart';
 
@@ -19,32 +21,55 @@ class _IndexState extends State<Index> {
     )
   ];
 
+  final List<Map<String, dynamic>> paneItems = [
+    {
+      'icon': FluentIcons.b_i_dashboard,
+      'title': 'Dashboard',
+    },
+    {
+      'icon': FluentIcons.category_classification,
+      'title': 'Products',
+    },
+    {
+      'icon': FluentIcons.product_list,
+      'title': 'Orders',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return NavigationView(
       pane: NavigationPane(
-        displayMode: PaneDisplayMode.top,
         // header: Image.asset(
         //   'assets/brand_yes.png',
         //   fit: BoxFit.contain,
         // ),
-        items: [
-          PaneItem(
-            icon: Icon(FluentIcons.b_i_dashboard),
-            title: const Text('Dashboard'),
-            infoBadge: const InfoBadge(
-              source: Text('9'),
+
+        indicator: StickyNavigationIndicator(
+          color: kWhite,
+        ),
+        items: List.generate(paneItems.length, (index) {
+          var item = paneItems[index];
+          return PaneItem(
+            selectedTileColor: ButtonState.all(Colors.blue),
+            icon: Icon(
+              item['icon']!,
+              color: index == selected_index ? Colors.white : null,
             ),
-          ),
-          PaneItem(
-            icon: Icon(FluentIcons.product_list),
-            title: const Text('Products'),
-          ),
-          PaneItem(
-            icon: Icon(FluentIcons.activate_orders),
-            title: const Text('Orders'),
-          ),
-        ],
+            title: Text.rich(
+              TextSpan(
+                text: item['title'],
+                style: index == selected_index
+                    ? TextStyle(
+                        color: kWhite,
+                      )
+                    : TextStyle(
+                        color: kBlack,
+                      ),
+              ),
+            ),
+          );
+        }),
         selected: selected_index,
         onChanged: (v) {
           setState(() {

@@ -5,7 +5,9 @@ import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
+// import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProductPickIMages extends StatefulWidget {
@@ -29,7 +31,6 @@ class ProductPickIMages extends StatefulWidget {
 }
 
 class __ProductPickIMagesState extends State<ProductPickIMages> {
-  // List<FilePickerResult> _selectedImages = [];
   FilePickerResult? _selectedImage;
 
   Future<void> pickImage() async {
@@ -66,17 +67,18 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              InkWell(
-                onTap: () => Navigator.of(context).pop(),
-                child: const Icon(Icons.close, color: kBlack),
+              IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(FluentIcons.close_pane, color: kBlack),
+                // child: const Icon(Icons.close, color: kBlack),
               ),
               Text(
                 "Harydyn suratlary".toUpperCase(),
-                style: Theme.of(context).textTheme.headline4,
+                style: FluentTheme.of(context).typography.bodyLarge,
               ),
               Text(
                 "2/2",
-                style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                style: FluentTheme.of(context).typography.body?.copyWith(
                       color: kText2Color,
                     ),
               ),
@@ -114,7 +116,7 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
                               right: 2,
                               child: SmallCircleButton(
                                 child: Icon(
-                                  Icons.close,
+                                  FluentIcons.close_pane,
                                   size: 12,
                                   shadows: kBoxShadow,
                                 ),
@@ -169,14 +171,14 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('Suratlary asakdaky duwma basyp saylap bilersiniz!',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2
+                          style: FluentTheme.of(context)
+                              .typography
+                              .body
                               ?.copyWith(color: kGrey1Color, fontSize: 18)),
                       SizedBox(
                         height: 14,
                       ),
-                      Button(
+                      f.Button(
                         text: 'Surat sayla',
                         textColor: kWhite,
                         primary: kswPrimaryColor,
@@ -185,14 +187,14 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
 
                           widget.onSelectedIMages.call(_selectedImage!);
                         },
-                      ),
+                      )
                     ],
                   ),
                 ),
               ),
             ),
           if (_selectedImage != null)
-            Button(
+            f.Button(
               text: 'Surat gosh',
               onPressed: () async {
                 await pickImage();
@@ -204,7 +206,7 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Button(
+              f.Button(
                 primary: kswPrimaryColor,
                 textColor: kWhite,
                 text: "Back",
@@ -218,7 +220,7 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
               SizedBox(width: 16),
               Row(
                 children: [
-                  Button(
+                  f.Button(
                     primary: kswPrimaryColor,
                     textColor: kWhite,
                     text: "Save",

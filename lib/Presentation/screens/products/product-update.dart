@@ -15,7 +15,8 @@ import 'package:admin_v2/Presentation/screens/products/dialogs/product-update-in
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../Data/models/filter/size.dart';
@@ -116,21 +117,21 @@ class _ProductUpdateDialogState extends State<ProductUpdateDialog> {
           s1.deleteStatus != s2.deleteStatus ||
           s1.updateStatus != s2.updateStatus,
       listener: (context, state) {
-        if (state.deleteStatus == ProductDeleteStatus.success) {
-          Navigator.of(context).pop();
-          showSnackBar(
-            context,
-            Text('Deleted successfully'),
-            type: SnackbarType.success,
-          );
-        } else if (state.updateStatus == ProductUpdateStatus.success) {
-          Navigator.of(context).pop();
-          showSnackBar(
-            context,
-            Text('Updated successfully'),
-            type: SnackbarType.success,
-          );
-        }
+        // if (state.deleteStatus == ProductDeleteStatus.success) {
+        //   Navigator.of(context).pop();
+        //   showSnackBar(
+        //     context,
+        //     Text('Deleted successfully'),
+        //     type: SnackbarType.success,
+        //   );
+        // } else if (state.updateStatus == ProductUpdateStatus.success) {
+        //   Navigator.of(context).pop();
+        //   showSnackBar(
+        //     context,
+        //     Text('Updated successfully'),
+        //     type: SnackbarType.success,
+        //   );
+        // }
       },
       builder: (context, state) {
         return Container(
@@ -192,23 +193,23 @@ class _ProductUpdateDialogState extends State<ProductUpdateDialog> {
                   });
                 },
               ),
-              ProductPickUpdateImages(
-                deleteLoading:
-                    state.deleteStatus == ProductDeleteStatus.loading,
-                onDelete: () async {
-                  await productBloc.deleteProduct(widget.product.id!);
-                },
-                product: widget.product,
-                onSelectedIMages: (v) {
-                  setState(() {
-                    _selectedImages.add(v);
-                  });
-                },
-                onSave: onSave,
-                pageController: _pageViewController,
-                updateLoading:
-                    state.updateStatus == ProductUpdateStatus.loading,
-              ),
+              // ProductPickUpdateImages(
+              //   deleteLoading:
+              //       state.deleteStatus == ProductDeleteStatus.loading,
+              //   onDelete: () async {
+              //     await productBloc.deleteProduct(widget.product.id!);
+              //   },
+              //   product: widget.product,
+              //   onSelectedIMages: (v) {
+              //     setState(() {
+              //       _selectedImages.add(v);
+              //     });
+              //   },
+              //   onSave: onSave,
+              //   pageController: _pageViewController,
+              //   updateLoading:
+              //       state.updateStatus == ProductUpdateStatus.loading,
+              // ),
             ],
           ),
         );

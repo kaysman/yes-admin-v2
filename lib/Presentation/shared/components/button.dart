@@ -1,6 +1,7 @@
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/indicators.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
   const Button({
@@ -45,33 +46,38 @@ class Button extends StatelessWidget {
         opacity: isDisabled ? 0.5 : 1,
         child: AbsorbPointer(
           absorbing: isDisabled || isLoading,
-          child: ElevatedButton(
+          child: FilledButton(
             onPressed: this.onPressed,
-            style: ElevatedButton.styleFrom(
-              elevation: this.elevation,
-              primary: this.primary,
-              onPrimary: this.onPrimary,
-              shape: RoundedRectangleBorder(
-                side: this.hasBorder
-                    ? BorderSide(color: this.borderColor)
-                    : BorderSide.none,
-                borderRadius: BorderRadius.circular(this.borderRadius),
+            style: ButtonStyle(
+              backgroundColor: ButtonState.all(this.primary),
+              elevation: ButtonState.all(this.elevation),
+              // primary: this.primary,
+              // onPrimary: this.onPrimary,
+              shape: ButtonState.all(
+                RoundedRectangleBorder(
+                  side: this.hasBorder
+                      ? BorderSide(color: this.borderColor)
+                      : BorderSide.none,
+                  borderRadius: BorderRadius.circular(this.borderRadius),
+                ),
               ),
-              padding: this.padding,
+
+              padding: ButtonState.all(this.padding),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (icon != null) icon!,
                 SizedBox(width: 8.0),
-                Text(
-                  this.text,
-                  style: textStyle ??
-                      Theme.of(context)
-                          .textTheme
-                          .bodyText2
-                          ?.copyWith(color: textColor),
-                ),
+                if (icon == null)
+                  Text(
+                    this.text,
+                    style: textStyle ??
+                        FluentTheme.of(context)
+                            .typography
+                            .body
+                            ?.copyWith(color: textColor),
+                  ),
                 SizedBox(width: 8.0),
                 if (isLoading)
                   ProgressIndicatorSmall(
@@ -97,7 +103,7 @@ class FlatBackButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      style: TextButton.styleFrom(padding: EdgeInsets.zero),
+      style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
       onPressed: () {
         Navigator.of(context).pop(result);
       },
@@ -115,9 +121,9 @@ class FlatBackButton<T> extends StatelessWidget {
           ),
           Text(
             "Back",
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
+            style: FluentTheme.of(context)
+                .typography
+                .body
                 ?.copyWith(color: kGrey1Color),
           ),
         ],
@@ -140,19 +146,27 @@ class TryAgainButton extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.error, size: 42, color: Colors.redAccent),
+          Icon(FluentIcons.error, size: 42, color: Colors.red),
           SizedBox(height: 14),
           Text(
             "Something went wrong",
-            style: Theme.of(context).textTheme.bodyText1,
+            style: FluentTheme.of(context).typography.body,
           ),
           SizedBox(height: 8),
-          TextButton.icon(
+          TextButton(
             onPressed: this.tryAgain,
-            icon: Icon(Icons.refresh),
-            label: Text(
-              "Try again",
-              style: Theme.of(context).textTheme.bodyText1,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(FluentIcons.refresh),
+                SizedBox(
+                  width: 8,
+                ),
+                Text(
+                  "Try again",
+                  style: FluentTheme.of(context).typography.body,
+                ),
+              ],
             ),
           ),
         ],
@@ -173,7 +187,7 @@ class SmallCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: this.onTap,
       child: Container(
         padding: const EdgeInsets.all(8),

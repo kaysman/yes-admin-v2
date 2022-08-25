@@ -32,7 +32,6 @@ class ProductService {
             .toList(),
         fields: fields,
       );
-      print(res.data);
       return ProductEntity.fromJson(res.data);
     } catch (_) {
       print(_);

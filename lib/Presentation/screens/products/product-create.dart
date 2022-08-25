@@ -1,5 +1,4 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
-import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/category/sub.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
@@ -15,7 +14,9 @@ import 'package:admin_v2/Presentation/screens/products/dialogs/product-pick-imag
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../Data/models/filter/size.dart';
@@ -70,9 +71,9 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
       brandBloc.getAllBrands();
     }
     categoryBloc = context.read<CategoryBloc>();
-    // if (categoryBloc.state.categories == null) {
-    categoryBloc.getAllCategories();
-    // }
+    if (categoryBloc.state.categories == null) {
+      categoryBloc.getAllCategories();
+    }
 
     marketBloc = context.read<MarketBloc>();
     if (marketBloc.state.markets == null) {
@@ -97,77 +98,96 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
       listenWhen: (s1, s2) => s1.createStatus != s2.createStatus,
       listener: (context, state) {
         if (state.createStatus == ProductCreateStatus.success) {
-          Navigator.of(context).pop();
-          showSnackBar(
+          showSnackbar(
             context,
-            Text('Created successfully'),
-            type: SnackbarType.success,
+            Snackbar(
+              content: Text('Created successfully'),
+            ),
           );
+          Navigator.of(context).pop();
+        } else if (state.createStatus == ProductCreateStatus.error) {
+          showSnackbar(
+            context,
+            Snackbar(
+              content: Text(
+                'Creation error. Please, try again!',
+                style: FluentTheme.of(context).typography.body?.copyWith(
+                      color: Colors.red,
+                    ),
+              ),
+            ),
+          );
+          Navigator.of(context).pop();
         }
       },
       builder: (context, state) {
-        return Container(
-          width: MediaQuery.of(context).size.width * .45,
-          child: ExpandablePageView(
-            controller: _pageViewController,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              ProductCerateInfo(
-                marketPriceController: marketPriceController,
-                ourPriceController: ourPriceController,
-                descriptionController_ru: descriptionController_ru,
-                descriptionController_tm: descriptionController_tm,
-                priceController: priceController,
-                titleController_ru: titleController_ru,
-                titleController_tm: titleController_tm,
-                pageController: _pageViewController,
-                formKey: productCreateFormKey,
-                codeController: codeController,
-                onBrandChanged: (v) {
-                  setState(() {
-                    brand = v;
-                  });
-                },
-                onMarketChanged: (v) {
-                  setState(() {
-                    market = v;
-                  });
-                },
-                onCategoryChanged: (v) {
-                  setState(() {
-                    category = v;
-                  });
-                },
-                onColorChanged: (v) {
-                  setState(() {
-                    color = v;
-                  });
-                },
-                onSizeChanged: (v) {
-                  setState(() {
-                    sizes = v
-                        .map((e) =>
-                            CreateSizeDTO(size_id: e.id!, count: e.count,))
-                        .toList();
-                  });
-                },
-                onGenderChanged: (v) {
-                  setState(() {
-                    gender = v;
-                  });
-                },
-              ),
-              ProductPickIMages(
-                onSelectedIMages: (v) {
-                  setState(() {
-                    _selectedImages = v.files;
-                  });
-                },
-                onSave: onSave,
-                pageController: _pageViewController,
-                saveLoading: state.createStatus == ProductCreateStatus.loading,
-              ),
-            ],
+        return SingleChildScrollView(
+          child: Container(
+            width: MediaQuery.of(context).size.width * .45,
+            child: ExpandablePageView(
+              controller: _pageViewController,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                ProductCerateInfo(
+                  marketPriceController: marketPriceController,
+                  ourPriceController: ourPriceController,
+                  descriptionController_ru: descriptionController_ru,
+                  descriptionController_tm: descriptionController_tm,
+                  priceController: priceController,
+                  titleController_ru: titleController_ru,
+                  titleController_tm: titleController_tm,
+                  pageController: _pageViewController,
+                  formKey: productCreateFormKey,
+                  codeController: codeController,
+                  onBrandChanged: (v) {
+                    setState(() {
+                      brand = v;
+                    });
+                  },
+                  onMarketChanged: (v) {
+                    setState(() {
+                      market = v;
+                    });
+                  },
+                  onCategoryChanged: (v) {
+                    setState(() {
+                      category = v;
+                    });
+                  },
+                  onColorChanged: (v) {
+                    setState(() {
+                      color = v;
+                    });
+                  },
+                  onSizeChanged: (v) {
+                    setState(() {
+                      sizes = v
+                          .map((e) => CreateSizeDTO(
+                                size_id: e.id!,
+                                count: e.count,
+                              ))
+                          .toList();
+                    });
+                  },
+                  onGenderChanged: (v) {
+                    setState(() {
+                      gender = v;
+                    });
+                  },
+                ),
+                ProductPickIMages(
+                  onSelectedIMages: (v) {
+                    setState(() {
+                      _selectedImages = v.files;
+                    });
+                  },
+                  onSave: onSave,
+                  pageController: _pageViewController,
+                  saveLoading:
+                      state.createStatus == ProductCreateStatus.loading,
+                ),
+              ],
+            ),
           ),
         );
       },

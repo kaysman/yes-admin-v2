@@ -1,6 +1,7 @@
 import 'package:admin_v2/Presentation/screens/home-gadgets/gadget-update.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:fluent_ui/fluent_ui.dart' as f;
 import 'package:flutter/material.dart';
 
 Map<String, String> header() {
@@ -65,7 +66,8 @@ void showSnackBar(
   Color? backgroundColor,
   double? width = 230,
 }) {
-  ScaffoldMessenger?.of(context).showSnackBar(
+  f.showSnackbar(
+    context,
     SnackBar(
       backgroundColor: backgroundColor != null
           ? backgroundColor
@@ -82,7 +84,7 @@ void showSnackBar(
 
 showAppDialog(
   BuildContext context,
-  Widget child, 
+  Widget child,
 ) async {
   return await showDialog(
     context: context,
@@ -90,6 +92,34 @@ showAppDialog(
       return Dialog(
         backgroundColor: Colors.white,
         child: child,
+      );
+    },
+  );
+}
+
+Future<T?> showFluentAppDialog<T>(
+  BuildContext context, {
+  Widget? title,
+  Widget? content,
+  List<Widget>? actions,
+}) async {
+  return await showDialog<T>(
+    context: context,
+    // barrierDismissible: true,
+    builder: (context) {
+      return f.ContentDialog(
+        constraints: BoxConstraints(maxWidth: 800),
+        title: title,
+        content: content,
+        actions: actions,
+        // f.Button(
+        //   child: Text('Cancel'),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
+        // f.FilledButton(
+        //   child: Text('Go'),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
       );
     },
   );
@@ -113,4 +143,13 @@ void hideKeyboard({BuildContext? context}) {
       currentFocus.unfocus();
     }
   }
+}
+
+/// ------
+/// [customLogger]
+/// ------
+log<T>(T value) {
+  print('-- -- -- -- --');
+  print(value);
+  print('--  --  --  --  --');
 }
