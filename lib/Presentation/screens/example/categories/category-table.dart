@@ -61,7 +61,7 @@ class _FluentCategoryTableState extends State<FluentCategoryTable> {
           leading: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: Text(
-              'Categories',
+              'Category Table',
               style: FluentTheme.of(context).typography.title,
             ),
           ),

@@ -5,6 +5,7 @@ import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dar
 import 'package:admin_v2/Presentation/screens/categories/category-create.dart';
 import 'package:admin_v2/Presentation/screens/categories/category-update.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/delete-dialog.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/titled-add-btn.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -96,11 +97,7 @@ class _CategoryTreeViewImplState extends State<CategoryTreeViewImpl> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Button(
-                  child: Text('Add category'),
-                  onPressed: () {
-                    showFluentAppDialog(context, content: CreateCategoryPage());
-                  }),
+              TitledAddBtn(onAdd: () {}, title: 'Categories'),
               SizedBox(
                 height: 8,
               ),

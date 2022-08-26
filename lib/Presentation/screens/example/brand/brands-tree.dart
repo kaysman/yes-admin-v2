@@ -2,12 +2,14 @@ import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-create.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-update.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/delete-dialog.dart';
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../brands/bloc/brand.bloc.dart';
 import '../../brands/bloc/brand.state.dart';
+import '../widgets/titled-add-btn.dart';
 import '../widgets/tree-view-item-content.dart';
 
 class Category {
@@ -92,16 +94,22 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
         var brands = state.brands;
 
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 8,
+          ),
           width: 300,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Button(
-                  child: Text('+ brand'),
-                  onPressed: () {
-                    showFluentAppDialog(context, content: CreateBrandPage());
-                  }),
+              TitledAddBtn(
+                onAdd: () {
+                  showFluentAppDialog(
+                    context,
+                    content: CreateBrandPage(),
+                  );
+                },
+                title: 'Brands',
+              ),
               SizedBox(
                 height: 8,
               ),

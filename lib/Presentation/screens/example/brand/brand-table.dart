@@ -70,7 +70,7 @@ class _FluentBrandTableState extends State<FluentBrandTable> {
               horizontal: 14,
             ),
             child: Text(
-              'Brands',
+              'Brand Table',
               style: FluentTheme.of(context).typography.title,
             ),
           ),
