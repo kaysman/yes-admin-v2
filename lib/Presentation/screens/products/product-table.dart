@@ -5,18 +5,18 @@ import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
-import 'package:admin_v2/Presentation/screens/products/dialogs/import.dart';
 import 'package:admin_v2/Presentation/screens/products/product-create.dart';
 import 'package:admin_v2/Presentation/screens/products/product-info.dialog.dart';
-import 'package:admin_v2/Presentation/screens/products/widgets/endrawer.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../shared/components/data_row.dart';
 import '../../shared/components/scrollable copy.dart';
 import 'product-update.dart';
 
@@ -57,10 +57,10 @@ SidebarItem getProductSidebarItem() {
                 width: 14,
               ),
               OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  onSurface: Colors.white,
-                  primary: Colors.transparent,
-                ),
+                // style: OutlinedButton.styleFrom(
+                //   onSurface: Colors.white,
+                //   primary: Colors.transparent,
+                // ),
                 onPressed: () {
                   showAppDialog(context, ProductCreateDialog());
                 },
@@ -111,15 +111,15 @@ class _ProductsTableState extends State<ProductsTable> {
   @override
   void initState() {
     productBloc = context.read<ProductBloc>();
-    productBloc.getAllProducts();
+    // productBloc.getAllProducts();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: EndDrawer(),
-      body: LayoutBuilder(
+    return Container(
+      // endDrawer: EndDrawer(),
+      child: LayoutBuilder(
         builder: (_, constraints) {
           return BlocBuilder<ProductBloc, ProductState>(
             bloc: productBloc,
@@ -127,16 +127,17 @@ class _ProductsTableState extends State<ProductsTable> {
               var allProductLength = state.totalProductsCount;
               if (state.listingStatus == ProductListStatus.loading) {
                 return Container(
-                  height: MediaQuery.of(context).size.height - 100,
+                  height: MediaQuery.of(context).size.height - 200,
                   alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
+                  child: ProgressRing(),
+                  // child: CircularProgressIndicator(),
                 );
               }
               if (state.listingStatus == ProductListStatus.error) {
                 return Container(
                   height: MediaQuery.of(context).size.height - 100,
                   alignment: Alignment.center,
-                  child: TryAgainButton(
+                  child: f.TryAgainButton(
                     tryAgain: () async {
                       await productBloc.getAllProducts();
                     },
@@ -156,7 +157,7 @@ class _ProductsTableState extends State<ProductsTable> {
                             Text("$allProductLength total products"),
                             Spacer(),
                             if (selectedProducts.length == 1) ...[
-                              Button(
+                              f.Button(
                                 text: 'Haryt barada',
                                 primary: kswPrimaryColor,
                                 textColor: kWhite,
@@ -176,7 +177,7 @@ class _ProductsTableState extends State<ProductsTable> {
                               SizedBox(
                                 width: 14,
                               ),
-                              Button(
+                              f.Button(
                                 text: 'Uytget',
                                 primary: kswPrimaryColor,
                                 textColor: kWhite,
@@ -194,10 +195,10 @@ class _ProductsTableState extends State<ProductsTable> {
                               ),
                             ],
                             if (selectedProducts.length >= 2) ...[
-                              Button(
+                              f.Button(
                                 text: 'Delete',
-                                textColor: Colors.redAccent,
-                                borderColor: Colors.redAccent,
+                                textColor: Colors.red,
+                                borderColor: Colors.red,
                                 hasBorder: true,
                                 onPressed: () async {
                                   List<int> ids = [];
@@ -219,43 +220,43 @@ class _ProductsTableState extends State<ProductsTable> {
                                 },
                               )
                             ],
-                            SizedBox(width: 16),
-                            OutlinedButton.icon(
-                              label: Text(
-                                'Import',
-                                style: TextStyle(
-                                  letterSpacing: .7,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              onPressed: () {
-                                showAppDialog(context, ImportDialog());
-                              },
-                              icon: Icon(
-                                Icons.file_upload,
-                                size: 20,
-                              ),
-                            ),
-                            SizedBox(width: 16),
-                            OutlinedButton.icon(
-                              label: Text(
-                                'Filter',
-                                style:
-                                    TextStyle(letterSpacing: .7, fontSize: 16),
-                              ),
-                              onPressed: () {
-                                Scaffold.of(context).openEndDrawer();
-                              },
-                              icon: Icon(
-                                Icons.filter_list_alt,
-                                size: 20,
-                                color: state.lastFilter
-                                            ?.filterArgumentsIsNotNull ??
-                                        false
-                                    ? Colors.orange
-                                    : null,
-                              ),
-                            ),
+                            // SizedBox(width: 16),
+                            // OutlinedButton.icon(
+                            //   label: Text(
+                            //     'Import',
+                            //     style: TextStyle(
+                            //       letterSpacing: .7,
+                            //       fontSize: 16,
+                            //     ),
+                            //   ),
+                            //   onPressed: () {
+                            //     showAppDialog(context, ImportDialog());
+                            //   },
+                            //   icon: Icon(
+                            //     Icons.file_upload,
+                            //     size: 20,
+                            //   ),
+                            // ),
+                            // SizedBox(width: 16),
+                            // OutlinedButton.icon(
+                            //   label: Text(
+                            //     'Filter',
+                            //     style:
+                            //         TextStyle(letterSpacing: .7, fontSize: 16),
+                            //   ),
+                            //   onPressed: () {
+                            //     Scaffold.of(context).openEndDrawer();
+                            //   },
+                            //   icon: Icon(
+                            //     Icons.filter_list_alt,
+                            //     size: 20,
+                            //     color: state.lastFilter
+                            //                 ?.filterArgumentsIsNotNull ??
+                            //             false
+                            //         ? Colors.orange
+                            //         : null,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -265,9 +266,18 @@ class _ProductsTableState extends State<ProductsTable> {
                             minWidth: constraints.maxWidth,
                           ),
                           child: DataTable(
+                            headingRowColor:
+                                m.MaterialStateProperty.resolveWith<Color>(
+                              (Set<m.MaterialState> states) {
+                                if (states.contains(m.MaterialState.selected)) {
+                                  return kGrey5Color;
+                                }
+                                return kGrey5Color;
+                              },
+                            ),
                             border: TableBorder.all(
                               width: 1.0,
-                              color: Colors.grey.shade100,
+                              color: Colors.grey[10],
                             ),
                             sortColumnIndex: sortColumnIndex,
                             sortAscending: sortAscending,
@@ -312,7 +322,10 @@ class _ProductsTableState extends State<ProductsTable> {
     return List.generate(columnNames.length, (index) {
       var name = columnNames[index];
       return DataColumn(
-        label: Text(name, style: Theme.of(context).textTheme.bodyText1),
+        label: Text(
+          name,
+          style: FluentTheme.of(context).typography.body,
+        ),
       );
     });
   }
@@ -428,7 +441,7 @@ class MultiDeleteProductDialog extends StatelessWidget {
             children: [
               Text(
                 'Hakykatdan - da saylan harytlarynyzy \' DELETE \' etmek isleyarsinizmi ?',
-                style: Theme.of(context).textTheme.headline2,
+                style: FluentTheme.of(context).typography.body,
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -437,7 +450,7 @@ class MultiDeleteProductDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Button(
+                  f.Button(
                     text: 'Yok',
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -448,7 +461,7 @@ class MultiDeleteProductDialog extends StatelessWidget {
                   SizedBox(
                     width: 20,
                   ),
-                  Button(
+                  f.Button(
                     text: 'Hawwa',
                     isLoading: state.multiDeleteStatus ==
                         ProductMultiDeleteStatus.loading,

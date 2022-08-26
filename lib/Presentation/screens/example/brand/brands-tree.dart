@@ -1,13 +1,11 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-create.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-update.dart';
-import 'package:admin_v2/Presentation/screens/example/categories/category-tree.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/delete-dialog.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../brands/bloc/brand.bloc.dart';
 import '../../brands/bloc/brand.state.dart';
 import '../widgets/tree-view-item-content.dart';
@@ -37,6 +35,8 @@ class BrandTreeViewImpl extends StatefulWidget {
 class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
   late BrandBloc brandBloc;
   int selected_item = 0;
+  String? action;
+  BrandEntity? brand;
 
   @override
   void initState() {
@@ -98,7 +98,7 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Button(
-                  child: Text('Add brand'),
+                  child: Text('+ brand'),
                   onPressed: () {
                     showFluentAppDialog(context, content: CreateBrandPage());
                   }),
@@ -113,7 +113,9 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
                               ? ButtonState.resolveWith(
                                   (states) => Colors.grey[20],
                                 )
-                              : null,
+                              : ButtonState.resolveWith(
+                                  (states) => Colors.white,
+                                ),
                           content: TreeViewItemContent(
                             title: e.name ?? '-',
                             onItemTap: () {

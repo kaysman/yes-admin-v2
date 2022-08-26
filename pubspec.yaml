@@ -67,6 +67,7 @@ dependencies:
   card_swiper: ^2.0.4
   fluent_ui: ^3.12.0
   faker: ^2.0.0
+  native_context_menu: ^0.2.2+5
 
 
 

@@ -149,7 +149,6 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                     ),
                   );
                   Navigator.of(context).pop(data);
-                  Navigator.of(context).pop();
                 },
               ),
             ],

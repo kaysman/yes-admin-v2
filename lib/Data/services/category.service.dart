@@ -50,7 +50,6 @@ class CategoryService {
     var uri = Uri.parse(url);
     try {
       var res = await ApiClient.instance.get(uri, headers: header());
-      print(res.data.toString());
 
       return (res.data as List)
           .map((json) => CategoryEntity.fromJson(json as Map<String, dynamic>))

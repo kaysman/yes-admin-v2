@@ -1,5 +1,7 @@
 import 'package:admin_v2/Data/models/meta.dart';
-import 'package:flutter/material.dart';
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 
 class Pagination extends StatelessWidget {
   const Pagination({
@@ -32,39 +34,62 @@ class Pagination extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            width: double.infinity,
-            child: Divider(
-              indent: 0,
-              endIndent: 0,
-            ),
+              width: double.infinity,
+              child: Divider(
+                style: DividerThemeData(
+                    decoration: BoxDecoration(
+                  color: kGrey4Color,
+                )),
+              )
+              // Divider(
+              //   style: DividerThemeData(decoration: ),
+              //     // indent: 0,
+              //     // endIndent: 0,
+              //     ),
+              ),
+          SizedBox(
+            height: 8,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (this.goPrevious != null)
-                InkWell(
-                  onTap: () => this.goPrevious!.call(),
-                  child: Row(
+                IconButton(
+                  style: ButtonStyle(
+                      backgroundColor: ButtonState.all(kGrey4Color)),
+                  icon: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.arrow_back_ios,
-                        // color: kPrimaryColor,
+                        FluentIcons.back,
+                        size: 14,
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(
+                        width: 8,
+                      ),
                       Text(
-                        "Previous",
-                        style: Theme.of(context).textTheme.headline2,
+                        'Previous',
+                        style:
+                            FluentTheme.of(context).typography.body?.copyWith(
+                                  fontSize: 16,
+                                ),
                       ),
                     ],
                   ),
+                  onPressed: () => this.goNext,
                 ),
               SizedBox(width: 8),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    const Radius.circular(6),
-                  ),
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: kGrey3Color),
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                // shape: RoundedRectangleBorder(
+                //   borderRadius: BorderRadius.all(
+                //     const Radius.circular(6),
+                //   ),
+                // ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
@@ -73,7 +98,7 @@ class Pagination extends StatelessWidget {
                   child: Text(
                     // "${_meta?.currentPage}",,
                     text,
-                    style: Theme.of(context).textTheme.headline3,
+                    style: FluentTheme.of(context).typography.bodyLarge,
                   ),
                 ),
               ),
@@ -85,22 +110,47 @@ class Pagination extends StatelessWidget {
               //   ),
               SizedBox(width: 16),
               if (this.goNext != null)
-                InkWell(
-                  onTap: () => this.goNext!.call(),
-                  child: Row(
+                IconButton(
+                  style: ButtonStyle(
+                      backgroundColor: ButtonState.all(kGrey4Color)),
+                  icon: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Next",
-                        style: Theme.of(context).textTheme.headline2,
+                        'Next',
+                        style:
+                            FluentTheme.of(context).typography.body?.copyWith(
+                                  fontSize: 16,
+                                ),
                       ),
-                      SizedBox(width: 8),
+                      SizedBox(
+                        width: 8,
+                      ),
                       Icon(
-                        Icons.arrow_forward_ios,
-                        // color: kPrimaryColor,
+                        FluentIcons.forward,
+                        size: 14,
                       ),
                     ],
                   ),
+                  onPressed: () => this.goNext,
                 ),
+              // GestureDetector(
+              //   onTap: () => this.goNext!.call(),
+              //   child: Row(
+              //     children: [
+              //       Text(
+              //         "Next",
+              //         style: FluentTheme.of(context).typography.bodyLarge,
+              //       ),
+              //       SizedBox(width: 8),
+              //       Icon(
+              //         FluentIcons.forward,
+              //         // color: kPrimaryColor,
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ],

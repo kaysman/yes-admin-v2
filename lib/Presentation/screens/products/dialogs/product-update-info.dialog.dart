@@ -10,6 +10,7 @@ import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
@@ -23,9 +24,12 @@ import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:admin_v2/main.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:native_context_menu/native_context_menu.dart';
 
+import '../../example/widgets/fluent-labeled-input.dart';
 import '../../markets/bloc/market.bloc.dart';
 
 class ProductUpdateInfo extends StatefulWidget {
@@ -75,44 +79,54 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
   late FilterBloc filterBloc;
   late CategoryBloc categoryBloc;
   late BrandBloc brandBloc;
-  FilterEntity? color;
-  FilterEntity? gender;
-  FilterEntity? size;
-  SubItem? category;
-  BrandEntity? brand;
+  String color = '';
+  String gender = '';
+  String size = '';
+  String category = '';
+  String brand = '';
+  String market = '';
   TextEditingController sizeCountController = TextEditingController();
 
-  List<SizeEntity> _selectedSizes = [];
-  MarketEntity? market;
+  List<FilterEntity> _selectedSizes = [];
 
   bool editMode = false;
+  bool isNext = false;
 
   @override
   void initState() {
     super.initState();
 
-    color = widget.product.color;
-    gender = widget.product.gender;
-    _selectedSizes = widget.product.sizes!;
-    brand = widget.product.brand;
-    market = widget.product.market;
+    color = widget.product.color?.name_tm ?? '-';
+    gender = widget.product.gender?.name_tm ?? '-';
+    _selectedSizes = widget.product.sizes!
+        .map(
+          (e) => FilterEntity(
+            id: e.id,
+            name_tm: e.name_tm,
+            name_ru: '',
+            type: FilterType.SIZE,
+          ),
+        )
+        .toList();
+    // brand = widget.product.brand;
+    // market = widget.product.market;
 
     filterBloc = BlocProvider.of<FilterBloc>(context);
     if (filterBloc.state.filters == null) {
       filterBloc.getAllFilters();
     }
-    categoryBloc = BlocProvider.of<CategoryBloc>(context);
-    if (categoryBloc.state.categories == null) {
-      categoryBloc.getAllCategories();
-      category = getSubItem(
-          categoryBloc.state.categories ?? [], widget.product.category?.id);
-    }
-    category = getSubItem(
-        categoryBloc.state.categories ?? [], widget.product.category?.id);
-    brandBloc = BlocProvider.of<BrandBloc>(context);
-    if (brandBloc.state.brands == null) {
-      brandBloc.getAllBrands();
-    }
+    // categoryBloc = BlocProvider.of<CategoryBloc>(context);
+    // if (categoryBloc.state.categories == null) {
+    //   categoryBloc.getAllCategories();
+    //   category = getSubItem(
+    //       categoryBloc.state.categories ?? [], widget.product.category?.id);
+    // }
+    // category = getSubItem(
+    //     categoryBloc.state.categories ?? [], widget.product.category?.id);
+    // brandBloc = BlocProvider.of<BrandBloc>(context);
+    // if (brandBloc.state.brands == null) {
+    //   brandBloc.getAllBrands();
+    // }
   }
 
   // var subs = getSubs(widget.product.category);
@@ -165,14 +179,17 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () => Navigator.of(context).pop(),
-                  child: const Icon(Icons.close, color: kBlack),
+                IconButton(
+                  // borderRadius: BorderRadius.circular(20),
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(FluentIcons.remove, color: kBlack),
                 ),
                 Text(
                   "Haryt döret".toUpperCase(),
-                  style: Theme.of(context).textTheme.headline4,
+                  style: FluentTheme.of(context).typography.body?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                      ),
                 ),
                 SizedBox(height: 12),
                 OutlinedButton(
@@ -182,41 +199,36 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                     // style: Theme.of(context).textTheme.caption,
                   ),
                 ),
-                Text(
-                  "1/2",
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: kText2Color,
-                      ),
-                ),
               ],
             ),
             SizedBox(height: 20),
             RowOfTwoChildren(
-                child1: LabeledInput(
-                  hintText: 'Harydyň ady-tm *',
-                  validator: emptyField,
-                  editMode: editMode,
-                  controller: widget.titleController_tm,
-                ),
-                child2: LabeledInput(
-                  editMode: editMode,
-                  validator: emptyField,
-                  hintText: 'Harydyň ady-ru *',
-                  controller: widget.titleController_ru,
-                )),
+              child1: FluentLabeledInput(
+                controller: widget.titleController_tm,
+                isEditMode: true,
+                isTapped: false,
+                label: 'Harydyň ady-tm *',
+              ),
+              child2: FluentLabeledInput(
+                controller: widget.titleController_ru,
+                isEditMode: true,
+                isTapped: isNext,
+                label: 'Harydyň ady-ru *',
+              ),
+            ),
             SizedBox(height: 14),
             RowOfTwoChildren(
-              child1: LabeledInput(
-                editMode: editMode,
-                hintText: "YES baha *",
-                validator: emptyField,
+              child1: FluentLabeledInput(
                 controller: widget.ourPriceController,
+                isEditMode: true,
+                isTapped: isNext,
+                label: 'YES baha *',
               ),
-              child2: LabeledInput(
-                editMode: editMode,
-                validator: emptyField,
-                hintText: "Market baha *",
+              child2: FluentLabeledInput(
                 controller: widget.marketPriceController,
+                isEditMode: true,
+                isTapped: isNext,
+                label: 'Market baha *',
               ),
             ),
             SizedBox(height: 14),
@@ -228,62 +240,71 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                         (e) => e.type == FilterType.SIZE,
                       )
                       .toList();
-                  var mappedSizes = sizes
-                      ?.map((e) => SizeEntity(
-                            id: e.id,
-                            quantity: e.count,
-                            name_ru: e.name_ru,
-                            name_tm: e.name_tm,
-                          ))
-                      .toList();
-                  return DropdownSearch<SizeEntity>.multiSelection(
-                    enabled: editMode,
-                    dropdownBuilder: (context, selectedItems) {
-                      return Wrap(
-                        children: List.generate(selectedItems.length, (i) {
-                          return SizefilterItem(
-                            itemForUpdate: selectedItems[i],
-                            onCLear: () {
-                              setState(() {
-                                selectedItems[i].quantity = 1;
-                                selectedItems.remove(selectedItems[i]);
-                                _selectedSizes.remove(_selectedSizes[i]);
-                              });
-                            },
-                            onChangeCount: (v) {
-                              setState(() {
-                                selectedItems[i].quantity =
-                                    int.tryParse(v ?? '1') ?? 1;
-                              });
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Select sizes *',
+                        style:
+                            FluentTheme.of(context).typography.body?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  color: kGrey1Color,
+                                  fontSize: 18,
+                                ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      DropdownSearch<FilterEntity>.multiSelection(
+                        dropdownBuilder: (context, selectedItems) {
+                          return Wrap(
+                            runSpacing: 2,
+                            spacing: 2,
+                            children: List.generate(selectedItems.length, (i) {
+                              return SizefilterItem(
+                                item: selectedItems[i],
+                                onCLear: () {
+                                  setState(() {
+                                    selectedItems[i].count = 1;
+                                    selectedItems.remove(selectedItems[i]);
+                                    _selectedSizes.remove(_selectedSizes[i]);
+                                  });
+                                },
+                                onChangeCount: (v) {
+                                  setState(() {
+                                    selectedItems[i].count =
+                                        int.tryParse(v ?? '1') ?? 1;
+                                    _selectedSizes[i].count =
+                                        int.tryParse(v ?? '1') ?? 1;
+                                  });
+                                },
+                              );
+                            }),
+                          );
+                        },
+                        onChanged: (selecteds) {
+                          setState(
+                            () {
+                              _selectedSizes = [];
+                              for (var i = 0; i < selecteds.length; i++) {
+                                var item = selecteds[i];
+                                if (_selectedSizes.contains(item)) {
+                                  item.count = _selectedSizes[
+                                          _selectedSizes.indexOf(item)]
+                                      .count;
+                                }
+                                _selectedSizes.add(item);
+                              }
                             },
                           );
-                        }),
-                      );
-                    },
-                    onChanged: (selecteds) {
-                      setState(
-                        () {
-                          _selectedSizes = [];
-                          for (var i = 0; i < selecteds.length; i++) {
-                            var item = selecteds[i];
-                            if (_selectedSizes.contains(item)) {
-                              item.quantity =
-                                  _selectedSizes[_selectedSizes.indexOf(item)]
-                                      .quantity;
-                            }
-                            _selectedSizes.add(item);
-                          }
                         },
-                      );
-                      print("---------");
-                      print(_selectedSizes);
-                      print("---------");
-                    },
-                    validator: (v) => v!.isEmpty ? 'Bos bolmaly dal' : null,
-                    selectedItems: _selectedSizes,
-                    itemAsString: (v) => v.name_tm ?? '-',
-                    items: mappedSizes ?? [],
-                    dropdownDecoratorProps: kDropDownDecoratorProps,
+                        validator: (v) => v!.isEmpty ? 'Bos bolmaly dal' : null,
+                        selectedItems: _selectedSizes,
+                        itemAsString: (v) => v.name_tm ?? '',
+                        items: sizes ?? [],
+                        dropdownDecoratorProps: kDropDownDecoratorProps,
+                      ),
+                    ],
                   );
                 },
               ),
@@ -294,23 +315,24 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                         (e) => e.type == FilterType.GENDER,
                       )
                       .toList();
-                  return InfoWithLabel<FilterEntity>(
+
+                  return CustomAutoSuggestedBox(
+                    isEditMode: true,
                     label: 'Select gender *',
-                    editMode: editMode,
-                    hintText: 'Select gender *',
-                    value: gender,
-                    onValueChanged: (v) {
-                      widget.onGenderChanged.call(v!);
-                      setState(() {
-                        gender = v;
-                      });
+                    items: genders?.map((e) => e.name_tm ?? '-').toList() ?? [],
+                    onChanged: (v) {
+                      var mappedGenders =
+                          genders?.where((el) => el.name_tm == v).toList();
+                      if (mappedGenders?.isNotEmpty == true) {
+                        setState(() {
+                          gender = v ?? '';
+                        });
+                        if (mappedGenders != null) {
+                          widget.onGenderChanged.call(mappedGenders.first);
+                        }
+                      }
                     },
-                    items: genders?.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type.name_tm ?? ''),
-                      );
-                    }).toList(),
+                    isTapped: isNext,
                   );
                 },
               ),
@@ -322,167 +344,153 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                   var categories = state.categories;
 
                   var subs = getSubs(categories);
-                  print(categories);
-                  return InfoWithLabel<SubItem>(
-                    label: 'Select caategory *',
-                    editMode: editMode,
-                    hintText: 'Select caategory *',
-                    value: category,
-                    onValueChanged: (v) {
-                      widget.onCategoryChanged.call(v!);
-                      setState(() {
-                        category = v;
-                      });
+
+                  return CustomAutoSuggestedBox(
+                    isEditMode: true,
+                    label: 'Select category *',
+                    items: subs
+                        .map((e) =>
+                            '${e.name ?? '-'}     main: ${e.parentName ?? '-'}')
+                        .toList(),
+                    onChanged: (v) {
+                      var filteredCategories = subs
+                          .where((el) => v?.contains(el.name!) == true)
+                          .toList();
+                      if (filteredCategories.isNotEmpty) {
+                        setState(() {
+                          category = v ?? '';
+                        });
+                        widget.onCategoryChanged.call(filteredCategories.first);
+                      }
                     },
-                    items: subs.map(
-                      (type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                type.name ?? '-',
-                                style: Theme.of(context).textTheme.bodyText1,
-                              ),
-                              Text(
-                                type.parentName ?? '-',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1
-                                    ?.copyWith(
-                                      color: kGrey3Color,
-                                    ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                    ).toList(),
+                    isTapped: isNext,
                   );
                 },
               ),
               child2: BlocBuilder<BrandBloc, BrandState>(
                 builder: (context, state) {
                   var brands = state.brands;
-                  return InfoWithLabel<BrandEntity>(
+                  return CustomAutoSuggestedBox(
+                    isEditMode: true,
                     label: 'Select brand *',
-                    editMode: editMode,
-                    hintText: 'Select brand *',
-                    value: brand,
-                    onValueChanged: (v) {
-                      widget.onBrandChanged.call(v!);
-                      setState(() {
-                        brand = v;
-                      });
+                    items:
+                        brands?.map((e) => '${e.name ?? '-'}').toList() ?? [],
+                    onChanged: (v) {
+                      var filteredBrands =
+                          brands?.where((el) => el.name == v).toList();
+                      if (filteredBrands?.isNotEmpty == true) {
+                        setState(() {
+                          brand = v ?? '';
+                        });
+                        if (filteredBrands != null) {
+                          widget.onBrandChanged.call(filteredBrands.first);
+                        }
+                      }
                     },
-                    items: brands?.map(
-                      (type) {
-                        return DropdownMenuItem(
-                          value: type,
-                          child: Text(type.name ?? ''),
-                        );
-                      },
-                    ).toList(),
+                    isTapped: isNext,
                   );
                 },
               ),
             ),
             SizedBox(height: 14),
             RowOfTwoChildren(
-                child1: BlocBuilder<MarketBloc, MarketState>(
-                  builder: (context, state) {
-                    var markets = state.markets;
-                    return InfoWithLabel<MarketEntity>(
-                      label: 'Select market *',
-                      editMode: editMode,
-                      hintText: 'Select market *',
-                      value: market,
-                      onValueChanged: (v) {
-                        widget.onMarketChanged.call(v!);
+              child1: BlocBuilder<MarketBloc, MarketState>(
+                builder: (context, state) {
+                  var markets = state.markets;
+                  return CustomAutoSuggestedBox(
+                    isEditMode: true,
+                    label: 'Select market *',
+                    items:
+                        markets?.map((e) => '${e.title ?? '-'}').toList() ?? [],
+                    onChanged: (v) {
+                      var filteredMarkets =
+                          markets?.where((el) => el.title == v).toList();
+                      if (filteredMarkets?.isNotEmpty == true) {
                         setState(() {
-                          market = v;
+                          market = v ?? '';
                         });
-                      },
-                      items: markets?.map(
-                        (type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(type.title ?? ''),
-                          );
-                        },
-                      ).toList(),
-                    );
-                  },
-                ),
-                child2: LabeledInput(
-                  editMode: editMode,
-                  hintText: "Kody *",
-                  validator: emptyField,
-                  controller: widget.codeController,
-                )),
-            SizedBox(height: 14),
-            RowOfTwoChildren(
-              child1: BlocBuilder<FilterBloc, FilterState>(
+                        if (filteredMarkets != null) {
+                          widget.onMarketChanged.call(filteredMarkets.first);
+                        }
+                      }
+                    },
+                    isTapped: isNext,
+                  );
+                },
+              ),
+              child2: BlocBuilder<FilterBloc, FilterState>(
                 builder: (context, state) {
                   var colors = state.filters
                       ?.where(
                         (e) => e.type == FilterType.COLOR,
                       )
                       .toList();
-                  return InfoWithLabel<FilterEntity>(
+                  return CustomAutoSuggestedBox(
+                    isEditMode: true,
                     label: 'Select color *',
-                    editMode: editMode,
-                    hintText: 'Select color *',
-                    isLoading: state.listingStatus == FilterListStatus.loading,
-                    onValueChanged: (v) {
-                      widget.onColorChanged.call(v!);
-                      setState(() {
-                        color = v;
-                      });
-                    },
-                    value: color,
-                    items: colors?.map((type) {
-                          return DropdownMenuItem(
-                            value: type,
-                            child: Text(type.name_tm ?? ''),
-                          );
-                        }).toList() ??
+                    items: colors?.map((e) => '${e.name_tm ?? '-'}').toList() ??
                         [],
+                    onChanged: (v) {
+                      var filteredColors =
+                          colors?.where((el) => el.name_tm == v).toList();
+                      if (filteredColors?.isNotEmpty == true) {
+                        setState(() {
+                          color = v ?? '';
+                        });
+                        if (filteredColors != null) {
+                          widget.onColorChanged.call(filteredColors.first);
+                        }
+                      }
+                    },
+                    isTapped: isNext,
                   );
                 },
-              ),
-              child2: LabeledInput(
-                editMode: editMode,
-                hintText: "Barada-tm",
-                controller: widget.descriptionController_tm,
               ),
             ),
             SizedBox(height: 14),
             RowOfTwoChildren(
-              child1: LabeledInput(
-                editMode: editMode,
-                hintText: "Barada-ru",
+              child1: FluentLabeledInput(
+                controller: widget.descriptionController_tm,
+                isEditMode: true,
+                isTapped: isNext,
+                label: 'Barada-tm',
+              ),
+              child2: FluentLabeledInput(
+                controller: widget.codeController,
+                isEditMode: true,
+                isTapped: isNext,
+                label: 'Kody',
+              ),
+            ),
+            SizedBox(height: 14),
+            RowOfTwoChildren(
+              child1: FluentLabeledInput(
                 controller: widget.descriptionController_ru,
+                isEditMode: true,
+                isTapped: isNext,
+                label: 'Barada-ru',
               ),
               child2: SizedBox(),
             ),
             SizedBox(height: 24),
-            Button(
-              text: 'Next',
-              textColor: kWhite,
-              primary: kswPrimaryColor,
-              onPressed: () {
-                print(_selectedSizes);
-                if (widget.formKey.currentState!.validate()) {
-                  widget.onSizeChanged.call(_selectedSizes);
-                  widget.pageController.nextPage(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.decelerate,
-                  );
-                }
-              },
-            )
+            // ContextMenuRegion(child: child, menuItems: menuItems)
+            // Button(
+            //   text: 'Next',
+            //   textColor: kWhite,
+            //   primary: kswPrimaryColor,
+            //   onPressed: () {
+            //     setState(() {
+            //       isNext = true;
+            //     });
+            //     if (widget.formKey.currentState!.validate() && isValidate()) {
+            //       widget.onSizeChanged.call(_selectedSizes);
+            //       widget.pageController.nextPage(
+            //         duration: const Duration(milliseconds: 250),
+            //         curve: Curves.decelerate,
+            //       );
+            //     }
+            //   },
+            // )
           ],
         ),
       ),

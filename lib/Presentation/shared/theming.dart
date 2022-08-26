@@ -11,22 +11,22 @@ class AppTheme {
       scaffoldBackgroundColor: kWhite,
       // dataTableTheme: DataTableThemeData(
       //   checkboxHorizontalMargin: 18,
-      //   // headingRowColor: MaterialStateProperty.resolveWith<Color>(
-      //   //   (Set<MaterialState> states) {
-      //   //     if (states.contains(MaterialState.selected)) {
-      //   //       return kswPrimaryColor.withOpacity(0.3);
-      //   //     }
-      //   //     return kswPrimaryColor.withOpacity(0.3);
-      //   //   },
-      //   // ),
-      //   // dataRowColor: MaterialStateProperty.resolveWith<Color>(
-      //   //   (Set<MaterialState> states) {
-      //   //     if (states.contains(MaterialState.selected)) {
-      //   //       return kGrey5Color;
-      //   //     }
-      //   //     return kWhite;
-      //   //   },
-      //   // ),
+        // headingRowColor: MaterialStateProperty.resolveWith<Color>(
+        //   (Set<MaterialState> states) {
+        //     if (states.contains(MaterialState.selected)) {
+        //       return kswPrimaryColor.withOpacity(0.3);
+        //     }
+        //     return kswPrimaryColor.withOpacity(0.3);
+        //   },
+        // ),
+        // dataRowColor: MaterialStateProperty.resolveWith<Color>(
+        //   (Set<MaterialState> states) {
+        //     if (states.contains(MaterialState.selected)) {
+        //       return kGrey5Color;
+        //     }
+        //     return kWhite;
+        //   },
+        // ),
       //   dataRowHeight: 46,
       //   headingTextStyle: GoogleFonts.poppins(
       //     fontSize: 14,

@@ -143,7 +143,6 @@ class _UpdateBrandPageState extends State<UpdateBrandPage> {
                             'data': data.toJson(),
                           },
                         );
-                        Navigator.of(context).pop();
                       }
                     },
                   ),

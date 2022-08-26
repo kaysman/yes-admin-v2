@@ -44,21 +44,11 @@ class _FluentBrandTableState extends State<FluentBrandTable> {
   void initState() {
     productBloc = BlocProvider.of<ProductBloc>(context);
     if (widget.brand != null) {
+      selectedBrand = widget.brand;
       productBloc.getAllProducts(
         filter: FilterForProductDTO(brand_id: widget.brand?.id),
       );
     }
-    // brandBloc.getAllBrands();
-    // final f = faker.Faker();
-    // people.addAll(List.generate(
-    //     10,
-    //     (index) => Person(
-    //           f.person.firstName(),
-    //           f.internet.email(),
-    //           f.phoneNumber.us(),
-    //           f.address.city(),
-    //         )));
-
     super.initState();
   }
 
@@ -74,12 +64,16 @@ class _FluentBrandTableState extends State<FluentBrandTable> {
       },
       child: ScaffoldPage(
         header: PageHeader(
-          leading: TableBackButton(),
-          title: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 14,
-              ),
-              child: Text('Brands')),
+          // leading: TableBackButton(),
+          leading: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+            ),
+            child: Text(
+              'Brands',
+              style: FluentTheme.of(context).typography.title,
+            ),
+          ),
           commandBar: TableCommandBar(onSearch: () async {
             await showFluentAppDialog(
               context,
@@ -98,18 +92,37 @@ class _FluentBrandTableState extends State<FluentBrandTable> {
         content: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BrandTreeViewImpl(
-              onBrandIdChanged: (v) {
-                setState(() {
-                  selectedBrand = v;
-                });
-                productBloc.getAllProducts(
-                  filter: FilterForProductDTO(brand_id: v.id),
-                );
-              },
+            Container(
+              color: kGrey5Color.withOpacity(.6),
+              child: BrandTreeViewImpl(
+                onBrandIdChanged: (v) {
+                  // log(v);
+                  setState(() {
+                    selectedBrand = v;
+                  });
+                  productBloc.getAllProducts(
+                    filter: FilterForProductDTO(brand_id: v.id),
+                  );
+                },
+              ),
             ),
             Expanded(
-              child: TableProducts(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      TableBackButton(),
+                      SizedBox(
+                        width: 14,
+                      ),
+                      Text('Products of ${selectedBrand?.name}'),
+                    ],
+                  ),
+                  ProductsTable(),
+                ],
+              ),
+              // TableProducts(),
             ),
           ],
         ),

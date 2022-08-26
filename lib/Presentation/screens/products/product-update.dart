@@ -117,21 +117,21 @@ class _ProductUpdateDialogState extends State<ProductUpdateDialog> {
           s1.deleteStatus != s2.deleteStatus ||
           s1.updateStatus != s2.updateStatus,
       listener: (context, state) {
-        // if (state.deleteStatus == ProductDeleteStatus.success) {
-        //   Navigator.of(context).pop();
-        //   showSnackBar(
-        //     context,
-        //     Text('Deleted successfully'),
-        //     type: SnackbarType.success,
-        //   );
-        // } else if (state.updateStatus == ProductUpdateStatus.success) {
-        //   Navigator.of(context).pop();
-        //   showSnackBar(
-        //     context,
-        //     Text('Updated successfully'),
-        //     type: SnackbarType.success,
-        //   );
-        // }
+        if (state.deleteStatus == ProductDeleteStatus.success) {
+          Navigator.of(context).pop();
+          showSnackBar(
+            context,
+            Text('Deleted successfully'),
+            type: SnackbarType.success,
+          );
+        } else if (state.updateStatus == ProductUpdateStatus.success) {
+          Navigator.of(context).pop();
+          showSnackBar(
+            context,
+            Text('Updated successfully'),
+            type: SnackbarType.success,
+          );
+        }
       },
       builder: (context, state) {
         return Container(
@@ -193,23 +193,6 @@ class _ProductUpdateDialogState extends State<ProductUpdateDialog> {
                   });
                 },
               ),
-              // ProductPickUpdateImages(
-              //   deleteLoading:
-              //       state.deleteStatus == ProductDeleteStatus.loading,
-              //   onDelete: () async {
-              //     await productBloc.deleteProduct(widget.product.id!);
-              //   },
-              //   product: widget.product,
-              //   onSelectedIMages: (v) {
-              //     setState(() {
-              //       _selectedImages.add(v);
-              //     });
-              //   },
-              //   onSave: onSave,
-              //   pageController: _pageViewController,
-              //   updateLoading:
-              //       state.updateStatus == ProductUpdateStatus.loading,
-              // ),
             ],
           ),
         );

@@ -23,11 +23,11 @@ class _TableProductsState extends State<TableProducts> {
   ProductEntity? hoveredP;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext buildContext) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(buildContext).size.width,
         child: Column(
           children: [
             Container(
@@ -231,30 +231,73 @@ class _TableProductsState extends State<TableProducts> {
                                     ),
                                     if (selected)
                                       Positioned(
-                                        right: 10,
-                                        child: DropDownButton(
-                                          leading: Icon(FluentIcons.more),
-                                          items: [
-                                            MenuFlyoutItem(
-                                              leading:
-                                                  const Icon(FluentIcons.edit),
-                                              onPressed: () async {
-                                                setState(() {
-                                                  hoveredP = product;
-                                                });
-                                                log(hoveredP);
-                                                await showFluentAppDialog(
-                                                  context,
-                                                  content: ProductUpdateDialog(
-                                                    product: hoveredP!,
+                                          right: 10,
+                                          child:
+                                              // Button(
+                                              //   child: Text('Edit'),
+                                              //   onPressed: () async {
+                                              //     await showFluentAppDialog(
+                                              //       context,
+                                              //       content: ProductUpdateDialog(
+                                              //         product: hoveredP!,
+                                              //       ),
+                                              //     );
+                                              //   },
+                                              // )
+                                              Container(
+                                            decoration: BoxDecoration(
+                                                color: kGrey2Color,
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            width: 35,
+                                            child: CommandBar(
+                                              compactBreakpointWidth: 40,
+                                              overflowBehavior:
+                                                  CommandBarOverflowBehavior
+                                                      .clip,
+                                              primaryItems: [
+                                                // CommandBarButton(
+                                                //   label: Row(
+                                                //     mainAxisSize:
+                                                //         MainAxisSize.min,
+                                                //     children: [
+                                                //       Text('Edit'),
+                                                //     ],
+                                                //   ),
+                                                //   icon: Icon(
+                                                //     FluentIcons.edit,
+                                                //   ),
+                                                //   onPressed: () {},
+                                                // ),
+                                              ],
+                                              secondaryItems: [
+                                                CommandBarButton(
+                                                  label: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text('Edit'),
+                                                    ],
                                                   ),
-                                                );
-                                              },
-                                              text: Text('Edit'),
+                                                  icon: Icon(
+                                                    FluentIcons.edit,
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      hoveredP = product;
+                                                    });
+                                                    showFluentAppDialog(
+                                                      context,
+                                                      content:
+                                                          ProductUpdateDialog(
+                                                        product: product!,
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
+                                          )),
                                   ],
                                 ),
                               );

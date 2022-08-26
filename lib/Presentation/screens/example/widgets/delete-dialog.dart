@@ -24,7 +24,6 @@ class DeleteDialog extends StatelessWidget {
               child: Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop(false);
-                Navigator.of(context).pop();
               },
             ),
             SizedBox(
@@ -36,7 +35,6 @@ class DeleteDialog extends StatelessWidget {
               text: 'Yes',
               onPressed: () {
                 Navigator.of(context).pop(true);
-                Navigator.of(context).pop();
               },
             )
           ],

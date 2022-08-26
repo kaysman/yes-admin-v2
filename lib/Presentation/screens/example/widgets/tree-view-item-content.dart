@@ -1,50 +1,41 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:native_context_menu/native_context_menu.dart' as n;
 
 class TreeViewItemContent extends StatelessWidget {
-  const TreeViewItemContent(
-      {Key? key,
-      required this.title,
-      required this.onItemTap,
-      required this.onEdit,
-      required this.onDelete})
-      : super(key: key);
-  final String title;
+  TreeViewItemContent({
+    Key? key,
+    required this.onEdit,
+    required this.onDelete,
+    required this.title,
+    required this.onItemTap,
+  }) : super(key: key);
   final VoidCallback onItemTap;
   final VoidCallback onEdit;
+  final String title;
   final VoidCallback onDelete;
+  List<String> options = [
+    'Edit',
+    'Delete',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: onItemTap,
-            child: Text(
-              title,
-              style: FluentTheme.of(context).typography.bodyStrong,
-            ),
-          ),
-        ),
-        Expanded(
-          child: CommandBar(
-            overflowBehavior: CommandBarOverflowBehavior.dynamicOverflow,
-            compactBreakpointWidth: 20,
-            primaryItems: [CommandBarButton(onPressed: () {})],
-            secondaryItems: [
-              CommandBarButton(
-                onPressed: onEdit,
-                label: Text('Edit'),
-              ),
-              CommandBarButton(
-                onPressed: onDelete,
-                label: Text('Delete'),
-              ),
-            ],
-          ),
-        )
-      ],
+    return n.ContextMenuRegion(
+      onItemSelected: (item) {
+        item.onSelected?.call();
+      },
+      menuItems: List.generate(options.length, (index) {
+        return n.MenuItem(
+            title: options[index],
+            onSelected: () {
+              if (index == 0) onEdit.call();
+              if (index == 1) onDelete.call();
+            });
+      }),
+      child: GestureDetector(
+        onTap: onItemTap,
+        child: Text(title),
+      ),
     );
   }
 }

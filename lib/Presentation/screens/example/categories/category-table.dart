@@ -8,6 +8,7 @@ import 'package:admin_v2/Presentation/screens/example/widgets/product-table.dart
 import 'package:admin_v2/Presentation/screens/example/widgets/table-command-bar.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/product-create.dart';
+import 'package:admin_v2/Presentation/screens/products/product-table.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,10 @@ class _FluentCategoryTableState extends State<FluentCategoryTable> {
   void initState() {
     productBloc = BlocProvider.of<ProductBloc>(context);
     if (widget.category != null) {
+      selectedCategory = CategoryEntity(
+        id: widget.category?.id,
+        title_tm: widget.category?.name,
+      );
       productBloc.getAllProducts(
         filter: FilterForProductDTO(category_id: widget.category?.id),
       );
@@ -53,10 +58,13 @@ class _FluentCategoryTableState extends State<FluentCategoryTable> {
       },
       child: ScaffoldPage(
         header: PageHeader(
-          leading: TableBackButton(),
-          title: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Text('Categories')),
+          leading: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Text(
+              'Categories',
+              style: FluentTheme.of(context).typography.title,
+            ),
+          ),
           commandBar: TableCommandBar(
             onSearch: () async {
               await showFluentAppDialog(
@@ -88,7 +96,22 @@ class _FluentCategoryTableState extends State<FluentCategoryTable> {
               },
             ),
             Expanded(
-              child: TableProducts(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      TableBackButton(),
+                      SizedBox(
+                        width: 14,
+                      ),
+                      Text('Products of ${selectedCategory?.title_tm}'),
+                    ],
+                  ),
+                  ProductsTable(),
+                ],
+              ),
+              // TableProducts(),
             ),
           ],
         ),
