@@ -8,6 +8,7 @@ import 'package:admin_v2/Presentation/screens/example/dashboard.dart';
 import 'package:admin_v2/Presentation/screens/example/filters/filter-table.dart';
 import 'package:admin_v2/Presentation/screens/example/markets/market-table.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:faker/faker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -111,22 +112,27 @@ class _TilesBoxState extends State<TilesBox> {
   }
 
   buildTiles(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Image.asset(
-          widget.imgPath,
-          height: 300,
-          width: double.infinity,
-          fit: BoxFit.fill,
-        ),
-        Expanded(
-          child: Container(
-            color: kWhite,
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            height: 100,
+    return LayoutBuilder(builder: (context, constraints) {
+      log(constraints.maxWidth);
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.asset(
+            widget.imgPath,
+            height: constraints.maxWidth > 400
+                ? 300
+                : constraints.maxWidth > 350
+                    ? 200
+                    : constraints.maxWidth > 250
+                        ? 150
+                        : 100,
+            width: double.infinity,
+            fit: BoxFit.fill,
+          ),
+          Expanded(
             child: Container(
-              // color: kG,
+              color: kWhite,
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -136,7 +142,21 @@ class _TilesBoxState extends State<TilesBox> {
                     children: [
                       Text(
                         widget.title,
-                        style: FluentTheme.of(context).typography.title,
+                        style: constraints.maxWidth > 400
+                            ? FluentTheme.of(context).typography.title
+                            : constraints.maxWidth > 300
+                                ? FluentTheme.of(context)
+                                    .typography
+                                    .title
+                                    ?.copyWith(
+                                      fontSize: 24,
+                                    )
+                                : FluentTheme.of(context)
+                                    .typography
+                                    .title
+                                    ?.copyWith(
+                                      fontSize: 18,
+                                    ),
                       ),
                       CircleAvatar(
                         backgroundColor: kGrey4Color,
@@ -164,8 +184,8 @@ class _TilesBoxState extends State<TilesBox> {
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

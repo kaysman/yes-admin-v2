@@ -9,20 +9,23 @@ class EmtyProductView extends StatelessWidget {
   final String emtyText;
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Image.asset(
-            'assets/emtyCart.jpg',
-            height: MediaQuery.of(context).size.height * .3,
-          ),
-          Text(
-            emtyText,
-            style: FluentTheme.of(context).typography.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-          )
-        ],
+    return Container(
+      height: MediaQuery.of(context).size.height * .8,
+      child: Center(
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/emtyCart.jpg',
+              height: MediaQuery.of(context).size.height * .3,
+            ),
+            Text(
+              emtyText,
+              style: FluentTheme.of(context).typography.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+            )
+          ],
+        ),
       ),
     );
   }

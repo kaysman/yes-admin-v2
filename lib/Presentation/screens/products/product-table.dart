@@ -151,6 +151,10 @@ class _ProductsTableState extends State<ProductsTable> {
                   ),
                 );
               }
+              if (state.products?.isEmpty == true)
+                return EmtyProductView(
+                  emtyText: widget.emtyText,
+                );
               return Container(
                 padding: const EdgeInsets.all(16),
                 child: SingleChildScrollView(
@@ -293,10 +297,6 @@ class _ProductsTableState extends State<ProductsTable> {
                           ),
                         ),
                       ),
-                      if (state.products?.isEmpty == true)
-                        EmtyProductView(
-                          emtyText: widget.emtyText,
-                        ),
                       Pagination(
                         text: "${state.lastFilter?.take} items per page",
                         goPrevious: state.itemIds.isNotEmpty
