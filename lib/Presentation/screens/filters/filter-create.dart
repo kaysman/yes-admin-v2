@@ -1,26 +1,22 @@
 import 'package:admin_v2/Data/models/filter/filter.enum.dart';
 import 'package:admin_v2/Data/models/filter/filter.model.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
-import 'package:admin_v2/Presentation/shared/components/info.label.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
-import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/material.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../example/widgets/fluent-labeled-input.dart';
 import 'bloc/filter.bloc.dart';
 
-class CreateFliterPage extends StatefulWidget {
-  const CreateFliterPage({Key? key}) : super(key: key);
+class CreateFilterPage extends StatefulWidget {
+  const CreateFilterPage({Key? key}) : super(key: key);
 
   @override
-  State<CreateFliterPage> createState() => _CreateFliterPageState();
+  State<CreateFilterPage> createState() => _CreateFilterPageState();
 }
 
-class _CreateFliterPageState extends State<CreateFliterPage> {
+class _CreateFilterPageState extends State<CreateFilterPage> {
   late FilterBloc filterBloc;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController_tm = TextEditingController();
@@ -40,14 +36,13 @@ class _CreateFliterPageState extends State<CreateFliterPage> {
       listenWhen: (s1, s2) => s1.createStatus != s2.createStatus,
       listener: (context, state) {
         if (state.createStatus == FilterCreateStatus.success) {
-          showSnackBar(
-            context,
-            Text(
-              'Created Successully',
-            ),
-            type: SnackbarType.success,
-          );
           Navigator.of(context).pop();
+          showSnackbar(
+            context,
+            Snackbar(
+              content: Text('Created successfully'),
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -62,58 +57,59 @@ class _CreateFliterPageState extends State<CreateFliterPage> {
                 children: [
                   Text(
                     "Filter döret".toUpperCase(),
-                    style: Theme.of(context).textTheme.headline4,
+                    style:
+                        FluentTheme.of(context).typography.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
                   ),
                   SizedBox(height: 20),
-                  LabeledInput(
+                  FluentLabeledInput(
                     controller: titleController_tm,
-                    validator: emptyField,
-                    hintText: "Filterin ady-tm *",
-                    editMode: true,
+                    isEditMode: true,
+                    isTapped: false,
+                    label: "Filterin ady-tm *",
                   ),
                   SizedBox(height: 14),
-                  LabeledInput(
-                    editMode: true,
+                  FluentLabeledInput(
+                    isEditMode: true,
+                    isTapped: false,
+                    label: "Filterin ady-ru",
                     controller: titleController_ru,
-                    hintText: "Filterin ady-ru ",
                   ),
                   SizedBox(height: 14),
-                  InfoWithLabel<FilterType>(
-                    label: 'Filter type',
-                    editMode: true,
-                    hintText: '',
-                    value: selectedType,
-                    onValueChanged: (val) {
-                      setState(() {
-                        selectedType = val;
-                      });
+                  CustomAutoSuggestedBox(
+                    items: FilterType.values.map((e) => e.name).toList(),
+                    onChanged: (v) {
+                      if (v != null) {
+                        var types = FilterType.values.where((el) =>
+                            v.toLowerCase().contains(el.name.toLowerCase()));
+                        setState(() {
+                          selectedType = types.first;
+                        });
+                      }
                     },
-                    items: FilterType.values.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type.name),
-                      );
-                    }).toList(),
+                    label: 'Filter gornusleri',
+                    isEditMode: true,
                   ),
                   SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Button(
+                      f.Button(
                         text: 'Cancel',
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       SizedBox(width: 16),
-                      Button(
+                      f.Button(
                         text: "Save",
                         primary: kswPrimaryColor,
                         textColor: kWhite,
                         isLoading:
                             state.createStatus == FilterCreateStatus.loading,
                         onPressed: () async {
-                          if (formKey.currentState!.validate()) {
+                          if (true) {
                             FilterDTO data = FilterDTO(
                               name_tm: titleController_tm.text,
                               name_ru: titleController_ru.text,

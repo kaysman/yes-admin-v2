@@ -3,6 +3,8 @@ import 'package:admin_v2/Data/models/product/filter-for-product.model.dart';
 import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
+import 'package:admin_v2/Presentation/screens/example/dashboard.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/emty-product-view.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
 import 'package:admin_v2/Presentation/screens/products/product-create.dart';
@@ -30,7 +32,9 @@ SidebarItem getProductSidebarItem() {
       color: kswPrimaryColor,
     ),
     title: "Harytlar",
-    view: ProductsTable(),
+    view: ProductsTable(
+      emtyText: '',
+    ),
     getActions: (context) {
       return [
         Padding(
@@ -78,8 +82,11 @@ SidebarItem getProductSidebarItem() {
 }
 
 class ProductsTable extends StatefulWidget {
-  const ProductsTable({Key? key}) : super(key: key);
-
+  const ProductsTable({
+    Key? key,
+    required this.emtyText,
+  }) : super(key: key);
+  final String emtyText;
   @override
   State<ProductsTable> createState() => _ProductsTableState();
 }
@@ -286,6 +293,10 @@ class _ProductsTableState extends State<ProductsTable> {
                           ),
                         ),
                       ),
+                      if (state.products?.isEmpty == true)
+                        EmtyProductView(
+                          emtyText: widget.emtyText,
+                        ),
                       Pagination(
                         text: "${state.lastFilter?.take} items per page",
                         goPrevious: state.itemIds.isNotEmpty

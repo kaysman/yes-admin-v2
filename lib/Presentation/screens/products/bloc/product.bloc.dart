@@ -4,6 +4,7 @@ import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Data/models/product/update-product.model.dart';
 import 'package:admin_v2/Data/services/product_service.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -120,7 +121,7 @@ class ProductBloc extends Cubit<ProductState> {
         var index = state.itemIds.indexOf(state.currentPage!);
         filter.lastId = state.itemIds[index - 1].firstId;
       }
-
+      log(filter.toJson());
       var res = await ProductService.getProducts(filter.toJson());
 
       List<CurrentPage> ids = [];

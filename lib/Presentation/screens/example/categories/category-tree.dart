@@ -97,7 +97,15 @@ class _CategoryTreeViewImplState extends State<CategoryTreeViewImpl> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TitledAddBtn(onAdd: () {}, title: 'Categories'),
+              TitledAddBtn(
+                onAdd: () {
+                  showFluentAppDialog(
+                    context,
+                    content: CreateCategoryPage(),
+                  );
+                },
+                title: 'Categories',
+              ),
               SizedBox(
                 height: 8,
               ),
@@ -145,6 +153,14 @@ class _CategoryTreeViewImplState extends State<CategoryTreeViewImpl> {
                                               (states) => Colors.white,
                                             ),
                                       content: TreeViewItemContent(
+                                        titleTextStyle: FluentTheme.of(context)
+                                            .typography
+                                            .body
+                                            ?.copyWith(
+                                              fontWeight: selected_item == e.id
+                                                  ? FontWeight.w500
+                                                  : null,
+                                            ),
                                         title: e.title_tm ?? '-',
                                         onItemTap: () {
                                           widget.onCategoryChanged.call(e);

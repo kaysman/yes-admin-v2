@@ -2,12 +2,12 @@ import 'package:admin_v2/Data/models/market/create-market.model.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../example/widgets/fluent-labeled-input.dart';
 
 class CreateMarketPage extends StatefulWidget {
   const CreateMarketPage({Key? key}) : super(key: key);
@@ -43,10 +43,11 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
       listenWhen: (s1, s2) => s1.createStatus != s2.createStatus,
       listener: (context, state) {
         if (state.createStatus == MarketCreateStatus.success) {
-          showSnackBar(
+          showSnackbar(
             context,
-            Text('Created successfully'),
-            type: SnackbarType.success,
+            Snackbar(
+              content: Text('Created successfully'),
+            ),
           );
           Navigator.of(context).pop();
         }
@@ -63,59 +64,65 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 children: [
                   Text(
                     "Market döret".toUpperCase(),
-                    style: Theme.of(context).textTheme.headline4,
+                    style:
+                        FluentTheme.of(context).typography.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w500,
+                            ),
                   ),
                   SizedBox(height: 20),
-                  LabeledInput(
+                  FluentLabeledInput(
                     controller: titleController,
-                    validator: emptyField,
-                    editMode: true,
-                    hintText: "Markediň ady *",
+                    isTapped: false,
+                    label: "Markediň ady *",
+                    isEditMode: true,
                   ),
                   SizedBox(height: 14),
-                  LabeledInput(
+                  FluentLabeledInput(
+                    isTapped: false,
+                    label: "Barada",
+                    isEditMode: true,
                     controller: descriptionController,
-                    editMode: true,
-                    hintText: "Barada",
                   ),
                   SizedBox(height: 14),
-                  LabeledInput(
+                  FluentLabeledInput(
+                    isTapped: false,
+                    label: "Salgysy",
+                    isEditMode: true,
                     controller: addressController,
-                    editMode: true,
-                    hintText: "Salgysy",
                   ),
                   SizedBox(height: 14),
-                  LabeledInput(
+                  FluentLabeledInput(
+                    isTapped: false,
+                    label: "Telefon *",
+                    isEditMode: true,
                     controller: phoneNumberController,
-                    validator: emptyField,
-                    editMode: true,
-                    hintText: "Telefon *",
                   ),
                   SizedBox(height: 14),
-                  LabeledInput(
+                  FluentLabeledInput(
+                    isTapped: false,
+                    label: "Eýesiniň ady",
+                    isEditMode: true,
                     controller: ownerNameController,
-                    hintText: "Eýesiniň ady",
-                    editMode: true,
                   ),
                   SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Button(
+                      f.Button(
                         text: 'Cancel',
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       SizedBox(width: 16),
-                      Button(
+                      f.Button(
                         text: "Save",
-                        primary: kswPrimaryColor,
-                        textColor: kWhite,
                         isLoading:
                             state.createStatus == MarketCreateStatus.loading,
+                        primary: kswPrimaryColor,
+                        textColor: kWhite,
                         onPressed: () async {
-                          if (formKey.currentState!.validate()) {
+                          if (true) {
                             CreateMarketDTO data = CreateMarketDTO(
                               title: titleController.text,
                               address: addressController.text,

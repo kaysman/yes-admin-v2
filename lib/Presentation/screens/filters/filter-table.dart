@@ -58,7 +58,7 @@ SidebarItem getFiltersSidebarItem() {
                   primary: Colors.transparent,
                 ),
                 onPressed: () {
-                  showAppDialog(context, CreateFliterPage());
+                  showAppDialog(context, CreateFilterPage());
                 },
                 child: Text(
                   'Filter döret',

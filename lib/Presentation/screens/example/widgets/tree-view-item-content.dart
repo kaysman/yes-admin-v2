@@ -8,11 +8,13 @@ class TreeViewItemContent extends StatelessWidget {
     required this.onDelete,
     required this.title,
     required this.onItemTap,
+    this.titleTextStyle,
   }) : super(key: key);
   final VoidCallback onItemTap;
   final VoidCallback onEdit;
   final String title;
   final VoidCallback onDelete;
+  final TextStyle? titleTextStyle;
   List<String> options = [
     'Edit',
     'Delete',
@@ -34,7 +36,10 @@ class TreeViewItemContent extends StatelessWidget {
       }),
       child: GestureDetector(
         onTap: onItemTap,
-        child: Text(title),
+        child: Text(
+          title,
+          style: titleTextStyle,
+        ),
       ),
     );
   }

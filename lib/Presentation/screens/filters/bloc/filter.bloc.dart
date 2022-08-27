@@ -5,6 +5,8 @@ import 'package:admin_v2/Data/services/filter_service.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../Data/models/filter/filter.enum.dart';
+
 class FilterBloc extends Cubit<FilterState> {
   FilterBloc() : super(FilterState());
 
@@ -16,6 +18,7 @@ class FilterBloc extends Cubit<FilterState> {
       l.add(res!);
       emit(state.copyWith(
         filters: l,
+        filterTypes: getFilterTypes(l),
         createStatus: FilterCreateStatus.success,
       ));
     } catch (_) {
@@ -54,7 +57,13 @@ class FilterBloc extends Cubit<FilterState> {
     }
     try {
       var res = await FilterService.getFilters(filter.toJson());
-      emit(state.copyWith(filters: res, listingStatus: FilterListStatus.idle));
+
+      emit(
+        state.copyWith(
+            filters: res,
+            filterTypes: getFilterTypes(res),
+            listingStatus: FilterListStatus.idle),
+      );
     } catch (_) {
       print(_);
       emit(state.copyWith(listingStatus: FilterListStatus.error));
@@ -90,4 +99,29 @@ class FilterBloc extends Cubit<FilterState> {
       emit(state.copyWith(deleteStatus: FilterDeleteStatus.error));
     }
   }
+}
+
+
+///
+// * GET FILTER BY TYPE FOR SHOW THEM UNDER TREE
+///
+getFiltersByType(FilterType type, List<FilterEntity>? filters) {
+  return filters?.where((el) => el.type?.name == type.name).toList();
+}
+
+getFilterTypes(List<FilterEntity>? filters) {
+  List<FilterEntity> sizes = getFiltersByType(FilterType.SIZE, filters);
+  List<FilterEntity> genders = getFiltersByType(FilterType.GENDER, filters);
+  List<FilterEntity> colors = getFiltersByType(FilterType.COLOR, filters);
+  return [
+    {
+      'Sizes': sizes,
+    },
+    {
+      'Genders': genders,
+    },
+    {
+      'Colors': colors,
+    },
+  ];
 }

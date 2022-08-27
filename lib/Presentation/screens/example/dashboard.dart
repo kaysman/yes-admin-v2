@@ -1,6 +1,8 @@
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/tiles_box.dart';
+import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
+import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
 import 'package:admin_v2/Presentation/screens/products/dialogs/product-create-info.dialog.dart';
 import 'package:faker/faker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../brands/bloc/brand.state.dart';
 import '../categories/bloc/category..bloc.dart';
+import '../filters/bloc/filter.state.dart';
+import '../markets/bloc/market.bloc.dart';
 
 class Person {
   String name;
@@ -21,6 +25,15 @@ class Person {
     this.phone,
     this.address,
   );
+}
+
+enum PageType {
+  BRAND,
+  CATEGORY,
+  MARKET,
+  FILTER,
+  PRODUCT,
+  ORDER,
 }
 
 class FluentDashboard extends StatefulWidget {
@@ -37,14 +50,20 @@ class _FluentDashboardState extends State<FluentDashboard>
   late AnimationController animationController;
   late BrandBloc brandBloc;
   late CategoryBloc categoryBloc;
+  late MarketBloc marketBloc;
+  late FilterBloc filterBloc;
 
   @override
   void initState() {
     categoryBloc = BlocProvider.of<CategoryBloc>(context);
     brandBloc = BlocProvider.of<BrandBloc>(context);
+    marketBloc = BlocProvider.of<MarketBloc>(context);
+    filterBloc = BlocProvider.of<FilterBloc>(context);
 
     brandBloc.getAllBrands();
     categoryBloc.getAllCategories();
+    marketBloc.getAllMarkets();
+    filterBloc.getAllFilters();
 
     animationController = AnimationController(
       vsync: this,
@@ -92,6 +111,9 @@ class _FluentDashboardState extends State<FluentDashboard>
                         ? state.brands?.first
                         : null;
                     return TilesBox(
+                      pageType: PageType.BRAND,
+                      imgPath: 'assets/brand.jpg',
+                      subTitle: 'Something about brands...',
                       title: 'Brands',
                       faker: faker,
                       brand: brand,
@@ -104,6 +126,9 @@ class _FluentDashboardState extends State<FluentDashboard>
                   builder: (context, state) {
                     var subs = getSubs(state.categories);
                     return TilesBox(
+                      pageType: PageType.CATEGORY,
+                      imgPath: 'assets/category-page.jpg',
+                      subTitle: 'Something about categories...',
                       faker: faker,
                       title: 'Categories',
                       category: subs.isNotEmpty ? subs.first : null,
@@ -112,25 +137,55 @@ class _FluentDashboardState extends State<FluentDashboard>
                     );
                   },
                 ),
-                TilesBox(
-                  title: 'Filters',
-                  faker: faker,
-                  color: Colors.teal,
-                  controller: animationController,
+                BlocBuilder<MarketBloc, MarketState>(
+                  builder: (context, state) {
+                    var market =
+                        state.markets != null && state.markets!.isNotEmpty
+                            ? state.markets?.first
+                            : null;
+                    return TilesBox(
+                      market: market,
+                      pageType: PageType.MARKET,
+                      imgPath: 'assets/market.webp',
+                      subTitle: 'Something about markets...',
+                      title: 'Markets',
+                      faker: faker,
+                      color: Colors.orange,
+                      controller: animationController,
+                    );
+                  },
+                ),
+                BlocBuilder<FilterBloc, FilterState>(
+                  builder: (context, state) {
+                    var filter =
+                        state.filters != null && state.filters!.isNotEmpty
+                            ? state.filters?.first
+                            : null;
+                    return TilesBox(
+                      filter: filter,
+                      pageType: PageType.FILTER,
+                      imgPath: 'assets/filter.webp',
+                      subTitle: 'Something about filters...',
+                      title: 'Filters',
+                      faker: faker,
+                      color: Colors.teal,
+                      controller: animationController,
+                    );
+                  },
                 ),
                 TilesBox(
-                  title: 'Markets',
-                  faker: faker,
-                  color: Colors.orange,
-                  controller: animationController,
-                ),
-                TilesBox(
+                  pageType: PageType.BRAND,
+                  imgPath: 'assets/brand.jpg',
+                  subTitle: 'Something about products...',
                   title: 'Products',
                   faker: faker,
                   color: Colors.purple,
                   controller: animationController,
                 ),
                 TilesBox(
+                  pageType: PageType.BRAND,
+                  imgPath: 'assets/brand.jpg',
+                  subTitle: 'Something about orders...',
                   title: 'Orders',
                   faker: faker,
                   color: Colors.magenta,

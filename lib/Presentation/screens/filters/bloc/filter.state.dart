@@ -18,8 +18,10 @@ class FilterState {
   final FilterDeleteStatus? deleteStatus;
   final GetFilterByIdStatus? getFilterByIdStatus;
   final FilterEntity? selectedFilter;
+  final List<Map<String, List<FilterEntity>?>>? filterTypes;
 
   FilterState({
+    this.filterTypes,
     this.filters,
     this.listingStatus = FilterListStatus.idle,
     this.createStatus = FilterCreateStatus.idle,
@@ -29,14 +31,16 @@ class FilterState {
     this.selectedFilter,
   });
 
-  FilterState copyWith(
-      {List<FilterEntity>? filters,
-      FilterListStatus? listingStatus,
-      FilterCreateStatus? createStatus,
-      FilterUpdateStatus? updateStatus,
-      FilterDeleteStatus? deleteStatus,
-      GetFilterByIdStatus? getFilterByIdStatus,
-      FilterEntity? selectedFilter}) {
+  FilterState copyWith({
+    List<FilterEntity>? filters,
+    FilterListStatus? listingStatus,
+    FilterCreateStatus? createStatus,
+    FilterUpdateStatus? updateStatus,
+    FilterDeleteStatus? deleteStatus,
+    GetFilterByIdStatus? getFilterByIdStatus,
+    FilterEntity? selectedFilter,
+    List<Map<String, List<FilterEntity>?>>? filterTypes,
+  }) {
     return FilterState(
       filters: filters ?? this.filters,
       listingStatus: listingStatus ?? this.listingStatus,
@@ -45,6 +49,7 @@ class FilterState {
       deleteStatus: deleteStatus ?? this.deleteStatus,
       getFilterByIdStatus: getFilterByIdStatus ?? this.getFilterByIdStatus,
       selectedFilter: selectedFilter ?? this.selectedFilter,
+      filterTypes: filterTypes ?? this.filterTypes,
     );
   }
 }

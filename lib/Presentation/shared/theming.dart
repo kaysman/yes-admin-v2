@@ -11,22 +11,22 @@ class AppTheme {
       scaffoldBackgroundColor: kWhite,
       // dataTableTheme: DataTableThemeData(
       //   checkboxHorizontalMargin: 18,
-        // headingRowColor: MaterialStateProperty.resolveWith<Color>(
-        //   (Set<MaterialState> states) {
-        //     if (states.contains(MaterialState.selected)) {
-        //       return kswPrimaryColor.withOpacity(0.3);
-        //     }
-        //     return kswPrimaryColor.withOpacity(0.3);
-        //   },
-        // ),
-        // dataRowColor: MaterialStateProperty.resolveWith<Color>(
-        //   (Set<MaterialState> states) {
-        //     if (states.contains(MaterialState.selected)) {
-        //       return kGrey5Color;
-        //     }
-        //     return kWhite;
-        //   },
-        // ),
+      // headingRowColor: MaterialStateProperty.resolveWith<Color>(
+      //   (Set<MaterialState> states) {
+      //     if (states.contains(MaterialState.selected)) {
+      //       return kswPrimaryColor.withOpacity(0.3);
+      //     }
+      //     return kswPrimaryColor.withOpacity(0.3);
+      //   },
+      // ),
+      // dataRowColor: MaterialStateProperty.resolveWith<Color>(
+      //   (Set<MaterialState> states) {
+      //     if (states.contains(MaterialState.selected)) {
+      //       return kGrey5Color;
+      //     }
+      //     return kWhite;
+      //   },
+      // ),
       //   dataRowHeight: 46,
       //   headingTextStyle: GoogleFonts.poppins(
       //     fontSize: 14,
@@ -177,6 +177,14 @@ List<BoxShadow> kBoxShadow = [
     color: Colors.black.withOpacity(0.1),
     offset: Offset(0, 4),
     blurRadius: 30,
+  ),
+];
+List<BoxShadow> kBoxHover = [
+  BoxShadow(
+    color: Colors.black.withOpacity(0.09),
+    offset: Offset(1, 2),
+    blurRadius: 10,
+    spreadRadius: 12,
   ),
 ];
 List<BoxShadow> kBoxShadowLow = [

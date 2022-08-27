@@ -1,8 +1,13 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
+import 'package:admin_v2/Data/models/market/create-market.model.dart';
+import 'package:admin_v2/Data/models/market/market.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-create.dart';
 import 'package:admin_v2/Presentation/screens/brands/brand-update.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/delete-dialog.dart';
-import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
+import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
+import 'package:admin_v2/Presentation/screens/markets/market-create.dart';
+import 'package:admin_v2/Presentation/screens/markets/market-update.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -22,30 +27,30 @@ class Category {
   });
 }
 
-class BrandTreeViewImpl extends StatefulWidget {
-  const BrandTreeViewImpl({
+class MarketTreeViewImpl extends StatefulWidget {
+  const MarketTreeViewImpl({
     Key? key,
-    required this.onBrandIdChanged,
+    required this.onMarketIdChanged,
   }) : super(key: key);
 
-  final ValueChanged<BrandEntity> onBrandIdChanged;
+  final ValueChanged<MarketEntity> onMarketIdChanged;
 
   @override
-  State<BrandTreeViewImpl> createState() => _BrandTreeViewImplState();
+  State<MarketTreeViewImpl> createState() => _MarketTreeViewImplState();
 }
 
-class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
-  late BrandBloc brandBloc;
+class _MarketTreeViewImplState extends State<MarketTreeViewImpl> {
+  late MarketBloc marketBloc;
   int selected_item = 0;
   String? action;
-  BrandEntity? brand;
+  MarketEntity? market;
 
   @override
   void initState() {
-    brandBloc = BlocProvider.of<BrandBloc>(context);
-    if (brandBloc.state.brands?.isNotEmpty == true) {
-      var brand = brandBloc.state.brands?.first;
-      selected_item = brand?.id ?? 0;
+    marketBloc = BlocProvider.of<MarketBloc>(context);
+    if (marketBloc.state.markets?.isNotEmpty == true) {
+      var market = marketBloc.state.markets?.first;
+      selected_item = market?.id ?? 0;
     }
     super.initState();
   }
@@ -54,14 +59,14 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<BrandBloc, BrandState>(
+    return BlocConsumer<MarketBloc, MarketState>(
       listenWhen: (p, c) =>
           p.listingStatus != c.listingStatus ||
           p.createStatus != c.createStatus ||
-          p.brandDeleteStatus != c.brandDeleteStatus,
+          p.marketDeleteStatus != c.marketDeleteStatus,
       listener: (context, state) {
         // log(state.brandUpdateStatus);
-        if (state.brandUpdateStatus == BrandUpdateStatus.success) {
+        if (state.marketUpadteStatus == MarketUpadteStatus.success) {
           showSnackbar(
             context,
             Snackbar(
@@ -71,7 +76,7 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
             ),
           );
         }
-        if (state.brandDeleteStatus == BrandDeleteStatus.success) {
+        if (state.marketDeleteStatus == MarketDeleteStatus.success) {
           showSnackbar(
             context,
             Snackbar(
@@ -83,15 +88,25 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
         }
       },
       builder: (context, state) {
-        if (state.listingStatus == BrandListStatus.loading) {
-          return Center(child: ProgressRing());
+        if (state.listingStatus == MarketListStatus.loading) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 200,
+            child: Center(
+              child: ProgressRing(),
+            ),
+          );
         }
-        if (state.listingStatus == BrandListStatus.error) {
-          return f.TryAgainButton(tryAgain: () {
-            brandBloc.getAllBrands();
-          });
+        if (state.listingStatus == MarketListStatus.error) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 200,
+            child: Center(
+              child: f.TryAgainButton(tryAgain: () {
+                marketBloc.getAllMarkets();
+              }),
+            ),
+          );
         }
-        var brands = state.brands;
+        var markets = state.markets;
 
         return Container(
           padding: const EdgeInsets.symmetric(
@@ -105,16 +120,16 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
                 onAdd: () {
                   showFluentAppDialog(
                     context,
-                    content: CreateBrandPage(),
+                    content: CreateMarketPage(),
                   );
                 },
-                title: 'Brands',
+                title: 'Markets',
               ),
               SizedBox(
                 height: 8,
               ),
               TreeView(
-                items: brands?.map(
+                items: markets?.map(
                       (e) {
                         return TreeViewItem(
                           backgroundColor: selected_item == e.id
@@ -125,27 +140,32 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
                                   (states) => Colors.white,
                                 ),
                           content: TreeViewItemContent(
-                            title: e.name ?? '-',
+                            titleTextStyle: FluentTheme.of(context)
+                                .typography
+                                .body
+                                ?.copyWith(
+                                  fontWeight: selected_item == e.id
+                                      ? FontWeight.w500
+                                      : null,
+                                ),
+                            title: e.title ?? '-',
                             onItemTap: () {
-                              widget.onBrandIdChanged.call(e);
+                              widget.onMarketIdChanged.call(e);
                               setState(() {
-                                selected_item = e.id;
+                                selected_item = e.id ?? 0;
                               });
                             },
                             onEdit: () async {
-                              final res = await showFluentAppDialog<
-                                  Map<String, dynamic>>(
+                              final res =
+                                  await showFluentAppDialog<MarketEntity>(
                                 context,
-                                content: UpdateBrandPage(
-                                  brand: e,
+                                content: UpdateMarketPage(
+                                  market: e,
                                 ),
                               );
 
                               if (res != null) {
-                                await brandBloc.updateBrand(
-                                  res['files'],
-                                  res['data'],
-                                );
+                                await marketBloc.updateMarket(res);
                               }
                             },
                             onDelete: () async {
@@ -153,8 +173,8 @@ class _BrandTreeViewImplState extends State<BrandTreeViewImpl> {
                                 context,
                                 content: DeleteDialog(),
                               );
-                              if (res == true) {
-                                await brandBloc.deleteBrand(e.id);
+                              if (res == true && e.id != null) {
+                                await marketBloc.deleteMarket(e.id!);
                               }
                             },
                           ),
