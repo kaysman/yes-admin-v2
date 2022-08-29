@@ -1,13 +1,8 @@
-import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/order/order.model.dart';
-import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
-import 'package:admin_v2/Presentation/screens/categories/category-create.dart';
-import 'package:admin_v2/Presentation/screens/categories/category-info.dialog.dart';
-import 'package:admin_v2/Presentation/screens/categories/category-update.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/emty-product-view.dart';
 import 'package:admin_v2/Presentation/screens/orders/order.bloc.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
@@ -27,52 +22,53 @@ SidebarItem getOrdersSideBarItem() {
     view: OrdersTable(),
     getActions: (context) {
       return [
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            children: [
-              BlocConsumer<OrderBloc, OrderState>(
-                listener: (_, state) {},
-                builder: (context, state) {
-                  return SearchFieldInAppBar(
-                    hintText: "e.g mb orders",
-                    onEnter: state.listingStatus == OrderListStatus.loading
-                        ? null
-                        : (value) {
-                            print(value);
-                            context.read<OrderBloc>().getAllOrders(
-                                  filter: PaginationDTO(search: value),
-                                );
-                          },
-                  );
-                },
-              ),
-              SizedBox(
-                width: 14,
-              ),
-              // OutlinedButton(
-              //   style: OutlinedButton.styleFrom(
-              //     onSurface: Colors.white,
-              //     primary: Colors.transparent,
-              //   ),
-              //   onPressed: () {
-              //     showAppDialog(context, CreateCategoryPage());
-              //   },
-              //   child: Text(
-              //     'Kategoriya döret',
-              //     style: TextStyle(color: Colors.white),
-              //   ),
-              // ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(12.0),
+        //   child: Row(
+        //     children: [
+        //       BlocConsumer<OrderBloc, OrderState>(
+        //         listener: (_, state) {},
+        //         builder: (context, state) {
+        //           return SearchFieldInAppBar(
+        //             hintText: "e.g mb orders",
+        //             onEnter: state.listingStatus == OrderListStatus.loading
+        //                 ? null
+        //                 : (value) {
+        //                     print(value);
+        //                     context.read<OrderBloc>().getAllOrders(
+        //                           filter: PaginationDTO(search: value),
+        //                         );
+        //                   },
+        //           );
+        //         },
+        //       ),
+        //       SizedBox(
+        //         width: 14,
+        //       ),
+        //       // OutlinedButton(
+        //       //   style: OutlinedButton.styleFrom(
+        //       //     onSurface: Colors.white,
+        //       //     primary: Colors.transparent,
+        //       //   ),
+        //       //   onPressed: () {
+        //       //     showAppDialog(context, CreateCategoryPage());
+        //       //   },
+        //       //   child: Text(
+        //       //     'Kategoriya döret',
+        //       //     style: TextStyle(color: Colors.white),
+        //       //   ),
+        //       // ),
+        //     ],
+        //   ),
+        // ),
       ];
     },
   );
 }
 
 class OrdersTable extends StatefulWidget {
-  const OrdersTable({Key? key}) : super(key: key);
+  const OrdersTable({Key? key, this.emptyOrderText}) : super(key: key);
+  final String? emptyOrderText;
 
   @override
   State<OrdersTable> createState() => _OrdersTableState();
@@ -91,12 +87,12 @@ class _OrdersTableState extends State<OrdersTable> {
     'Harytlaryn id-lary',
   ];
 
-  @override
-  void initState() {
-    orderBloc = context.read<OrderBloc>();
-    orderBloc.getAllOrders();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   orderBloc = context.read<OrderBloc>();
+  //   orderBloc.getAllOrders();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext buildContext) {
@@ -104,7 +100,7 @@ class _OrdersTableState extends State<OrdersTable> {
       return BlocBuilder<OrderBloc, OrderState>(builder: (context, state) {
         if (state.listingStatus == OrderListStatus.loading) {
           return Container(
-            height: MediaQuery.of(context).size.height - 100,
+            height: MediaQuery.of(context).size.height - 200,
             alignment: Alignment.center,
             child: Center(
               child: CircularProgressIndicator(color: kPrimaryColor),
@@ -113,7 +109,7 @@ class _OrdersTableState extends State<OrdersTable> {
         }
         if (state.listingStatus == OrderListStatus.error) {
           return Container(
-            height: MediaQuery.of(context).size.height - 100,
+            height: MediaQuery.of(context).size.height - 200,
             alignment: Alignment.center,
             child: TryAgainButton(
               tryAgain: () async {
@@ -121,6 +117,10 @@ class _OrdersTableState extends State<OrdersTable> {
               },
             ),
           );
+        }
+
+        if (state.orderFilteredList?.isEmpty == true) {
+          return EmptyProductView(emptyText: widget.emptyOrderText ?? '-');
         }
         return Container(
           padding: const EdgeInsets.all(16),
@@ -195,8 +195,9 @@ class _OrdersTableState extends State<OrdersTable> {
 
   List<DataRow> tableRows(OrderState state) {
     if (state.orders == null) return [];
+    var orders = state.orderFilteredList;
     return List.generate(
-      state.orders!.length,
+      orders?.length ?? 0,
       (index) {
         var order = state.orders![index];
         return DataRow(

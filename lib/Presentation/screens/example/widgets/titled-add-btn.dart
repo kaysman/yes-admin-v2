@@ -4,11 +4,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 class TitledAddBtn extends StatelessWidget {
   const TitledAddBtn({
     Key? key,
-    required this.onAdd,
+    this.onAdd,
     required this.title,
+    this.hasIcon,
   }) : super(key: key);
-  final VoidCallback onAdd;
+  final VoidCallback? onAdd;
   final String title;
+  final bool? hasIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +25,16 @@ class TitledAddBtn extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
           ),
-          IconButton(
-            style: ButtonStyle(backgroundColor: ButtonState.all(kGrey3Color)),
-            icon: Icon(
-              FluentIcons.add,
-              // color: kWhite,
+          if (hasIcon == null) SizedBox(),
+          if (hasIcon == true)
+            IconButton(
+              style: ButtonStyle(backgroundColor: ButtonState.all(kGrey3Color)),
+              icon: Icon(
+                FluentIcons.add,
+                // color: kWhite,
+              ),
+              onPressed: onAdd,
             ),
-            onPressed: onAdd,
-          ),
         ],
       ),
     );

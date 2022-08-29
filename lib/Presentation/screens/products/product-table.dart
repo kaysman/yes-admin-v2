@@ -142,7 +142,7 @@ class _ProductsTableState extends State<ProductsTable> {
               }
               if (state.listingStatus == ProductListStatus.error) {
                 return Container(
-                  height: MediaQuery.of(context).size.height - 100,
+                  height: MediaQuery.of(context).size.height - 200,
                   alignment: Alignment.center,
                   child: f.TryAgainButton(
                     tryAgain: () async {
@@ -152,8 +152,8 @@ class _ProductsTableState extends State<ProductsTable> {
                 );
               }
               if (state.products?.isEmpty == true)
-                return EmtyProductView(
-                  emtyText: widget.emtyText,
+                return EmptyProductView(
+                  emptyText: widget.emtyText,
                 );
               return Container(
                 padding: const EdgeInsets.all(16),

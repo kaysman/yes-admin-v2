@@ -11,8 +11,10 @@ class OrderState {
   final OrderListStatus listingStatus;
   final UpdateOrderStatus updateOrderStatus;
   final List<OrderEntity>? orders;
+  final List<OrderEntity>? orderFilteredList;
 
   OrderState({
+    this.orderFilteredList,
     this.listingStatus = OrderListStatus.idle,
     this.updateOrderStatus = UpdateOrderStatus.idle,
     this.orders,
@@ -22,11 +24,13 @@ class OrderState {
     OrderListStatus? listingStatus,
     UpdateOrderStatus? updateOrderStatus,
     List<OrderEntity>? orders,
+    List<OrderEntity>? orderFilteredList,
   }) {
     return OrderState(
       listingStatus: listingStatus ?? this.listingStatus,
       updateOrderStatus: updateOrderStatus ?? this.updateOrderStatus,
       orders: orders ?? this.orders,
+      orderFilteredList: orderFilteredList ?? this.orderFilteredList,
     );
   }
 }
@@ -34,8 +38,10 @@ class OrderState {
 class OrderBloc extends Cubit<OrderState> {
   OrderBloc() : super(OrderState());
 
-  getAllOrders({
+  getAllOrders(
+ {
     PaginationDTO? filter,
+        OrderStatus? selectedStatus,
   }) async {
     emit(state.copyWith(listingStatus: OrderListStatus.loading));
 
@@ -44,8 +50,10 @@ class OrderBloc extends Cubit<OrderState> {
     }
     try {
       var res = await OrderService.getOrders(filter.toJson());
+      var filteredOrders = getOrdersByStatus(res, selectedStatus);
       emit(state.copyWith(
         orders: res,
+        orderFilteredList: filteredOrders,
         listingStatus: OrderListStatus.idle,
       ));
     } catch (_) {
@@ -70,3 +78,39 @@ class OrderBloc extends Cubit<OrderState> {
   //   }
   // }
 }
+
+///
+// * GET ORDERS BY STATUS
+///
+List<OrderEntity> getOrdersByStatus(
+    List<OrderEntity>? orders, OrderStatus? status) {
+  return orders?.where((el) => el.status == status?.name).toList() ?? [];
+}
+
+// getOrdersListByStatus(List<OrderEntity>? orders) {
+//   List<OrderEntity> createdOrders = getOrdersByStatus(
+//     orders,
+//     OrderStatus.CREATED,
+//   );
+//   List<OrderEntity> approvedOrders = getOrdersByStatus(
+//     orders,
+//     OrderStatus.APPROVED,
+//   );
+//   List<OrderEntity> completedOrders = getOrdersByStatus(
+//     orders,
+//     OrderStatus.COMPLETED,
+//   );
+//   return [
+//     {
+//       'Zakaz edildi': createdOrders,
+//     },
+//     {
+//       'Kabul edildi': approvedOrders,
+//     },
+//     {
+//       'Yerine yetirildi': completedOrders,
+//     },
+//   ];
+// }
+
+enum OrderStatus { CREATED, APPROVED, COMPLETED }

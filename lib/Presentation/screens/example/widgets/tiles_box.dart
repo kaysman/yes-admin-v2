@@ -1,18 +1,21 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/category/sub.model.dart';
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
+import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Data/models/market/market.model.dart';
+import 'package:admin_v2/Data/models/order/order.model.dart';
 import 'package:admin_v2/Presentation/screens/example/brands/brand-table.dart';
 import 'package:admin_v2/Presentation/screens/example/categories/category-table.dart';
 import 'package:admin_v2/Presentation/screens/example/dashboard.dart';
 import 'package:admin_v2/Presentation/screens/example/filters/filter-table.dart';
+import 'package:admin_v2/Presentation/screens/example/gadgets/gadget-table.dart';
 import 'package:admin_v2/Presentation/screens/example/markets/market-table.dart';
+import 'package:admin_v2/Presentation/screens/example/orders/order-table.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:faker/faker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' as mt;
+// import 'package:flutter/material.dart' as mt;
 
 class TilesBox extends StatefulWidget {
   const TilesBox({
@@ -28,12 +31,15 @@ class TilesBox extends StatefulWidget {
     required this.pageType,
     this.market,
     this.filter,
+    this.order, this.gadget,
   }) : super(key: key);
 
   final Faker faker;
   final BrandEntity? brand;
   final FilterEntity? filter;
   final MarketEntity? market;
+  final GadgetEntity? gadget;
+  final OrderEntity? order;
   final SubItem? category;
   final String title;
   final String subTitle;
@@ -72,13 +78,13 @@ class _TilesBoxState extends State<TilesBox> {
                 return FluentFilterTable(
                   filter: widget.filter,
                 );
-              case PageType.PRODUCT:
-                return FluentCategoryTable(
-                  category: widget.category,
+              case PageType.GADGET:
+                return FluentGadgetTable(
+                  gadget: widget.gadget,
                 );
               case PageType.ORDER:
-                return FluentCategoryTable(
-                  category: widget.category,
+                return FluentOrderTable(
+                  order: widget.order,
                 );
 
               default:
@@ -113,7 +119,7 @@ class _TilesBoxState extends State<TilesBox> {
 
   buildTiles(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      log(constraints.maxWidth);
+      // log(constraints.maxWidth);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

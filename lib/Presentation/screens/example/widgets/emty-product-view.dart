@@ -1,12 +1,14 @@
 import 'package:admin_v2/Presentation/screens/example/dashboard.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
-class EmtyProductView extends StatelessWidget {
-  const EmtyProductView({
+class EmptyProductView extends StatelessWidget {
+  const EmptyProductView({
     Key? key,
-    required this.emtyText,
+    required this.emptyText,
+    this.isGadget,
   }) : super(key: key);
-  final String emtyText;
+  final String emptyText;
+  final bool? isGadget;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -15,11 +17,11 @@ class EmtyProductView extends StatelessWidget {
         child: Column(
           children: [
             Image.asset(
-              'assets/emtyCart.jpg',
+              isGadget == true ? 'assets/empty.png' : 'assets/emtyCart.jpg',
               height: MediaQuery.of(context).size.height * .3,
             ),
             Text(
-              emtyText,
+              emptyText,
               style: FluentTheme.of(context).typography.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),

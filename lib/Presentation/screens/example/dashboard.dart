@@ -3,6 +3,7 @@ import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dar
 import 'package:admin_v2/Presentation/screens/example/widgets/tiles_box.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
+import 'package:admin_v2/Presentation/screens/orders/order.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/dialogs/product-create-info.dialog.dart';
 import 'package:faker/faker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../brands/bloc/brand.state.dart';
 import '../categories/bloc/category..bloc.dart';
 import '../filters/bloc/filter.state.dart';
+import '../home-gadgets/bloc/gadget.bloc.dart';
 import '../markets/bloc/market.bloc.dart';
 
 class Person {
@@ -34,6 +36,7 @@ enum PageType {
   FILTER,
   PRODUCT,
   ORDER,
+  GADGET,
 }
 
 class FluentDashboard extends StatefulWidget {
@@ -52,6 +55,8 @@ class _FluentDashboardState extends State<FluentDashboard>
   late CategoryBloc categoryBloc;
   late MarketBloc marketBloc;
   late FilterBloc filterBloc;
+  late OrderBloc orderBloc;
+  late GadgetBloc gadgetBloc;
 
   @override
   void initState() {
@@ -59,11 +64,15 @@ class _FluentDashboardState extends State<FluentDashboard>
     brandBloc = BlocProvider.of<BrandBloc>(context);
     marketBloc = BlocProvider.of<MarketBloc>(context);
     filterBloc = BlocProvider.of<FilterBloc>(context);
+    orderBloc = BlocProvider.of<OrderBloc>(context);
+    gadgetBloc = BlocProvider.of<GadgetBloc>(context);
 
     brandBloc.getAllBrands();
     categoryBloc.getAllCategories();
     marketBloc.getAllMarkets();
     filterBloc.getAllFilters();
+    orderBloc.getAllOrders();
+    gadgetBloc.getAllGadgets();
 
     animationController = AnimationController(
       vsync: this,
@@ -173,23 +182,35 @@ class _FluentDashboardState extends State<FluentDashboard>
                     );
                   },
                 ),
-                TilesBox(
-                  pageType: PageType.BRAND,
-                  imgPath: 'assets/brand.jpg',
-                  subTitle: 'Something about products...',
-                  title: 'Products',
-                  faker: faker,
-                  color: Colors.purple,
-                  controller: animationController,
+                BlocBuilder<GadgetBloc, GadgetState>(
+                  builder: (context, state) {
+                    return TilesBox(
+                      pageType: PageType.GADGET,
+                      imgPath: 'assets/gadget1.webp',
+                      subTitle: 'Something about gadget...',
+                      title: 'Gadgets',
+                      faker: faker,
+                      color: Colors.purple,
+                      controller: animationController,
+                    );
+                  },
                 ),
-                TilesBox(
-                  pageType: PageType.BRAND,
-                  imgPath: 'assets/brand.jpg',
-                  subTitle: 'Something about orders...',
-                  title: 'Orders',
-                  faker: faker,
-                  color: Colors.magenta,
-                  controller: animationController,
+                BlocBuilder<OrderBloc, OrderState>(
+                  builder: (context, state) {
+                    var order = state.orders != null && state.orders!.isNotEmpty
+                        ? state.orders?.first
+                        : null;
+                    return TilesBox(
+                      pageType: PageType.ORDER,
+                      imgPath: 'assets/order.jpg',
+                      subTitle: 'Something about orders...',
+                      title: 'Orders',
+                      faker: faker,
+                      order: order,
+                      color: Colors.magenta,
+                      controller: animationController,
+                    );
+                  },
                 ),
               ],
             ),

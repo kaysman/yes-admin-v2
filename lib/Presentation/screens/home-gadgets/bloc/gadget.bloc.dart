@@ -1,3 +1,4 @@
+import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Data/models/gadget/update-gadget.model.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
@@ -23,6 +24,7 @@ class GadgetState {
   final GetGadgetByIdStatus getGadgetByIdStatus;
   final GadgetUpdatedStatus updatedStatus;
   final GadgetDeleteStatus deleteStatus;
+  final List<GadgetEntity>? filteredGadgets;
   final String? errorMessage;
 
   GadgetState({
@@ -34,6 +36,7 @@ class GadgetState {
     this.deleteStatus = GadgetDeleteStatus.idle,
     this.gadget,
     this.errorMessage,
+    this.filteredGadgets,
   });
 
   GadgetState copyWith({
@@ -45,6 +48,7 @@ class GadgetState {
     GadgetEntity? gadget,
     GadgetUpdatedStatus? updatedStatus,
     GadgetDeleteStatus? deleteStatus,
+    List<GadgetEntity>? filteredGadgets,
   }) {
     return GadgetState(
       createStatus: createStatus ?? this.createStatus,
@@ -55,6 +59,7 @@ class GadgetState {
       deleteStatus: deleteStatus ?? this.deleteStatus,
       updatedStatus: updatedStatus ?? this.updatedStatus,
       gadget: gadget ?? this.gadget,
+      filteredGadgets: filteredGadgets ?? this.filteredGadgets,
     );
   }
 }
@@ -137,10 +142,11 @@ class GadgetBloc extends Cubit<GadgetState> {
     }
   }
 
-  getAllGadgets({
-    PaginationDTO? filter,
-    bool subtle = false,
-  }) async {
+  getAllGadgets(
+      {PaginationDTO? filter,
+      bool subtle = false,
+      String? location,
+      String? status}) async {
     emit(state.copyWith(listStatus: GadgetListStatus.loading));
 
     if (filter == null) {
@@ -148,8 +154,14 @@ class GadgetBloc extends Cubit<GadgetState> {
     }
     try {
       var res = await GadgetService.getAllGadgets(filter.toJson());
+      var filteredGadgets = getGadgetsByLocationAndStatus(
+        res,
+        location,
+        status,
+      );
       emit(state.copyWith(
         gadgets: res,
+        filteredGadgets: filteredGadgets,
         listStatus: GadgetListStatus.idle,
       ));
     } catch (_) {
@@ -158,3 +170,35 @@ class GadgetBloc extends Cubit<GadgetState> {
     }
   }
 }
+
+///
+//* GET FILTERED GADGETS
+///
+getGadgetsByLocationAndStatus(
+    List<GadgetEntity> gadgets, String? location, String? status) {
+  return gadgets
+      .where((el) => el.location == location && el.status == status)
+      .toList();
+}
+
+// getGadgetsByLocationOfStatus(List<GadgetEntity> gadgets) {
+//   List<GadgetEntity> activeGadgetsOfHome =
+//       getGadgetsByLocation(gadgets, GadgetLocation.HOME, GadgetStatus.ACTIVE);
+//   List<GadgetEntity> inActiveGadgetsOfHome =
+//       getGadgetsByLocation(gadgets, GadgetLocation.HOME, GadgetStatus.INACTIVE);
+//   List<GadgetEntity> activeGadgetsOfCategory = getGadgetsByLocation(
+//       gadgets, GadgetLocation.CATEGORY, GadgetStatus.ACTIVE);
+//   List<GadgetEntity> inActiveGadgetsOfCategory = getGadgetsByLocation(
+//       gadgets, GadgetLocation.CATEGORY, GadgetStatus.INACTIVE);
+
+//   return {
+//     'Home': {
+//       'active': activeGadgetsOfHome,
+//       'in active': inActiveGadgetsOfHome,
+//     },
+//     'Category': {
+//       'active': activeGadgetsOfCategory,
+//       'in active': inActiveGadgetsOfCategory,
+//     },
+//   };
+// }

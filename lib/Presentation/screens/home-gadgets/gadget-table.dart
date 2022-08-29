@@ -1,8 +1,7 @@
-import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
-import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/emty-product-view.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/gadget%20-%20create.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/gadget-info.dialog.dart';
@@ -85,7 +84,8 @@ SidebarItem getMainPageSidebarItem() {
 }
 
 class GadgetsTable extends StatefulWidget {
-  const GadgetsTable({Key? key}) : super(key: key);
+  const GadgetsTable({Key? key, this.emptyListText}) : super(key: key);
+  final String? emptyListText;
 
   @override
   State<GadgetsTable> createState() => _GadgetsTableState();
@@ -112,7 +112,6 @@ class _GadgetsTableState extends State<GadgetsTable> {
   @override
   void initState() {
     gadgetBloc = BlocProvider.of<GadgetBloc>(context);
-    gadgetBloc.getAllGadgets();
     super.initState();
   }
 
@@ -125,7 +124,7 @@ class _GadgetsTableState extends State<GadgetsTable> {
         builder: (context, state) {
           if (state.listStatus == GadgetListStatus.loading) {
             return Container(
-              height: MediaQuery.of(context).size.height - 100,
+              height: MediaQuery.of(context).size.height - 200,
               alignment: Alignment.center,
               child: Center(
                 child: CircularProgressIndicator(color: kPrimaryColor),
@@ -134,7 +133,7 @@ class _GadgetsTableState extends State<GadgetsTable> {
           }
           if (state.listStatus == GadgetListStatus.error) {
             return Container(
-              height: MediaQuery.of(context).size.height - 100,
+              height: MediaQuery.of(context).size.height - 200,
               alignment: Alignment.center,
               child: TryAgainButton(
                 tryAgain: () async {
@@ -143,6 +142,14 @@ class _GadgetsTableState extends State<GadgetsTable> {
               ),
             );
           }
+
+          if (state.filteredGadgets?.isEmpty == true) {
+            return EmptyProductView(
+              emptyText: widget.emptyListText ?? '-',
+              isGadget: true,
+            );
+          }
+
           return Container(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -241,9 +248,9 @@ class _GadgetsTableState extends State<GadgetsTable> {
   List<DataRow> tableRows(GadgetState state) {
     if (state.gadgets == null) return [];
     return List.generate(
-      state.gadgets!.length,
+      state.filteredGadgets!.length,
       (index) {
-        var gadget = state.gadgets![index];
+        var gadget = state.filteredGadgets![index];
         return DataRow(
           selected: selectedGadgets.contains(gadget),
           onSelectChanged: (v) {
