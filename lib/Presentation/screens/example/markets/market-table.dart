@@ -56,7 +56,6 @@ class _FluentMarketTableState extends State<FluentMarketTable> {
         commandBar: TableCommandBar(onSearch: () async {
           await showFluentAppDialog(
             context,
-            title: Text('Search'),
             content: MarketProductSearch(
               selectedMarket: selectedMarket,
             ),

@@ -51,7 +51,6 @@ class _FluentFilterTableState extends State<FluentFilterTable> {
         commandBar: TableCommandBar(onSearch: () async {
           await showFluentAppDialog(
             context,
-            title: Text('Search'),
             content: FilterProductSearch(
               selectedFilter: selectedFilter,
             ),

@@ -21,8 +21,6 @@ class FluentBrandTable extends StatefulWidget {
 }
 
 class _FluentBrandTableState extends State<FluentBrandTable> {
-
-
   final autoSuggestBox = TextEditingController();
   late ProductBloc productBloc;
   BrandEntity? selectedBrand;
@@ -55,7 +53,6 @@ class _FluentBrandTableState extends State<FluentBrandTable> {
         commandBar: TableCommandBar(onSearch: () async {
           await showFluentAppDialog(
             context,
-            title: Text('Search'),
             content: BrandProductSearch(
               selectedBrand: selectedBrand,
             ),

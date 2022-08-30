@@ -1,15 +1,15 @@
 import 'package:admin_v2/Data/enums/gadget-type.dart';
-import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Data/models/gadget/update-gadget.model.dart';
-import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
-import 'package:admin_v2/Presentation/shared/components/info.label.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as fl;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/generated/l10n.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UpdateGadGetPage extends StatefulWidget {
@@ -23,9 +23,9 @@ class UpdateGadGetPage extends StatefulWidget {
 class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
   late GadgetBloc gadgetBloc;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  GadgetType? type;
-  GadgetLocation? location;
-  GadgetStatus? status;
+  String? type;
+  String? location;
+  String? status;
   final titleController = TextEditingController();
   final queueController = TextEditingController();
   bool editMode = false;
@@ -34,37 +34,47 @@ class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
   void initState() {
     super.initState();
     gadgetBloc = BlocProvider.of<GadgetBloc>(context);
-
     titleController.text = widget.gadget.title ?? '';
-    // type = widget.gadget.type;
-    // queueController.text = widget.gadget.queue.toString();
-    // status = widget.gadget.status;
-    // location = widget.gadget.location;
+    queueController.text = widget.gadget.queue.toString();
   }
 
-  String? get getOldTitile => widget.gadget.title;
+  String? get getOldTitle => widget.gadget.title;
   String? get getOldType => widget.gadget.type;
   int? get getOldQueue => widget.gadget.queue;
   String? get getOldStatus => widget.gadget.status;
+  String? get oldGadgetType => widget.gadget.type;
   String? get getOldLocation => widget.gadget.location;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GadgetBloc, GadgetState>(
-      listenWhen: (s1, s2) => true,
+      listenWhen: (s1, s2) =>
+          s1.updatedStatus != s2.updatedStatus ||
+          s1.deleteStatus != s2.deleteStatus,
       listener: (context, state) {
-        // if (state.updateStatus == CategoryUpdateStatus.success) {
-        //   print(state.updateStatus);
-        //   showSnackBar(context, Text('Updated successfully'),
-        //       type: SnackbarType.success);
-        //   Navigator.of(context).pop();
-        // }
-        // if (state.deleteStatus == CategoryDeleteStatus.success) {
-        //   print(state.deleteStatus);
-        //   showSnackBar(context, Text('Deleted successfully'),
-        //       type: SnackbarType.success);
-        //   Navigator.of(context).pop();
-        // }
+        if (state.updatedStatusForShow == GadgetForUpdatedStatus.success) {
+          log('Oh noo UPDATE');
+          log(state.deleteStatus);
+          log(state.updatedStatus);
+          Navigator.of(context).pop();
+          showSnackbar(
+            context,
+            Snackbar(
+              content: Text('Updated successfully'),
+            ),
+          );
+        } else if (state.deletedStatusForShow ==
+            GadgetForDeletedStatus.success) {
+          log('Oh noo DELETE');
+          Navigator.of(context).pop();
+          showSnackbar(
+            context,
+            Snackbar(
+              content: Text('Deleted successfully'),
+            ),
+          );
+        }
+        ;
       },
       builder: (context, state) {
         return Container(
@@ -78,103 +88,111 @@ class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
                 children: [
                   Text(
                     "Gadget uytget".toUpperCase(),
-                    style: Theme.of(context).textTheme.headline4,
+                    style: FluentTheme.of(context).typography.subtitle,
                   ),
                   SizedBox(height: 12),
-                  OutlinedButton(
+                  Button(
                     onPressed: () => setState(() => editMode = !editMode),
                     child: Text(
                       editMode ? "Cancel" : "Üýtget",
                     ),
                   ),
                   SizedBox(height: 20),
-                  LabeledInput(
+                  FluentLabeledInput(
                     controller: titleController,
-                    hintText: "Gadgetin ady",
-                    editMode: editMode,
+                    label: "Gadgetin ady",
+                    isEditMode: editMode,
+                    isTapped: false,
                   ),
                   SizedBox(height: 14),
-                  LabeledInput(
-                    editMode: editMode,
+                  FluentLabeledInput(
+                    isEditMode: editMode,
                     controller: queueController,
-                    hintText: "Gadgetin tertibi",
+                    label: "Gadgetin tertibi",
+                    isTapped: false,
                   ),
                   SizedBox(height: 14),
-                  InfoWithLabel<GadgetStatus>(
-                    label: 'Status',
-                    editMode: editMode,
-                    hintText: 'Status',
-                    value: status,
-                    onValueChanged: (v) {
+                  CustomAutoSuggestedBox(
+                    items: GadgetStatus.values.map((e) => e.name).toList(),
+                    onChanged: (v) {
                       setState(() {
                         status = v;
                       });
                     },
-                    items: GadgetStatus.values.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type.name),
-                      );
-                    }).toList(),
+                    label: 'Status',
+                    initialValue: getOldStatus,
+                    isEditMode: editMode,
                   ),
                   SizedBox(height: 14),
-                  InfoWithLabel<GadgetLocation>(
-                    label: 'Gadgetin yerlesyan yeri',
-                    editMode: editMode,
-                    hintText: 'GadGetin yerlesyan yeri',
-                    value: location,
-                    onValueChanged: (v) {
+                  CustomAutoSuggestedBox(
+                    items: GadgetType.values.map((e) => e.name).toList(),
+                    onChanged: (v) {
+                      setState(() {
+                        type = v;
+                      });
+                    },
+                    label: 'Gadgetin gornusi',
+                    initialValue: getOldType,
+                    isEditMode: editMode,
+                  ),
+                  SizedBox(height: 14),
+                  CustomAutoSuggestedBox(
+                    items: GadgetLocation.values.map((e) => e.name).toList(),
+                    onChanged: (v) {
                       setState(() {
                         location = v;
                       });
                     },
-                    items: GadgetLocation.values.map((type) {
-                      return DropdownMenuItem(
-                        value: type,
-                        child: Text(type.name),
-                      );
-                    }).toList(),
+                    initialValue: getOldLocation,
+                    label: 'Gadgetin yerlesyan yeri',
+                    isEditMode: editMode,
                   ),
                   SizedBox(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Button(
+                      fl.Button(
                         text: 'Delete',
-                        textColor: Colors.redAccent,
-                        borderColor: Colors.redAccent,
+                        textColor: Colors.red,
+                        borderColor: Colors.red,
                         hasBorder: true,
                         isLoading:
                             state.deleteStatus == GadgetDeleteStatus.loading,
                         onPressed: () {
                           if (widget.gadget.id != null) {
-                            gadgetBloc.deleteGadget(widget.gadget.id!);
+                            gadgetBloc.deleteGadget(
+                              widget.gadget.id!,
+                              location: getOldLocation,
+                              status: getOldStatus,
+                            );
                           }
                         },
                       ),
                       SizedBox(width: 16),
-                      Button(
+                      fl.Button(
                         text: "Update",
                         primary: kswPrimaryColor,
                         textColor: kWhite,
                         isLoading:
                             state.updatedStatus == GadgetUpdatedStatus.loading,
                         onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            // UpdateGadgetModel data = UpdateGadgetModel(
-                            //   id: widget.gadget.id,
-                            //   location: checkIfChangedAndReturn(
-                            //       getOldLocation, location),
-                            //   status:
-                            //       checkIfChangedAndReturn(getOldStatus, status),
-                            //   queue: checkIfChangedAndReturn(getOldQueue,
-                            //       int.tryParse(queueController.text)),
-                            //   title: checkIfChangedAndReturn(
-                            //       getOldTitile, titleController.text),
-                            //   type: checkIfChangedAndReturn(getOldType, type),
-                            // );
-                            // await gadgetBloc.updateGadget(data);
-                          }
+                          UpdateGadgetModel data = UpdateGadgetModel(
+                            id: widget.gadget.id,
+                            location: checkIfChangedAndReturn(
+                                getOldLocation, location),
+                            status:
+                                checkIfChangedAndReturn(getOldStatus, status),
+                            queue: checkIfChangedAndReturn(getOldQueue,
+                                int.tryParse(queueController.text)),
+                            title: checkIfChangedAndReturn(
+                                getOldTitle, titleController.text),
+                            type: checkIfChangedAndReturn(getOldType, type),
+                          );
+                          await gadgetBloc.updateGadget(
+                            data,
+                            status: getOldStatus,
+                            location: getOldLocation,
+                          );
                         },
                       ),
                     ],

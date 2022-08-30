@@ -15,6 +15,7 @@ class CustomAutoSuggestedBox extends StatefulWidget {
   Color? focusedBorderColor;
   Color? borderColor;
   final ValueChanged<String?> onChanged;
+  final String? initialValue;
   CustomAutoSuggestedBox({
     Key? key,
     this.validateText,
@@ -28,6 +29,7 @@ class CustomAutoSuggestedBox extends StatefulWidget {
     required this.label,
     required this.isEditMode,
     this.hintText,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,10 @@ class _CustomAutoSuggestedBoxState extends State<CustomAutoSuggestedBox> {
 
   @override
   void initState() {
+    if (widget.initialValue != null) {
+      controller.text = widget.initialValue!;
+    }
+
     if (widget.focusedBorderColor == null) {
       focusedBorderColor = kPrimaryColor;
     } else {

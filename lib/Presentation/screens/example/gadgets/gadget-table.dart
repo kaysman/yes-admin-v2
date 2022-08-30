@@ -4,8 +4,10 @@ import 'package:admin_v2/Presentation/screens/example/gadgets/gadget-tree.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/back-button.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/table-command-bar.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
+import 'package:admin_v2/Presentation/screens/home-gadgets/gadget%20-%20create.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/gadget-table.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,7 +46,11 @@ class _FluentGadgetTableState extends State<FluentGadgetTable> {
             style: FluentTheme.of(context).typography.title,
           ),
         ),
-        commandBar: TableCommandBar(onSearch: () async {}, onAdd: () {}),
+        commandBar: TableCommandBar(
+            onSearch: () {},
+            onAdd: () {
+              showFluentAppDialog(context, content: CreateMainPage());
+            }),
       ),
       content: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

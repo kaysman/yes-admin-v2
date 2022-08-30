@@ -434,12 +434,13 @@ class MultiDeleteProductDialog extends StatelessWidget {
       listenWhen: (p, c) => p.multiDeleteStatus != c.multiDeleteStatus,
       listener: (context, state) {
         if (state.multiDeleteStatus == ProductMultiDeleteStatus.success) {
-          showSnackBar(
-            context,
-            Text('Deleted all products successfully'),
-            type: SnackbarType.success,
-          );
           Navigator.of(context).pop();
+          showSnackbar(
+            context,
+            Snackbar(
+              content: Text('Deleted all selected products, successfully!'),
+            ),
+          );
         }
       },
       builder: (context, state) {

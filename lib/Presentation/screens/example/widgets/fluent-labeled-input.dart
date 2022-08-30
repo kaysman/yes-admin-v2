@@ -2,21 +2,21 @@ import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 class FluentLabeledInput extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final bool isEditMode;
   final EdgeInsets? contentPadding;
   final bool isTapped;
   final String label;
   final ValueChanged<String?>? onChanged;
-  const FluentLabeledInput(
-      {Key? key,
-      required this.controller,
-      required this.isEditMode,
-      this.contentPadding,
-      required this.isTapped,
-      this.onChanged,
-      required this.label})
-      : super(key: key);
+  const FluentLabeledInput({
+    Key? key,
+    this.controller,
+    required this.isEditMode,
+    this.contentPadding,
+    required this.isTapped,
+    this.onChanged,
+    required this.label,
+  }) : super(key: key);
 
   @override
   State<FluentLabeledInput> createState() => _FluentLabeledInputState();

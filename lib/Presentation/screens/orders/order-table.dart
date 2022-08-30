@@ -1,3 +1,4 @@
+import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/order/order.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/emty-product-view.dart';
@@ -5,10 +6,11 @@ import 'package:admin_v2/Presentation/screens/orders/order.bloc.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
+import 'package:fluent_ui/fluent_ui.dart' as fl;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../shared/components/button.dart';
+import '../../shared/components/button.dart' as fb;
 
 SidebarItem getOrdersSideBarItem() {
   return SidebarItem(
@@ -111,7 +113,7 @@ class _OrdersTableState extends State<OrdersTable> {
           return Container(
             height: MediaQuery.of(context).size.height - 200,
             alignment: Alignment.center,
-            child: TryAgainButton(
+            child: fb.TryAgainButton(
               tryAgain: () async {
                 await orderBloc.getAllOrders();
               },
@@ -132,7 +134,7 @@ class _OrdersTableState extends State<OrdersTable> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     if (selectedOrders.length == 1) ...[
-                      Button(
+                      fb.Button(
                         text: 'Zakaz barada',
                         primary: kswPrimaryColor,
                         textColor: kWhite,
@@ -213,7 +215,21 @@ class _OrdersTableState extends State<OrdersTable> {
           },
           cells: [
             DataCell(Text("${order.id ?? '-'} ")),
-            DataCell(Text("${order.status ?? '-'}")),
+            DataCell(
+              fl.DropDownButton(
+                leading: fl.Text(order.status ?? '-'),
+                items: GadgetStatus.values
+                    .map(
+                      (e) => fl.MenuFlyoutItem(
+                        text: Text(e.name),
+                        onPressed: () {
+                          
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             DataCell(Text("${order.address?.addressLine1 ?? '-'}")),
             DataCell(Text("${order.note ?? '-'} ")),
             DataCell(

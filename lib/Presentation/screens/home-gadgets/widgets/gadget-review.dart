@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class GadgetReview extends StatelessWidget {
   final String imgPath;
@@ -18,7 +18,7 @@ class GadgetReview extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-              flex: 8,
+              flex: 7,
               child: Image.asset(
                 imgPath,
                 fit: BoxFit.scaleDown,
@@ -27,16 +27,13 @@ class GadgetReview extends StatelessWidget {
             ),
             Spacer(),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: double.infinity,
                 child: Text(
                   description,
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: FluentTheme.of(context).typography.title,
                 ),
               ),
             ),

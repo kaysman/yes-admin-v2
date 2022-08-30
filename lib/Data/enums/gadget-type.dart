@@ -48,6 +48,13 @@ enum GadgetType {
 
 enum GadgetStatus { ACTIVE, INACTIVE }
 
+String getGadgetStatusName(GadgetStatus status) {
+  return GadgetStatus.values.firstWhere((el) => el == status).name;
+}
+String getGadgetLocationName(GadgetLocation status) {
+  return GadgetLocation.values.firstWhere((el) => el == status).name;
+}
+
 enum GadgetLocation { HOME, CATEGORY }
 
 extension AddOn on GadgetType {

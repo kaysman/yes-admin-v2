@@ -23,7 +23,6 @@ class FluentCategoryTable extends StatefulWidget {
 }
 
 class _FluentCategoryTableState extends State<FluentCategoryTable> {
-
   final autoSuggestBox = TextEditingController();
   late ProductBloc productBloc;
   CategoryEntity? selectedCategory;

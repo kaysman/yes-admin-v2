@@ -3,6 +3,7 @@ import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Data/models/gadget/update-gadget.model.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/services/gadget.service.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,10 @@ enum GetGadgetByIdStatus { idle, loading, error, success }
 
 enum GadgetUpdatedStatus { idle, loading, error, success }
 
+enum GadgetForUpdatedStatus { idle, loading, error, success }
+
+enum GadgetForDeletedStatus { idle, loading, error, success }
+
 enum GadgetDeleteStatus { idle, loading, error, success }
 
 class GadgetState {
@@ -23,7 +28,9 @@ class GadgetState {
   final GadgetEntity? gadget;
   final GetGadgetByIdStatus getGadgetByIdStatus;
   final GadgetUpdatedStatus updatedStatus;
+  final GadgetForUpdatedStatus updatedStatusForShow;
   final GadgetDeleteStatus deleteStatus;
+  final GadgetForDeletedStatus deletedStatusForShow;
   final List<GadgetEntity>? filteredGadgets;
   final String? errorMessage;
 
@@ -37,6 +44,8 @@ class GadgetState {
     this.gadget,
     this.errorMessage,
     this.filteredGadgets,
+    this.deletedStatusForShow = GadgetForDeletedStatus.idle,
+    this.updatedStatusForShow = GadgetForUpdatedStatus.idle,
   });
 
   GadgetState copyWith({
@@ -47,7 +56,9 @@ class GadgetState {
     GetGadgetByIdStatus? getGadgetByIdStatus,
     GadgetEntity? gadget,
     GadgetUpdatedStatus? updatedStatus,
+    GadgetForUpdatedStatus? updatedStatusForShow,
     GadgetDeleteStatus? deleteStatus,
+    GadgetForDeletedStatus? deletedStatusForShow,
     List<GadgetEntity>? filteredGadgets,
   }) {
     return GadgetState(
@@ -60,6 +71,8 @@ class GadgetState {
       updatedStatus: updatedStatus ?? this.updatedStatus,
       gadget: gadget ?? this.gadget,
       filteredGadgets: filteredGadgets ?? this.filteredGadgets,
+      deletedStatusForShow: deletedStatusForShow ?? GadgetForDeletedStatus.idle,
+      updatedStatusForShow: updatedStatusForShow ?? GadgetForUpdatedStatus.idle,
     );
   }
 }
@@ -75,8 +88,12 @@ class GadgetBloc extends Cubit<GadgetState> {
     try {
       var res = await GadgetService.createHomeGadget(files, fields);
       if (res.success == true) {
+        var gadget = GadgetEntity.fromJson(res.data);
         emit(state.copyWith(createStatus: GadgetCreateStatus.success));
-        getAllGadgets();
+        getAllGadgets(
+          location: gadget.location,
+          status: gadget.status,
+        );
       }
     } catch (e) {
       print(e);
@@ -104,15 +121,22 @@ class GadgetBloc extends Cubit<GadgetState> {
     }
   }
 
-  updateGadget(UpdateGadgetModel data) async {
+  updateGadget(UpdateGadgetModel data,
+      {String? status, String? location}) async {
     emit(state.copyWith(updatedStatus: GadgetUpdatedStatus.loading));
     try {
       var res = await GadgetService.upDateGadget(data);
       if (res.success == true) {
-        emit(state.copyWith(
-          updatedStatus: GadgetUpdatedStatus.success,
-        ));
-        getAllGadgets();
+        emit(
+          state.copyWith(
+            updatedStatus: GadgetUpdatedStatus.success,
+            updatedStatusForShow: GadgetForUpdatedStatus.success,
+          ),
+        );
+        getAllGadgets(
+          location: location,
+          status: status,
+        );
       }
     } catch (_) {
       emit(state.copyWith(
@@ -123,15 +147,19 @@ class GadgetBloc extends Cubit<GadgetState> {
     }
   }
 
-  deleteGadget(int id) async {
+  deleteGadget(int id, {String? status, String? location}) async {
     emit(state.copyWith(deleteStatus: GadgetDeleteStatus.loading));
     try {
       var res = await GadgetService.deleteGadget(id);
       if (res.success == true) {
         emit(state.copyWith(
           deleteStatus: GadgetDeleteStatus.success,
+          deletedStatusForShow: GadgetForDeletedStatus.success,
         ));
-        getAllGadgets();
+        getAllGadgets(
+          location: location,
+          status: status,
+        );
       }
     } catch (_) {
       emit(state.copyWith(
@@ -181,24 +209,3 @@ getGadgetsByLocationAndStatus(
       .toList();
 }
 
-// getGadgetsByLocationOfStatus(List<GadgetEntity> gadgets) {
-//   List<GadgetEntity> activeGadgetsOfHome =
-//       getGadgetsByLocation(gadgets, GadgetLocation.HOME, GadgetStatus.ACTIVE);
-//   List<GadgetEntity> inActiveGadgetsOfHome =
-//       getGadgetsByLocation(gadgets, GadgetLocation.HOME, GadgetStatus.INACTIVE);
-//   List<GadgetEntity> activeGadgetsOfCategory = getGadgetsByLocation(
-//       gadgets, GadgetLocation.CATEGORY, GadgetStatus.ACTIVE);
-//   List<GadgetEntity> inActiveGadgetsOfCategory = getGadgetsByLocation(
-//       gadgets, GadgetLocation.CATEGORY, GadgetStatus.INACTIVE);
-
-//   return {
-//     'Home': {
-//       'active': activeGadgetsOfHome,
-//       'in active': inActiveGadgetsOfHome,
-//     },
-//     'Category': {
-//       'active': activeGadgetsOfCategory,
-//       'in active': inActiveGadgetsOfCategory,
-//     },
-//   };
-// }

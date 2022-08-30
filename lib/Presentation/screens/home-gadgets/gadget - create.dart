@@ -3,6 +3,8 @@ import 'package:admin_v2/Data/models/gadget/create-gadget-link.model.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget-product.model.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget-subcategory.model.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/gadget-review.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
@@ -10,13 +12,12 @@ import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Data/models/gadget/gadget-link.model.dart';
-import '../../shared/components/button.dart';
+import '../../shared/components/button.dart' as fl;
 import '../../shared/components/image_select_card.dart';
-import '../../shared/components/info.label.dart';
 import '../../shared/components/input_fields.dart';
 
 final enabledgadgetTypes = [
@@ -73,73 +74,70 @@ class _CreateMainPageState extends State<CreateMainPage> {
   }
 
   onSavePressed() async {
-    print(selectedType);
     var isProduct = selectedType ==
         GadgetType.TWO_TO_THREE_PRODUCTS_IN_HORIZONTAL_WITH_TITLE_AS_TEXT;
     var isCategory = selectedType == GadgetType.CIRCLE_ITEMS ||
         selectedType == GadgetType.CATEGORY_BANNER;
 
-    if (_formKey.currentState!.validate()) {
-      List<CreateGadgetProducts> pL = [];
-      List<CreateGadgetSubCategory> cL = [];
-      List<CreateGadgetLink> gL = [];
-      // var links;
-      if (isProduct) {
-        var links = linkAndImgs
-            .map(
-              (e) => CreateGadgetProducts(
-                productId: int.parse(e.controller.text),
-              ),
-            )
-            .toList();
-        pL.addAll(links);
-      } else if (isCategory) {
-        var links = linkAndImgs
-            .map(
-              (e) => CreateGadgetSubCategory(
-                categoryId: int.parse(e.controller.text),
-              ),
-            )
-            .toList();
-        cL.addAll(links);
-      } else {
-        var links = linkAndImgs
-            .map(
-              (e) => CreateGadgetLink(
-                link: e.controller.text,
-              ),
-            )
-            .toList();
-        if (onImageLink != null) {
-          links.add(CreateGadgetLink(link: onImageLink!));
-        }
-        gL.addAll(links);
+    List<CreateGadgetProducts> pL = [];
+    List<CreateGadgetSubCategory> cL = [];
+    List<CreateGadgetLink> gL = [];
+    // var links;
+    if (isProduct) {
+      var links = linkAndImgs
+          .map(
+            (e) => CreateGadgetProducts(
+              productId: int.parse(e.controller.text),
+            ),
+          )
+          .toList();
+      pL.addAll(links);
+    } else if (isCategory) {
+      var links = linkAndImgs
+          .map(
+            (e) => CreateGadgetSubCategory(
+              categoryId: int.parse(e.controller.text),
+            ),
+          )
+          .toList();
+      cL.addAll(links);
+    } else {
+      var links = linkAndImgs
+          .map(
+            (e) => CreateGadgetLink(
+              link: e.controller.text,
+            ),
+          )
+          .toList();
+      if (onImageLink != null) {
+        links.add(CreateGadgetLink(link: onImageLink!));
       }
-
-      CreateGadgetModel model = CreateGadgetModel(
-        type: selectedType,
-        location: location,
-        categories: isCategory ? cL : null,
-        productIds: isProduct ? pL : null,
-        queue: queue ?? 1,
-        status: status,
-        title: titleText,
-        links: isProduct || isCategory ? [] : gL,
-      );
-      var files = linkAndImgs.map((e) => e.image).toList();
-      print(model.toJson());
-      await gadgetBloc.createHomeGadget(files, model.toJson());
+      gL.addAll(links);
     }
+
+    CreateGadgetModel model = CreateGadgetModel(
+      type: selectedType,
+      location: location,
+      categories: isCategory ? cL : null,
+      productIds: isProduct ? pL : null,
+      queue: queue ?? 1,
+      status: status,
+      title: titleText,
+      links: isProduct || isCategory ? [] : gL,
+    );
+    var files = linkAndImgs.map((e) => e.image).toList();
+    log(model.toJson());
+    await gadgetBloc.createHomeGadget(files, model.toJson());
   }
 
   @override
   Widget build(BuildContext context) {
-    double mainHaight = MediaQuery.of(context).size.height * 0.9;
+    double mainHeight = MediaQuery.of(context).size.height * 0.9;
     double mainWidth = MediaQuery.of(context).size.width * 0.7;
     return Form(
       key: _formKey,
       child: Container(
-        height: mainHaight,
+        height: mainHeight,
         width: mainWidth,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -148,39 +146,48 @@ class _CreateMainPageState extends State<CreateMainPage> {
             children: [
               Text(
                 "Sahypa döret".toUpperCase(),
-                style: Theme.of(context).textTheme.headline4,
+                style: FluentTheme.of(context).typography.title?.copyWith(
+                      fontSize: 20,
+                    ),
               ),
               SizedBox(height: 14),
               Container(
-                color: kScaffoldBgColor,
-                height: mainHaight * .25,
+                // color: kScaffoldBgColor,
+                height: mainHeight * .25,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: enabledgadgetTypes.length,
                   itemBuilder: (context, index) {
                     var item = enabledgadgetTypes[index];
                     var isSelected = item == selectedType;
-                    return SizedBox(
+                    return Container(
                       width: 200,
-                      child: Card(
-                        child: ListTile(
-                          tileColor: isSelected
-                              ? kPrimaryColor.withOpacity(0.2)
-                              : null,
-                          title: Text(item.name),
-                          onTap: () {
-                            if (item != selectedType) {
-                              setState(() {
-                                selectedType = item;
-                                linkAndImgs = List.generate(
-                                  selectedType.itemCount,
-                                  (index) => GadgetLink(
-                                    controller: TextEditingController(),
-                                  ),
-                                );
-                              });
-                            }
-                          },
+                      child: GestureDetector(
+                        onTap: () {
+                          if (item != selectedType) {
+                            setState(() {
+                              selectedType = item;
+                              linkAndImgs = List.generate(
+                                selectedType.itemCount,
+                                (index) => GadgetLink(
+                                  controller: TextEditingController(),
+                                ),
+                              );
+                            });
+                          }
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? kPrimaryColor.withOpacity(.2)
+                                : kGrey3Color,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Text(item.name),
+                          ),
                         ),
                       ),
                     );
@@ -197,7 +204,7 @@ class _CreateMainPageState extends State<CreateMainPage> {
                     onItemListChanged: (v) {
                       setState(() => linkAndImgs = v);
                     },
-                    onLocationCahnged: (v) {
+                    onLocationChanged: (v) {
                       setState(() {
                         location = v;
                       });
@@ -236,19 +243,20 @@ class _CreateMainPageState extends State<CreateMainPage> {
                 listenWhen: (p, c) => p.createStatus != c.createStatus,
                 listener: (context, state) {
                   if (state.createStatus == GadgetCreateStatus.success) {
-                    showSnackBar(
-                      context,
-                      Text('Created successfully'),
-                      type: SnackbarType.success,
-                    );
                     Navigator.of(context).pop();
+                    showSnackbar(
+                      context,
+                      Snackbar(
+                        content: Text('Created successfully'),
+                      ),
+                    );
                   }
                 },
                 builder: (context, state) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Button(
+                      fl.Button(
                         text: 'Cancel',
                         hasBorder: true,
                         borderColor: kGrey5Color,
@@ -257,7 +265,7 @@ class _CreateMainPageState extends State<CreateMainPage> {
                         },
                       ),
                       SizedBox(width: 16),
-                      Button(
+                      fl.Button(
                         isLoading:
                             state.createStatus == GadgetCreateStatus.loading,
                         text: "Save",
@@ -286,7 +294,7 @@ class GadgetCreateBody extends StatefulWidget {
     required this.onTitleTextChanged,
     required this.onTitleImageChanged,
     required this.onStatusChanged,
-    required this.onLocationCahnged,
+    required this.onLocationChanged,
     required this.onQueueChanged,
     this.titleText,
     this.titleImage,
@@ -309,7 +317,7 @@ class GadgetCreateBody extends StatefulWidget {
   final GadgetStatus? status;
   final ValueChanged<GadgetStatus> onStatusChanged;
   final GadgetLocation? location;
-  final ValueChanged<GadgetLocation> onLocationCahnged;
+  final ValueChanged<GadgetLocation> onLocationChanged;
   final String? queue;
   final ValueChanged<String?> onQueueChanged;
   final ValueChanged<String?> onOneImageLinkChanged;
@@ -371,11 +379,11 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .07,
-                  child: LabeledInput(
+                  child: FluentLabeledInput(
                     controller: _controller,
-                    editMode: true,
-                    hintText: 'Tertibi',
-                    onChanged: this.widget.onQueueChanged,
+                    isEditMode: true,
+                    isTapped: false,
+                    label: 'Tertibi',
                   ),
                 ),
                 SizedBox(height: 14),
@@ -389,11 +397,11 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
                   ),
                 ],
                 if (horizontalTypes.contains(type)) ...[
-                  LabeledInput(
+                  FluentLabeledInput(
                     onChanged: this.widget.onTitleTextChanged,
-                    hintText: 'Title text',
-                    editMode: true,
-                    validator: emptyField,
+                    label: 'Title text',
+                    isEditMode: true,
+                    isTapped: false,
                   )
                 ],
                 SizedBox(height: 14),
@@ -423,14 +431,14 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
                       ),
                       SizedBox(height: 14),
                       if (type == GadgetType.BANNER_FOR_MEN_AND_WOMEN)
-                        LabeledInput(
-                          editMode: true,
+                        FluentLabeledInput(
+                          isEditMode: true,
                           onChanged: widget.onOneImageLinkChanged,
-                          hintText: 'Link',
-                          validator: emptyField,
+                          label: 'Link',
+                          isTapped: false,
                         ),
                       if (expandableTypes.contains(type)) ...[
-                        OutlinedButton(
+                        Button(
                           onPressed: () {
                             widget.linkAndImgs.add(
                               GadgetLink(
@@ -463,47 +471,35 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
 
   statusAndLocation() {
     return RowOfTwoChildren(
-      child1: InfoWithLabel<GadgetStatus>(
-        editMode: true,
-        hintText: 'Gadget status',
-        validator: notSelectedItem,
+      child1: CustomAutoSuggestedBox(
+        items: GadgetStatus.values.map((e) => e.name).toList(),
+        onChanged: (v) {
+          if (v != null) {
+            setState(() {
+              status = GadgetStatus.values.firstWhere((el) => v == el.name);
+            });
+            if (status != null) {
+              widget.onStatusChanged.call(status!);
+            }
+          }
+        },
         label: 'Status',
-        value: status,
-        onValueChanged: (v) {
-          setState(() {
-            status = v;
-          });
-          widget.onStatusChanged.call(v!);
-        },
-        items: GadgetStatus.values
-            .map(
-              (e) => DropdownMenuItem<GadgetStatus>(
-                value: e,
-                child: Text(e.name),
-              ),
-            )
-            .toList(),
+        isEditMode: true,
       ),
-      child2: InfoWithLabel<GadgetLocation>(
-        editMode: true,
-        hintText: 'Gadget status',
-        validator: notSelectedItem,
-        label: 'Location',
-        value: location,
-        onValueChanged: (v) {
-          setState(() {
-            location = v;
-          });
-          widget.onLocationCahnged.call(v!);
+      child2: CustomAutoSuggestedBox(
+        items: GadgetLocation.values.map((e) => e.name).toList(),
+        onChanged: (v) {
+          if (v != null) {
+            setState(() {
+              location = GadgetLocation.values.firstWhere((el) => v == el.name);
+            });
+            if (location != null) {
+              widget.onLocationChanged.call(location!);
+            }
+          }
         },
-        items: GadgetLocation.values
-            .map(
-              (e) => DropdownMenuItem<GadgetLocation>(
-                value: e,
-                child: Text(e.name),
-              ),
-            )
-            .toList(),
+        label: 'Location',
+        isEditMode: true,
       ),
     );
   }
