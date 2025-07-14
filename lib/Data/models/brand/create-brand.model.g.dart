@@ -8,16 +8,14 @@ part of 'create-brand.model.dart';
 
 CreateBrandDTO _$CreateBrandDTOFromJson(Map<String, dynamic> json) =>
     CreateBrandDTO(
+      id: json['id'] as int?,
       name: json['name'] as String,
-      logo: json['logo'] as String,
-      image: json['image'] as String?,
       vip: json['vip'] as bool,
     );
 
 Map<String, dynamic> _$CreateBrandDTOToJson(CreateBrandDTO instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
-      'logo': instance.logo,
-      'image': instance.image,
       'vip': instance.vip,
     };

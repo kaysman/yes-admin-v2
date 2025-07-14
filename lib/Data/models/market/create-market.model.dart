@@ -4,7 +4,6 @@ part 'create-market.model.g.dart';
 @JsonSerializable()
 class CreateMarketDTO {
   final String title;
-  final String? logo;
   final String? address;
   final String? description;
   final String phoneNumber;
@@ -12,7 +11,6 @@ class CreateMarketDTO {
 
   CreateMarketDTO({
     required this.title,
-    this.logo,
     this.address,
     this.description,
     required this.phoneNumber,

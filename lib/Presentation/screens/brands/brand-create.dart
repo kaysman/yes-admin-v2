@@ -1,11 +1,16 @@
-import 'dart:convert';
 import 'package:admin_v2/Data/models/brand/create-brand.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
+import 'package:admin_v2/Presentation/shared/components/image_select_card.dart';
+import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+// import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,11 +24,18 @@ class CreateBrandPage extends StatefulWidget {
 }
 
 class _CreateBrandPageState extends State<CreateBrandPage> {
+  late BrandBloc brandBloc;
+
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   FilePickerResult? _selectedLogoImage;
-  FilePickerResult? _selectedImage;
   bool _isSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    brandBloc = BlocProvider.of<BrandBloc>(context);
+  }
 
   Future<void> pickImage(ImageType type) async {
     try {
@@ -33,8 +45,6 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
       setState(() {
         if (type == ImageType.BRAND_LOGO) {
           _selectedLogoImage = result;
-        } else {
-          _selectedImage = result;
         }
       });
     } on PlatformException catch (e) {
@@ -44,205 +54,163 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.45,
-      child: Form(
-        key: formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Brand döret".toUpperCase(),
-                style: Theme.of(context).textTheme.headline4,
-              ),
-              SizedBox(height: 20),
-              Row(
+    return BlocConsumer<BrandBloc, BrandState>(
+      listenWhen: (s1, s2) => s1.createStatus != s2.createStatus,
+      listener: (context, state) {
+        if (state.createStatus == BrandCreateStatus.success) {
+          Navigator.of(context).pop();
+          showSnackbar(
+            context,
+            Snackbar(
+              content: Text('Created successfully'),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Container(
+          width: MediaQuery.of(context).size.width * 0.45,
+          child: Form(
+            key: formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (_selectedLogoImage != null) ...[
-                    ClipOval(
-                      child: Image.memory(
-                        _selectedLogoImage!.files.first.bytes!,
-                        fit: BoxFit.cover,
-                        height: 80,
-                        width: 80,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 14,
-                    ),
-                  ],
-                  if (_selectedImage != null) ...[
-                    ClipOval(
-                      child: Image.memory(
-                        _selectedImage!.files.first.bytes!,
-                        fit: BoxFit.cover,
-                        height: 80,
-                        width: 80,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-              SizedBox(height: 14),
-              Card(
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Colors.black38,
-                    width: 0.0,
-                  ),
-                ),
-                child: ListTile(
-                  onTap: _selectedLogoImage == null
-                      ? () => this.pickImage(ImageType.BRAND_LOGO)
-                      : null,
-                  trailing: _selectedLogoImage == null
-                      ? null
-                      : OutlinedButton(
-                          onPressed: () => this.pickImage(ImageType.BRAND_LOGO),
-                          child: Text(
-                            "Täzele",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                          ),
-                        ),
-                  title: Text(
-                    _selectedLogoImage == null
-                        ? "Logo saýla"
-                        : _selectedLogoImage!.names
-                            .map((e) => e)
-                            .toList()
-                            .join(', '),
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: Colors.black54,
+                  Text(
+                    "Brand döret".toUpperCase(),
+                    style: FluentTheme.of(context).typography.body?.copyWith(
                           fontWeight: FontWeight.w500,
+                          fontSize: 16,
                         ),
                   ),
-                ),
-              ),
-              SizedBox(height: 14),
-              Card(
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: Colors.black38,
-                    width: 0.0,
+                  SizedBox(height: 20),
+                  buildImageReview(),
+                  SizedBox(height: 14),
+                  ImageSelectCard(
+                    editMode: true,
+                    image: _selectedLogoImage,
+                    pickImage: () => this.pickImage(ImageType.BRAND_LOGO),
                   ),
-                ),
-                child: ListTile(
-                  onTap: _selectedImage == null
-                      ? () => this.pickImage(ImageType.BRAND_IMAGE)
-                      : null,
-                  trailing: _selectedImage == null
-                      ? null
-                      : OutlinedButton(
-                          onPressed: () =>
-                              this.pickImage(ImageType.BRAND_IMAGE),
-                          child: Text(
-                            "Täzele",
-                            style:
-                                Theme.of(context).textTheme.caption!.copyWith(
-                                      color: Theme.of(context).primaryColor,
-                                    ),
-                          ),
-                        ),
-                  title: Text(
-                    _selectedImage == null
-                        ? "Surat saýla"
-                        : _selectedImage!.names
-                            .map((e) => e)
-                            .toList()
-                            .join(', '),
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w500,
-                        ),
+                  SizedBox(height: 14),
+                  buildVipInput(),
+                  SizedBox(height: 14),
+                  FluentLabeledInput(
+                    controller: titleController,
+                    isEditMode: true,
+                    isTapped: false,
+                    label: 'Brendin ady',
                   ),
-                ),
-              ),
-              SizedBox(height: 14),
-              Card(
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.black38, width: 0.0),
-                ),
-                child: CheckboxListTile(
-                  title: Text("VIP",
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            color: Colors.black54,
-                            fontWeight: FontWeight.w500,
-                          )),
-                  value: this._isSelected,
-                  onChanged: (val) {
-                    setState(() => _isSelected = val!);
-                  },
-                ),
-              ),
-              SizedBox(height: 14),
-              TextFormField(
-                controller: titleController,
-                validator: emptyField,
-                decoration: InputDecoration(
-                  labelText: "Brendiň ady *",
-                ),
-              ),
-              SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      "Cancel",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  BlocConsumer<BrandBloc, BrandState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return Button(
-                          isLoading:
-                              state.createStatus == BrandCreateStatus.loading,
-                          text: "Save",
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              String? logo64String;
-                              String? image64String;
-                              if (_selectedLogoImage != null ||
-                                  _selectedImage != null) {
-                                logo64String =
-                                    '${base64.encode(_selectedLogoImage!.files[0].bytes as List<int>)}-ext-${_selectedLogoImage!.files[0].extension}';
-                                ;
-                                image64String =
-                                    '${base64.encode(_selectedImage!.files[0].bytes as List<int>)}-ext-${_selectedImage!.files[0].extension}';
-                                ;
-                              }
+                  SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      f.Button(
+                        text: 'Cancel',
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      SizedBox(width: 16),
+                      f.Button(
+                        isLoading:
+                            state.createStatus == BrandCreateStatus.loading,
+                        text: "Save",
+                        textColor: kWhite,
+                        primary: kswPrimaryColor,
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            if (_selectedLogoImage != null) {
+                              List<FilePickerResult> _files = [];
+                              _files.add(_selectedLogoImage!);
                               CreateBrandDTO data = CreateBrandDTO(
                                 name: titleController.text,
-                                logo: logo64String!,
-                                image: image64String,
-                                vip: this._isSelected,
+                                vip: _isSelected,
                               );
 
-                              context.read<BrandBloc>().createBrand(data);
+                              brandBloc.createBrand(
+                                _files,
+                                data.toJson(),
+                              );
                             }
-                          },
-                        );
-                      }),
+                          }
+                        },
+                      )
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+        );
+      },
+    );
+  }
+
+  buildImageReview() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (_selectedLogoImage != null) ...[
+          ClipOval(
+            child: Image.memory(
+              _selectedLogoImage!.files.first.bytes!,
+              fit: BoxFit.cover,
+              height: 80,
+              width: 80,
+            ),
+          ),
+          SizedBox(
+            width: 14,
+          ),
+        ],
+      ],
+    );
+  }
+
+  buildVipInput() {
+    return GestureDetector(
+      onTap: () => setState(() {
+        _isSelected = !_isSelected;
+      }),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Vip',
+            style: FluentTheme.of(context).typography.body?.copyWith(
+                  color: kGrey1Color,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: kGrey3Color,
+                ),
+                borderRadius: BorderRadius.circular(8)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Vip'),
+                Checkbox(
+                  checked: this._isSelected,
+                  onChanged: (v) {
+                    setState(() {
+                      _isSelected = v!;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

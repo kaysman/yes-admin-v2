@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
 class CurrentPage with EquatableMixin {
-  final int firstId;
-  final int lastId;
+  final int? firstId;
+  final int? lastId;
 
   CurrentPage({
     required this.firstId,
