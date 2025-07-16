@@ -67,14 +67,11 @@ List<SidebarItem> sidebars = [
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                onSurface: Colors.white,
-                primary: Colors.transparent,
-              ),
+              
               onPressed: () {},
               child: Text(
                 'Aksiýa döret',
-                style: TextStyle(color: Colors.white),
+                
               ),
             ),
           ),

@@ -105,7 +105,7 @@ class _EndDrawerState extends State<EndDrawer> {
                     child: NavigationRail(
                       leading: null,
                       minWidth: 100,
-                      backgroundColor: kScaffoldBgColor,
+                      backgroundColor: Theme.of(context).colorScheme.background,
                       onDestinationSelected: (val) => setState(
                         () {
                           selectedIndex = val;
@@ -159,9 +159,9 @@ class _EndDrawerState extends State<EndDrawer> {
             width: double.infinity,
             decoration: BoxDecoration(
               border: Border(
-                top: BorderSide(color: kScaffoldBgColor!, width: 1),
+                top: BorderSide(color: Theme.of(context).dividerColor, width: 1),
               ),
-              color: kWhite,
+              color: Theme.of(context).colorScheme.surface,
             ),
             height: 50,
             child: Row(
@@ -172,7 +172,7 @@ class _EndDrawerState extends State<EndDrawer> {
                   child: TextButton(
                     child: Text(
                       'Close',
-                      style: TextStyle(color: kText2Color),
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -183,7 +183,7 @@ class _EndDrawerState extends State<EndDrawer> {
                   endIndent: 15,
                   indent: 15,
                   width: 2,
-                  color: kScaffoldBgColor,
+                  color: Theme.of(context).dividerColor,
                   thickness: 1,
                 ),
                 Expanded(
@@ -194,7 +194,7 @@ class _EndDrawerState extends State<EndDrawer> {
                         return TextButton(
                           child: Text(
                             'Clear All',
-                            style: TextStyle(color: kText2Color),
+                            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                           ),
                           onPressed: () {
                             if (productBloc.state.lastFilter != null) {
@@ -222,7 +222,7 @@ class _EndDrawerState extends State<EndDrawer> {
                   endIndent: 15,
                   indent: 15,
                   width: 2,
-                  color: kScaffoldBgColor,
+                  color: Theme.of(context).dividerColor,
                   thickness: 1,
                 ),
                 Expanded(
@@ -241,7 +241,7 @@ class _EndDrawerState extends State<EndDrawer> {
                             children: [
                               Text(
                                 'Apply',
-                                style: TextStyle(color: kPrimaryColor),
+                                style: TextStyle(color: Theme.of(context).colorScheme.primary),
                               ),
                               if (state.listingStatus ==
                                   ProductListStatus.silentLoading)
@@ -256,7 +256,7 @@ class _EndDrawerState extends State<EndDrawer> {
                                       height: 25,
                                       child: Center(
                                         child: CircularProgressIndicator(
-                                          color: kPrimaryColor,
+                                          color: Theme.of(context).colorScheme.primary,
                                         ),
                                       ),
                                     )

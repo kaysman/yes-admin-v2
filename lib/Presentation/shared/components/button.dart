@@ -1,13 +1,12 @@
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/indicators.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
   const Button({
     Key? key,
     required this.text,
-    this.primary = kWhite,
+    this.primary,
     this.borderColor = kGrey1Color,
     this.borderRadius = 6.0,
     this.hasBorder = false,
@@ -26,7 +25,7 @@ class Button extends StatelessWidget {
   final String text;
   final Color? textColor;
   final TextStyle? textStyle;
-  final Color primary;
+  final Color? primary;
   final Color? onPrimary;
   final bool hasBorder;
   final Color borderColor;
@@ -41,28 +40,32 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       child: Opacity(
         opacity: isDisabled ? 0.5 : 1,
         child: AbsorbPointer(
           absorbing: isDisabled || isLoading,
-          child: FilledButton(
+          child: ElevatedButton(
             onPressed: this.onPressed,
             style: ButtonStyle(
-              backgroundColor: ButtonState.all(this.primary),
-              elevation: ButtonState.all(this.elevation),
+              backgroundColor: MaterialStateColor.resolveWith(
+                  (states) => this.primary ?? colorScheme.primary),
+              elevation: MaterialStateProperty.resolveWith(
+                  (states) => this.elevation ?? 0),
               // primary: this.primary,
               // onPrimary: this.onPrimary,
-              shape: ButtonState.all(
-                RoundedRectangleBorder(
-                  side: this.hasBorder
-                      ? BorderSide(color: this.borderColor)
-                      : BorderSide.none,
-                  borderRadius: BorderRadius.circular(this.borderRadius),
-                ),
-              ),
+              // shape: ButtonState.all(
+              //   RoundedRectangleBorder(
+              //     side: this.hasBorder
+              //         ? BorderSide(color: this.borderColor)
+              //         : BorderSide.none,
+              //     borderRadius: BorderRadius.circular(this.borderRadius),
+              //   ),
+              // ),
 
-              padding: ButtonState.all(this.padding),
+              padding:
+                  MaterialStateProperty.resolveWith((states) => this.padding),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -73,15 +76,13 @@ class Button extends StatelessWidget {
                   Text(
                     this.text,
                     style: textStyle ??
-                        FluentTheme.of(context)
-                            .typography
-                            .body
-                            ?.copyWith(color: textColor),
+                        Theme.of(context).textTheme.bodyText2?.copyWith(
+                            color: textColor ?? colorScheme.onPrimary),
                   ),
                 SizedBox(width: 8.0),
                 if (isLoading)
                   ProgressIndicatorSmall(
-                    color: textColor ?? kWhite,
+                    color: textColor ?? colorScheme.onPrimary,
                   ),
               ],
             ),
@@ -103,7 +104,6 @@ class FlatBackButton<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      style: ButtonStyle(padding: ButtonState.all(EdgeInsets.zero)),
       onPressed: () {
         Navigator.of(context).pop(result);
       },
@@ -111,7 +111,7 @@ class FlatBackButton<T> extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // AppIcons.svgAsset(
-          //   AppIcons.back_android,
+          //   AppIcons.arrow_back_android,
           //   color: kGrey1Color,
           //   height: 18,
           //   width: 18,
@@ -121,9 +121,9 @@ class FlatBackButton<T> extends StatelessWidget {
           ),
           Text(
             "Back",
-            style: FluentTheme.of(context)
-                .typography
-                .body
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
                 ?.copyWith(color: kGrey1Color),
           ),
         ],
@@ -146,11 +146,11 @@ class TryAgainButton extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(FluentIcons.error, size: 42, color: Colors.red),
+          Icon(Icons.error, size: 42, color: Colors.red),
           SizedBox(height: 14),
           Text(
             "Something went wrong",
-            style: FluentTheme.of(context).typography.body,
+            style: Theme.of(context).textTheme.bodyText2,
           ),
           SizedBox(height: 8),
           TextButton(
@@ -158,13 +158,13 @@ class TryAgainButton extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(FluentIcons.refresh),
+                Icon(Icons.refresh),
                 SizedBox(
                   width: 8,
                 ),
                 Text(
                   "Try again",
-                  style: FluentTheme.of(context).typography.body,
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
               ],
             ),
@@ -187,16 +187,17 @@ class SmallCircleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: this.onTap,
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Colors.white,
+          color: colorScheme.surface,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: colorScheme.shadow.withOpacity(0.08),
               offset: Offset(0, 4),
               blurRadius: 20,
             ),

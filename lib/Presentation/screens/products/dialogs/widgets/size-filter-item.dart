@@ -1,8 +1,7 @@
 import 'package:admin_v2/Data/models/filter/filter.entity.model.dart';
 import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class SizefilterItem extends StatefulWidget {
   const SizefilterItem({
@@ -55,19 +54,14 @@ class _SizefilterItemState extends State<SizefilterItem> {
           ),
           SizedBox(
             width: 50,
-            child: TextBox(
+            child: TextField(
               controller: _controller,
               onChanged: widget.onChangeCount,
-              foregroundDecoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.transparent,
-                ),
-              ),
             ),
           ),
           IconButton(
             onPressed: this.widget.onCLear,
-            icon: Icon(FluentIcons.remove),
+            icon: Icon(Icons.remove),
           ),
         ],
       ),

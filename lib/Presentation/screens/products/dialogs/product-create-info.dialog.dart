@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/category/sub.model.dart';
@@ -11,7 +9,7 @@ import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
@@ -21,7 +19,6 @@ import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:fluent_ui/fluent_ui.dart' as f;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,7 +67,7 @@ class ProductCerateInfo extends StatefulWidget {
 
 class _ProductCerateInfoState extends State<ProductCerateInfo> {
   late FilterBloc filterBloc;
-  f.TextEditingController genderController = f.TextEditingController();
+  TextEditingController genderController = TextEditingController();
   late CategoryBloc categoryBloc;
   late BrandBloc brandBloc;
   String color = '';
@@ -107,25 +104,25 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
   Widget build(BuildContext context) {
     return Form(
       key: widget.formKey,
-      child: f.Column(
+      child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              f.GestureDetector(
+              GestureDetector(
                 onTap: () => Navigator.of(context).pop(),
                 child: const Icon(Icons.close, color: kBlack),
               ),
               Text(
                 "Haryt döret".toUpperCase(),
-                style: f.FluentTheme.of(context).typography.title?.copyWith(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: kText1Color,
                       fontSize: 24,
                     ),
               ),
               Text(
                 "1/2",
-                style: f.FluentTheme.of(context).typography.caption?.copyWith(
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: kText2Color,
                       fontSize: 14,
                     ),
@@ -134,13 +131,13 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
           ),
           SizedBox(height: 20),
           RowOfTwoChildren(
-            child1: FluentLabeledInput(
+            child1: MaterialLabeledInput(
               controller: widget.titleController_tm,
               isEditMode: true,
               isTapped: isNext,
               label: 'Harydyň ady-tm *',
             ),
-            child2: FluentLabeledInput(
+            child2: MaterialLabeledInput(
               controller: widget.titleController_ru,
               isEditMode: true,
               isTapped: isNext,
@@ -149,13 +146,13 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
           ),
           SizedBox(height: 14),
           RowOfTwoChildren(
-            child1: FluentLabeledInput(
+            child1: MaterialLabeledInput(
               controller: widget.ourPriceController,
               isEditMode: true,
               isTapped: isNext,
               label: 'YES baha *',
             ),
-            child2: FluentLabeledInput(
+            child2: MaterialLabeledInput(
               controller: widget.marketPriceController,
               isEditMode: true,
               isTapped: isNext,
@@ -171,24 +168,23 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
                       (e) => e.type == FilterType.SIZE,
                     )
                     .toList();
-                return f.Column(
+                return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Select sizes *',
-                      style:
-                          f.FluentTheme.of(context).typography.body?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: kGrey1Color,
-                                fontSize: 18,
-                              ),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            color: kGrey1Color,
+                            fontSize: 18,
+                          ),
                     ),
                     SizedBox(
                       height: 5,
                     ),
                     DropdownSearch<FilterEntity>.multiSelection(
                       dropdownBuilder: (context, selectedItems) {
-                        return f.Wrap(
+                        return Wrap(
                           runSpacing: 2,
                           spacing: 2,
                           children: List.generate(selectedItems.length, (i) {
@@ -231,9 +227,9 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
                       },
                       validator: (v) => v!.isEmpty ? 'Bos bolmaly dal' : null,
                       selectedItems: _selectedSizes,
-                      itemAsString: (v) => v.name_tm ?? '',
-                      items: sizes ?? [],
-                      dropdownDecoratorProps: kDropDownDecoratorProps,
+                      itemAsString: (v) => v?.name_tm ?? '',
+                      items: sizes ?? <FilterEntity>[],
+                      dropdownSearchDecoration: kDropDownDecoratorProps,
                     ),
                   ],
                 );
@@ -379,13 +375,13 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
           ),
           SizedBox(height: 14),
           RowOfTwoChildren(
-            child1: FluentLabeledInput(
+            child1: MaterialLabeledInput(
               controller: widget.descriptionController_tm,
               isEditMode: true,
               isTapped: isNext,
               label: 'Barada-tm',
             ),
-            child2: FluentLabeledInput(
+            child2: MaterialLabeledInput(
               controller: widget.codeController,
               isEditMode: true,
               isTapped: isNext,
@@ -394,7 +390,7 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
           ),
           SizedBox(height: 14),
           RowOfTwoChildren(
-            child1: FluentLabeledInput(
+            child1: MaterialLabeledInput(
               controller: widget.descriptionController_ru,
               isEditMode: true,
               isTapped: isNext,
@@ -441,22 +437,21 @@ class _ProductCerateInfoState extends State<ProductCerateInfo> {
       return false;
     }
   }
-
 }
 
-  List<SubItem> getSubs(List<CategoryEntity>? main) {
-    List<SubItem> subs = [];
-    if (main != null) {
-      for (var element in main) {
-        subs.addAll(
-          element.subcategories?.map(
-                (e) {
-                  return SubItem(e.id!, e.title_tm, element.title_tm);
-                },
-              ) ??
-              [],
-        );
-      }
+List<SubItem> getSubs(List<CategoryEntity>? main) {
+  List<SubItem> subs = [];
+  if (main != null) {
+    for (var element in main) {
+      subs.addAll(
+        element.subcategories?.map(
+              (e) {
+                return SubItem(e.id!, e.title_tm, element.title_tm);
+              },
+            ) ??
+            [],
+      );
     }
-    return subs;
   }
+  return subs;
+}

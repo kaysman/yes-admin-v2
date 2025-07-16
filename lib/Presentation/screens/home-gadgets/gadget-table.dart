@@ -24,7 +24,7 @@ SidebarItem getMainPageSidebarItem() {
       height: 30,
       color: kswPrimaryColor,
     ),
-    title: "Programmanyň Esasy Sahypasy",
+    title: "Programma Esasy Sahypasy",
     view: GadgetsTable(),
     getActions: (context) {
       return [
@@ -35,7 +35,7 @@ SidebarItem getMainPageSidebarItem() {
               BlocConsumer<GadgetBloc, GadgetState>(
                 listener: (_, state) {
                   if (state.createStatus == BrandCreateStatus.success) {
-                    showSnackBar(
+                    showSnackbar(
                       context,
                       Text(
                         'Created Successully',
@@ -63,16 +63,11 @@ SidebarItem getMainPageSidebarItem() {
                 width: 14,
               ),
               OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  onSurface: Colors.white,
-                  primary: Colors.transparent,
-                ),
                 onPressed: () {
                   showAppDialog(context, CreateMainPage());
                 },
                 child: Text(
-                  'Sahypa döret',
-                  style: TextStyle(color: Colors.white),
+                  'Bölum döret',
                 ),
               ),
             ],
@@ -127,7 +122,7 @@ class _GadgetsTableState extends State<GadgetsTable> {
               height: MediaQuery.of(context).size.height - 200,
               alignment: Alignment.center,
               child: Center(
-                child: CircularProgressIndicator(color: kPrimaryColor),
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
               ),
             );
           }
@@ -162,8 +157,8 @@ class _GadgetsTableState extends State<GadgetsTable> {
                       if (selectedGadgets.length == 1) ...[
                         Button(
                           text: 'Gadget barada',
-                          primary: kswPrimaryColor,
-                          textColor: kWhite,
+                          primary: Theme.of(context).colorScheme.primary,
+                          textColor: Theme.of(context).colorScheme.onPrimary,
                           onPressed: () async {
                             showAppDialog(
                               context,
@@ -182,8 +177,8 @@ class _GadgetsTableState extends State<GadgetsTable> {
                           ),
                           child: Button(
                             text: 'Uytget',
-                            primary: kswPrimaryColor,
-                            textColor: kWhite,
+                            primary: Theme.of(context).colorScheme.primary,
+                            textColor: Theme.of(context).colorScheme.onPrimary,
                             onPressed: () async {
                               await showAppDialog(
                                 context,
@@ -209,7 +204,7 @@ class _GadgetsTableState extends State<GadgetsTable> {
                     child: DataTable(
                       border: TableBorder.all(
                         width: 1.0,
-                        color: Colors.grey.shade100,
+                        color: Theme.of(context).dividerColor,
                       ),
                       sortColumnIndex: sortColumnIndex,
                       sortAscending: sortAscending,
@@ -298,7 +293,7 @@ class _GadgetsTableState extends State<GadgetsTable> {
             DataCell(
               StatusIndicator(
                 color: gadget.status == "ACTIVE"
-                    ? kswPrimaryColor
+                    ? Theme.of(context).colorScheme.primary
                     : Colors.redAccent.withOpacity(.8),
                 label: "${gadget.status ?? '-'}",
               ),

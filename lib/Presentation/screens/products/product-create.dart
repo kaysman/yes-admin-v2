@@ -14,8 +14,7 @@ import 'package:admin_v2/Presentation/screens/products/dialogs/product-pick-imag
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -100,22 +99,13 @@ class _ProductCreateDialogState extends State<ProductCreateDialog> {
         if (state.createStatus == ProductCreateStatus.success) {
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Created successfully'),
-            ),
+            Text('Created successfully'),
           );
           Navigator.of(context).pop();
         } else if (state.createStatus == ProductCreateStatus.error) {
           showSnackbar(
             context,
-            Snackbar(
-              content: Text(
-                'Creation error. Please, try again!',
-                style: FluentTheme.of(context).typography.body?.copyWith(
-                      color: Colors.red,
-                    ),
-              ),
-            ),
+            Text('Creation error. Please, try again!'),
           );
           Navigator.of(context).pop();
         }

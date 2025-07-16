@@ -1,12 +1,13 @@
 import 'package:admin_v2/Data/models/filter/filter.enum.dart';
 import 'package:admin_v2/Data/models/filter/filter.model.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:admin_v2/Presentation/shared/helpers.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../example/widgets/fluent-labeled-input.dart';
 import 'bloc/filter.bloc.dart';
 
 class CreateFilterPage extends StatefulWidget {
@@ -39,9 +40,7 @@ class _CreateFilterPageState extends State<CreateFilterPage> {
           Navigator.of(context).pop();
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Created successfully'),
-            ),
+            Text('Created successfully'),
           );
         }
       },
@@ -57,20 +56,19 @@ class _CreateFilterPageState extends State<CreateFilterPage> {
                 children: [
                   Text(
                     "Filter döret".toUpperCase(),
-                    style:
-                        FluentTheme.of(context).typography.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                   SizedBox(height: 20),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     controller: titleController_tm,
                     isEditMode: true,
                     isTapped: false,
                     label: "Filterin ady-tm *",
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isEditMode: true,
                     isTapped: false,
                     label: "Filterin ady-ru",
@@ -97,6 +95,9 @@ class _CreateFilterPageState extends State<CreateFilterPage> {
                     children: [
                       f.Button(
                         text: 'Cancel',
+                        hasBorder: true,
+                        borderColor: Theme.of(context).dividerColor,
+                        textColor: Theme.of(context).colorScheme.onSurface,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

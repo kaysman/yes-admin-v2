@@ -1,10 +1,10 @@
 import 'package:admin_v2/Data/models/market/market.model.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UpdateMarketPage extends StatefulWidget {
@@ -60,7 +60,7 @@ class UpdateMarketPageState extends State<UpdateMarketPage> {
             children: [
               Text(
                 "Market döret".toUpperCase(),
-                style: FluentTheme.of(context).typography.bodyLarge?.copyWith(
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -73,35 +73,35 @@ class UpdateMarketPageState extends State<UpdateMarketPage> {
                 ),
               ),
               SizedBox(height: 20),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 controller: titleController,
                 isTapped: false,
                 label: "Markediň ady *",
                 isEditMode: editMode,
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 isTapped: false,
                 label: "Barada",
                 isEditMode: editMode,
                 controller: descriptionController,
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 isTapped: false,
                 label: "Salgysy",
                 isEditMode: editMode,
                 controller: addressController,
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 isTapped: false,
                 label: "Telefon *",
                 isEditMode: editMode,
                 controller: phoneNumberController,
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 isTapped: false,
                 label: "Eýesiniň ady",
                 isEditMode: editMode,

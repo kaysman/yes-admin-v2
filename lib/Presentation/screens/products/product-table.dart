@@ -3,7 +3,6 @@ import 'package:admin_v2/Data/models/product/filter-for-product.model.dart';
 import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Data/models/product/size.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
-import 'package:admin_v2/Presentation/screens/example/dashboard.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/emty-product-view.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
@@ -14,11 +13,10 @@ import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' as m;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../../shared/components/data_row.dart';
 import '../../shared/components/scrollable copy.dart';
 import 'product-update.dart';
 
@@ -61,16 +59,13 @@ SidebarItem getProductSidebarItem() {
                 width: 14,
               ),
               OutlinedButton(
-                // style: OutlinedButton.styleFrom(
-                //   onSurface: Colors.white,
-                //   primary: Colors.transparent,
-                // ),
+                
                 onPressed: () {
                   showAppDialog(context, ProductCreateDialog());
                 },
                 child: Text(
                   'Haryt döret',
-                  style: TextStyle(color: Colors.white),
+                  
                 ),
               ),
             ],
@@ -136,7 +131,7 @@ class _ProductsTableState extends State<ProductsTable> {
                 return Container(
                   height: MediaQuery.of(context).size.height - 200,
                   alignment: Alignment.center,
-                  child: ProgressRing(),
+                  child: CircularProgressIndicator(),
                   // child: CircularProgressIndicator(),
                 );
               }
@@ -288,7 +283,7 @@ class _ProductsTableState extends State<ProductsTable> {
                             ),
                             border: TableBorder.all(
                               width: 1.0,
-                              color: Colors.grey[10],
+                              color: Colors.grey,
                             ),
                             sortColumnIndex: sortColumnIndex,
                             sortAscending: sortAscending,
@@ -335,7 +330,7 @@ class _ProductsTableState extends State<ProductsTable> {
       return DataColumn(
         label: Text(
           name,
-          style: FluentTheme.of(context).typography.body,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       );
     });
@@ -437,9 +432,7 @@ class MultiDeleteProductDialog extends StatelessWidget {
           Navigator.of(context).pop();
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Deleted all selected products, successfully!'),
-            ),
+            Text('Deleted all selected products, successfully!'),
           );
         }
       },
@@ -453,7 +446,7 @@ class MultiDeleteProductDialog extends StatelessWidget {
             children: [
               Text(
                 'Hakykatdan - da saylan harytlarynyzy \' DELETE \' etmek isleyarsinizmi ?',
-                style: FluentTheme.of(context).typography.body,
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -468,7 +461,8 @@ class MultiDeleteProductDialog extends StatelessWidget {
                       Navigator.of(context).pop();
                     },
                     hasBorder: true,
-                    borderColor: kGrey5Color,
+                    borderColor: Theme.of(context).dividerColor,
+                    textColor: Theme.of(context).colorScheme.onSurface,
                   ),
                   SizedBox(
                     width: 20,

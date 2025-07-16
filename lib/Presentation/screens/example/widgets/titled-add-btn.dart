@@ -1,5 +1,5 @@
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class TitledAddBtn extends StatelessWidget {
   const TitledAddBtn({
@@ -21,16 +21,15 @@ class TitledAddBtn extends StatelessWidget {
         children: [
           Text(
             title,
-            style: FluentTheme.of(context).typography.body?.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
           ),
           if (hasIcon == null) SizedBox(),
           if (hasIcon == true)
             IconButton(
-              style: ButtonStyle(backgroundColor: ButtonState.all(kGrey3Color)),
               icon: Icon(
-                FluentIcons.add,
+                Icons.add,
                 // color: kWhite,
               ),
               onPressed: onAdd,

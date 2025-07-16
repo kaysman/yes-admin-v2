@@ -3,12 +3,11 @@ import 'package:admin_v2/Data/models/category/update-category.model.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UpdateCategoryPage extends StatefulWidget {
@@ -64,7 +63,7 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
             children: [
               Text(
                 "Kategoriya uytget".toUpperCase(),
-                style: FluentTheme.of(context).typography.body,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               SizedBox(height: 12),
               OutlinedButton(
@@ -74,14 +73,14 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                 ),
               ),
               SizedBox(height: 20),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 controller: titleController_tm,
                 label: "Kategoriyanyn ady-tm *",
                 isTapped: isUpdate, // !
                 isEditMode: editMode,
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 isEditMode: editMode,
                 isTapped: false,
                 controller: titleController_ru,
@@ -111,14 +110,14 @@ class _UpdateCategoryPageState extends State<UpdateCategoryPage> {
                 },
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 isEditMode: editMode,
                 controller: descriptionController_tm,
                 label: "Barada-tm",
                 isTapped: false,
               ),
               SizedBox(height: 14),
-              FluentLabeledInput(
+              MaterialLabeledInput(
                 controller: descriptionController_ru,
                 label: "Barada-ru",
                 isEditMode: editMode,

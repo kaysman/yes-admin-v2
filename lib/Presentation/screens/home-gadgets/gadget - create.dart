@@ -4,7 +4,7 @@ import 'package:admin_v2/Data/models/gadget/create-gadget-product.model.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget-subcategory.model.dart';
 import 'package:admin_v2/Data/models/gadget/create-gadget.model.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/widgets/gadget-review.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
@@ -12,7 +12,7 @@ import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../Data/models/gadget/gadget-link.model.dart';
@@ -145,10 +145,7 @@ class _CreateMainPageState extends State<CreateMainPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Sahypa döret".toUpperCase(),
-                style: FluentTheme.of(context).typography.title?.copyWith(
-                      fontSize: 20,
-                    ),
+                "Bölüm döret".toUpperCase(),
               ),
               SizedBox(height: 14),
               Container(
@@ -181,8 +178,11 @@ class _CreateMainPageState extends State<CreateMainPage> {
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? kPrimaryColor.withOpacity(.2)
-                                : kGrey3Color,
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(.2)
+                                : Theme.of(context).dividerColor,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
@@ -246,9 +246,7 @@ class _CreateMainPageState extends State<CreateMainPage> {
                     Navigator.of(context).pop();
                     showSnackbar(
                       context,
-                      Snackbar(
-                        content: Text('Created successfully'),
-                      ),
+                      Text('Created successfully'),
                     );
                   }
                 },
@@ -259,7 +257,8 @@ class _CreateMainPageState extends State<CreateMainPage> {
                       fl.Button(
                         text: 'Cancel',
                         hasBorder: true,
-                        borderColor: kGrey5Color,
+                        borderColor: Theme.of(context).dividerColor,
+                        textColor: Theme.of(context).colorScheme.onSurface,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
@@ -379,7 +378,7 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .07,
-                  child: FluentLabeledInput(
+                  child: MaterialLabeledInput(
                     controller: _controller,
                     isEditMode: true,
                     isTapped: false,
@@ -397,7 +396,7 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
                   ),
                 ],
                 if (horizontalTypes.contains(type)) ...[
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     onChanged: this.widget.onTitleTextChanged,
                     label: 'Title text',
                     isEditMode: true,
@@ -431,14 +430,14 @@ class _GadgetCreateBodyState extends State<GadgetCreateBody> {
                       ),
                       SizedBox(height: 14),
                       if (type == GadgetType.BANNER_FOR_MEN_AND_WOMEN)
-                        FluentLabeledInput(
+                        MaterialLabeledInput(
                           isEditMode: true,
                           onChanged: widget.onOneImageLinkChanged,
                           label: 'Link',
                           isTapped: false,
                         ),
                       if (expandableTypes.contains(type)) ...[
-                        Button(
+                        OutlinedButton(
                           onPressed: () {
                             widget.linkAndImgs.add(
                               GadgetLink(

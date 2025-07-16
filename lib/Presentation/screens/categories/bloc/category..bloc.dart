@@ -1,4 +1,3 @@
-import 'package:admin_v2/Data/models/category/category.model.dart';
 import 'package:admin_v2/Data/models/category/create-category.model.dart';
 import 'package:admin_v2/Data/models/category/update-category.model.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
@@ -68,7 +67,7 @@ class CategoryBloc extends Cubit<CategoryState> {
       print(_);
       emit(state.copyWith(listingStatus: CategoryListStatus.error));
       if (context != null) {
-        showSnackBar(context, Text(_.toString()));
+        showSnackbar(context, Text(_.toString()));
       }
     }
   }

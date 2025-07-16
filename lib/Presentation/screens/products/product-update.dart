@@ -10,13 +10,11 @@ import 'package:admin_v2/Presentation/screens/filters/bloc/filter.bloc.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
-import 'package:admin_v2/Presentation/screens/products/dialogs/product-update-img.dialog.dart';
 import 'package:admin_v2/Presentation/screens/products/dialogs/product-update-info.dialog.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../Data/models/filter/size.dart';
@@ -119,14 +117,14 @@ class _ProductUpdateDialogState extends State<ProductUpdateDialog> {
       listener: (context, state) {
         if (state.deleteStatus == ProductDeleteStatus.success) {
           Navigator.of(context).pop();
-          showSnackBar(
+          showSnackbar(
             context,
             Text('Deleted successfully'),
             type: SnackbarType.success,
           );
         } else if (state.updateStatus == ProductUpdateStatus.success) {
           Navigator.of(context).pop();
-          showSnackBar(
+          showSnackbar(
             context,
             Text('Updated successfully'),
             type: SnackbarType.success,

@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class GadgetReview extends StatelessWidget {
   final String imgPath;
@@ -31,10 +31,7 @@ class GadgetReview extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 width: double.infinity,
-                child: Text(
-                  description,
-                  style: FluentTheme.of(context).typography.title,
-                ),
+                child: Text(description),
               ),
             ),
           ],

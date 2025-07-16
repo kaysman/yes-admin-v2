@@ -5,9 +5,8 @@ import 'package:admin_v2/Presentation/shared/components/button.dart';
 import 'package:admin_v2/Presentation/shared/theming.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProductPickIMages extends StatefulWidget {
@@ -69,16 +68,16 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
             children: [
               IconButton(
                 onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(FluentIcons.close_pane, color: kBlack),
+                icon: const Icon(Icons.close, color: kBlack),
                 // child: const Icon(Icons.close, color: kBlack),
               ),
               Text(
                 "Harydyn suratlary".toUpperCase(),
-                style: FluentTheme.of(context).typography.bodyLarge,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
               Text(
                 "2/2",
-                style: FluentTheme.of(context).typography.body?.copyWith(
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: kText2Color,
                     ),
               ),
@@ -116,7 +115,7 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
                               right: 2,
                               child: SmallCircleButton(
                                 child: Icon(
-                                  FluentIcons.close_pane,
+                                  Icons.close,
                                   size: 12,
                                   shadows: kBoxShadow,
                                 ),
@@ -171,9 +170,9 @@ class __ProductPickIMagesState extends State<ProductPickIMages> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('Suratlary asakdaky duwma basyp saylap bilersiniz!',
-                          style: FluentTheme.of(context)
-                              .typography
-                              .body
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
                               ?.copyWith(color: kGrey1Color, fontSize: 18)),
                       SizedBox(
                         height: 14,

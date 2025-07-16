@@ -11,11 +11,15 @@ class MenuBar extends StatefulWidget {
     required this.constraints,
     this.menuItems,
     this.onItemTapped,
+    this.onThemeChanged,
+    this.isDarkMode,
   }) : super(key: key);
 
   final BoxConstraints constraints;
   final List<SidebarItem>? menuItems;
   final ValueChanged<SidebarItem>? onItemTapped;
+  final void Function(bool isDark)? onThemeChanged;
+  final bool? isDarkMode;
 
   @override
   State<MenuBar> createState() => _MenuBarState();
@@ -32,25 +36,28 @@ class _MenuBarState extends State<MenuBar> {
           Container(
             width: double.infinity,
             height: 120,
-            color: Colors.grey.shade300,
+            color: Theme.of(context).colorScheme.surface,
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      'YES',
-                      style: Theme.of(context).textTheme.headline3?.copyWith(
+                  Text(
+                    'YES',
+                    style: Theme.of(context).textTheme.headline3?.copyWith(
                           letterSpacing: -5,
-                          color: kswPrimaryColor,
-                          fontSize: 30),
+                          color: Theme.of(context).colorScheme.primary,
+                          fontSize: 30,
+                        ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: SwitchListTile(
+                      title: Text('Dark Mode',
+                          style: Theme.of(context).textTheme.bodyText2),
+                      value: widget.isDarkMode ?? false,
+                      onChanged: widget.onThemeChanged,
                     ),
                   ),
                   if (state.status == AuthStatus.authenticated) ...[
@@ -96,8 +103,8 @@ class _MenuBarState extends State<MenuBar> {
                     padding: EdgeInsets.all(10),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shadowColor: kWhite,
-                        primary: kGrey5Color,
+                        shadowColor: Theme.of(context).shadowColor,
+                        backgroundColor: Theme.of(context).colorScheme.surface,
                         elevation: 0,
                       ),
                       child: Padding(
@@ -110,7 +117,13 @@ class _MenuBarState extends State<MenuBar> {
                             ),
                             Text(
                               e.title,
-                              style: Theme.of(context).textTheme.bodyText1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
                             )
                           ],
                         ),

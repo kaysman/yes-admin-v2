@@ -67,14 +67,14 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
     }, builder: (context, state) {
       return Container(
         alignment: Alignment.center,
-        color: kScaffoldBgColor,
+        color: Theme.of(context).colorScheme.background,
         child: Container(
           width: MediaQuery.of(context).size.width * .35,
           decoration: BoxDecoration(
             boxShadow: [shadow],
-            color: kWhite,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: kScaffoldBgColor!, width: 1),
+            border: Border.all(color: Theme.of(context).dividerColor, width: 1),
           ),
           child: Form(
             key: formKey,
@@ -124,7 +124,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                                 .toList()
                                 .join(', '),
                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                              color: Colors.black54,
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                               fontWeight: FontWeight.w500,
                             ),
                       ),
@@ -215,7 +215,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                       style: Theme.of(context)
                           .textTheme
                           .bodyLarge
-                          ?.copyWith(color: kPrimaryColor),
+                          ?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ),
                   SizedBox(height: 24),

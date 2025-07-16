@@ -13,12 +13,12 @@ import '../models/response.dart';
 import 'app.service.dart';
 import 'local_storage.service.dart';
 
-const baseUrl = 'http://192.168.1.8:3333';
+const baseUrl = 'http://0.0.0.0:8888';
 
 class ApiClient {
   static Client? http;
   static PackageInfo? packageInfo;
-  static Future? refreshing;
+  static FutureOr? refreshing;
 
   static interceptorClient() {
     return InterceptedClient.build(
@@ -52,7 +52,7 @@ class ApiClient {
   ///
 
   static Credentials? _credentials;
-  static Future<Credentials?> get credentials async {
+  static FutureOr<Credentials?> get credentials async {
     if (_credentials == null) {
       var disk = await LocalStorage.instance;
       setCredentials(disk?.credentials);
@@ -69,7 +69,7 @@ class ApiClient {
   /// [Headers, ApiResponse]
   ///
 
-  Future<ApiResponse> put(Uri uri,
+  FutureOr<ApiResponse> put(Uri uri,
       {Map<String, String>? headers,
       dynamic data,
       bool anonymous = false}) async {
@@ -82,7 +82,7 @@ class ApiClient {
     }
   }
 
-  Future<ApiResponse> post(Uri uri,
+  FutureOr<ApiResponse> post(Uri uri,
       {Map<String, String>? headers,
       dynamic data,
       bool anonymous = false}) async {
@@ -95,7 +95,7 @@ class ApiClient {
     }
   }
 
-  Future<ApiResponse> patch(Uri uri,
+  FutureOr<ApiResponse> patch(Uri uri,
       {Map<String, String>? headers,
       dynamic data,
       bool anonymous = false}) async {
@@ -108,7 +108,7 @@ class ApiClient {
     }
   }
 
-  Future<ApiResponse> get(Uri uri,
+  FutureOr<ApiResponse> get(Uri uri,
       {dynamic data,
       Map<String, String>? headers,
       bool anonymous = false}) async {
@@ -121,7 +121,7 @@ class ApiClient {
     }
   }
 
-  Future<ApiResponse> delete(Uri uri,
+  FutureOr<ApiResponse> delete(Uri uri,
       {Map<String, String>? headers,
       int apiVersion = 1,
       bool anonymous = false}) async {
@@ -134,7 +134,7 @@ class ApiClient {
     }
   }
 
-  Future<ApiResponse> multiPartRequest(
+  FutureOr<ApiResponse> multiPartRequest(
     Uri uri,
     List<MultipartFile> files, {
     Map<String, String>? fields,
@@ -161,7 +161,7 @@ class ApiClient {
     }
   }
 
-  Future download(String url, String udid, String filename) async {
+  FutureOr download(String url, String udid, String filename) async {
     var location = (Platform.isAndroid)
         ? await (getExternalStorageDirectory() as FutureOr<Directory>)
         : await getApplicationDocumentsDirectory();
@@ -195,7 +195,7 @@ class ApiClient {
   ///
   /// [RETRY]
   ///
-  Future<ApiResponse> sendWithRetry(ClientRequest req,
+  FutureOr<ApiResponse> sendWithRetry(ClientRequest req,
       {int maxRetries = 1}) async {
     AppService.httpRequests?.add(req.uri.path);
 
@@ -356,7 +356,7 @@ class ClientRequest {
     this.data,
   });
 
-  Future<Response> send() async {
+  FutureOr<Response> send() async {
     switch (method) {
       case 'GET':
         return await client.get(uri, headers: headers);
@@ -376,13 +376,13 @@ class ClientRequest {
 
 // class LoggingInterceptor implements InterceptorContract {
 //   @override
-//   Future<RequestData> interceptRequest({RequestData data}) async {
+//   FutureOr<RequestData> interceptRequest({RequestData data}) async {
 //     AppService.httpRequests.add(data.url);
 //     return data;
 //   }
 
 //   @override
-//   Future<ResponseData> interceptResponse({ResponseData data}) async {
+//   FutureOr<ResponseData> interceptResponse({ResponseData data}) async {
 //     AppService.httpRequests.remove(data.url);
 //     return data;
 //   }
@@ -392,7 +392,7 @@ class ClientRequest {
 // class ExpiredTokenRetryPolicy extends RetryPolicy {
 
 //   @override
-//   Future<bool> shouldAttemptRetryOnResponse(ResponseData response) async {
+//   FutureOr<bool> shouldAttemptRetryOnResponse(ResponseData response) async {
 //     try {
 //       // refresh conditions
 //       if (response.statusCode == 401) {
@@ -427,8 +427,8 @@ class ClientRequest {
 //     }
 //   }
 
-//   Future<bool> retryAfterDelay() =>
-//       Future.delayed(Duration(seconds: 1), () => true);
+//   FutureOr<bool> retryAfterDelay() =>
+//       FutureOr.delayed(Duration(seconds: 1), () => true);
 
 //   logAttempt(ResponseData response) async {
 //     var httpResponse = response.toHttpResponse();

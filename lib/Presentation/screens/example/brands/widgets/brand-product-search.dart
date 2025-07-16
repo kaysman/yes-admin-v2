@@ -4,7 +4,7 @@ import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/product-search.dialog.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.bloc.dart';
 import 'package:admin_v2/Presentation/screens/products/bloc/product.state.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BrandProductSearch extends StatefulWidget {

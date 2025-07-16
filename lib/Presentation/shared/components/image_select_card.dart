@@ -1,7 +1,6 @@
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class ImageSelectCard extends StatelessWidget {
   const ImageSelectCard({
@@ -24,9 +23,9 @@ class ImageSelectCard extends StatelessWidget {
       children: [
         Text(
           isExcel == true ? 'Excel' : 'Surat',
-          style: FluentTheme.of(context).typography.body!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
-                color: kGrey1Color,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontSize: 18,
               ),
         ),
@@ -37,25 +36,27 @@ class ImageSelectCard extends StatelessWidget {
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             border: Border.all(
-              color: kGrey3Color,
+              color: Theme.of(context).dividerColor,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           margin: EdgeInsets.zero,
           child: ListTile(
-            trailing: Button(
+            trailing: ElevatedButton(
               onPressed: editMode ?? false ? this.pickImage : null,
               child: Text(image == null ? "Saýla" : "Täzele",
-                  style: FluentTheme.of(context).typography.caption!.copyWith(
-                        color: kPrimaryColor,
+                  style: Theme.of(context).textTheme.caption!.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
                       )),
             ),
             title: Text(
               image == null
                   ? 'eg: img.jpg'
                   : image!.names.map((e) => e).toList().join(', '),
-              style: FluentTheme.of(context).typography.body!.copyWith(
-                    color: image == null ? kGrey2Color : kText2Color,
+              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: image == null 
+                        ? Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
+                        : Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w500,
                   ),
             ),

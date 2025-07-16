@@ -1,5 +1,4 @@
-import 'package:admin_v2/Presentation/screens/example/dashboard.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class EmptyProductView extends StatelessWidget {
   const EmptyProductView({
@@ -22,7 +21,7 @@ class EmptyProductView extends StatelessWidget {
             ),
             Text(
               emptyText,
-              style: FluentTheme.of(context).typography.bodyLarge?.copyWith(
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
             )

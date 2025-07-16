@@ -4,10 +4,10 @@ import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../example/widgets/fluent-labeled-input.dart';
+import '../example/widgets/labeled-input.dart';
 
 class CreateMarketPage extends StatefulWidget {
   const CreateMarketPage({Key? key}) : super(key: key);
@@ -45,9 +45,7 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
         if (state.createStatus == MarketCreateStatus.success) {
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Created successfully'),
-            ),
+            Text('Created successfully'),
           );
           Navigator.of(context).pop();
         }
@@ -64,41 +62,37 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                 children: [
                   Text(
                     "Market döret".toUpperCase(),
-                    style:
-                        FluentTheme.of(context).typography.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
                   ),
                   SizedBox(height: 20),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     controller: titleController,
                     isTapped: false,
                     label: "Markediň ady *",
                     isEditMode: true,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isTapped: false,
                     label: "Barada",
                     isEditMode: true,
                     controller: descriptionController,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isTapped: false,
                     label: "Salgysy",
                     isEditMode: true,
                     controller: addressController,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isTapped: false,
                     label: "Telefon *",
                     isEditMode: true,
                     controller: phoneNumberController,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isTapped: false,
                     label: "Eýesiniň ady",
                     isEditMode: true,
@@ -110,6 +104,9 @@ class _CreateMarketPageState extends State<CreateMarketPage> {
                     children: [
                       f.Button(
                         text: 'Cancel',
+                        hasBorder: true,
+                        borderColor: Theme.of(context).dividerColor,
+                        textColor: Theme.of(context).colorScheme.onSurface,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

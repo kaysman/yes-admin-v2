@@ -1,7 +1,7 @@
 import 'package:admin_v2/Presentation/screens/example/widgets/auto-suggested-box.dart'
     as c;
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class CustomAutoSuggestedBox extends StatefulWidget {
   final String? validateText;
@@ -80,7 +80,7 @@ class _CustomAutoSuggestedBoxState extends State<CustomAutoSuggestedBox> {
           children: [
             Text(
               widget.label,
-              style: FluentTheme.of(context).typography.body?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                     fontSize: 18,
                     color: kGrey1Color,
@@ -92,7 +92,7 @@ class _CustomAutoSuggestedBoxState extends State<CustomAutoSuggestedBox> {
             c.AutoSuggestBox(
               placeholder: widget.hintText,
               placeholderStyle:
-                  FluentTheme.of(context).typography.body?.copyWith(
+                  Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: kGrey2Color,
                       ),
               controller: controller,
@@ -125,7 +125,7 @@ class _CustomAutoSuggestedBoxState extends State<CustomAutoSuggestedBox> {
               ),
               Text(
                 widget.validateText ?? 'Bos bolmaly dal',
-                style: FluentTheme.of(context).typography.caption?.copyWith(
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: Colors.red,
                     ),
               )

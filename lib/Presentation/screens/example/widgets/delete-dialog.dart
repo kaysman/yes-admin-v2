@@ -1,6 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 
 class DeleteDialog extends StatelessWidget {
   const DeleteDialog({
@@ -20,22 +19,28 @@ class DeleteDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Button(
-              child: Text('Cancel'),
+            OutlinedButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(color: Theme.of(context).dividerColor),
+                foregroundColor: Theme.of(context).colorScheme.onSurface,
+              ),
+              child: const Text('Cancel'),
             ),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
-            f.Button(
-              primary: kswPrimaryColor,
-              textColor: kWhite,
-              text: 'Yes',
+            ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              child: const Text('Yes'),
             )
           ],
         ),

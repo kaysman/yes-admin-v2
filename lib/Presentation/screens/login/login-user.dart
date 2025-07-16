@@ -46,15 +46,15 @@ class _LoginUserPageState extends State<LoginUserPage> {
       }
     }, builder: (context, state) {
       return Container(
-        color: kScaffoldBgColor,
+        color: Theme.of(context).colorScheme.background,
         alignment: Alignment.center,
         child: Container(
           width: MediaQuery.of(context).size.width * .35,
           decoration: BoxDecoration(
               boxShadow: [shadow],
-              color: kWhite,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: kScaffoldBgColor!, width: 1)),
+              border: Border.all(color: Theme.of(context).dividerColor, width: 1)),
           child: Form(
             key: formKey,
             child: Padding(
@@ -125,7 +125,7 @@ class _LoginUserPageState extends State<LoginUserPage> {
                               var sms = disk?.toGetResMessage;
                               print(sms);
                               if (sms != null && sms.isNotEmpty) {
-                                showSnackBar(
+                                showSnackbar(
                                   context,
                                   SnackBar(
                                     behavior: SnackBarBehavior.floating,

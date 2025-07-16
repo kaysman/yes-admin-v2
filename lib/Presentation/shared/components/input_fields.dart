@@ -31,7 +31,7 @@ class LabeledInput extends StatelessWidget {
           hintText ?? '-',
           style: Theme.of(context).textTheme.headline5!.copyWith(
                 fontWeight: FontWeight.w500,
-                color: kGrey1Color,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
         ),
         SizedBox(height: 5),

@@ -16,17 +16,18 @@ class StatusIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
-        CircleAvatar(radius: 5, backgroundColor: color),
+        CircleAvatar(radius: 5, backgroundColor: color ?? colorScheme.primary),
         SizedBox(width: 8),
         Text(
-          "$label",
+          "${label}",
           style: isInfo
               ? Theme.of(context)
                   .textTheme
                   .bodyText1
-                  ?.copyWith(fontSize: 20, color: kGrey1Color)
+                  ?.copyWith(fontSize: 20, color: colorScheme.onSurface)
               : Theme.of(context).textTheme.bodyText1,
         )
       ],

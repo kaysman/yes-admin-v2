@@ -1,5 +1,4 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
-import 'package:admin_v2/Data/models/meta.dart';
 import 'package:admin_v2/Data/models/product/pagination.model.dart';
 import 'package:admin_v2/Data/models/sidebar_item.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
@@ -9,7 +8,6 @@ import 'package:admin_v2/Presentation/screens/brands/brand-info.dialog.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/appbar.components.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart';
-import 'package:admin_v2/Presentation/shared/components/pagination.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:flutter/material.dart';
@@ -53,16 +51,11 @@ SidebarItem getBrandSidebarItem() {
                   width: 14,
                 ),
                 OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    onSurface: Colors.white,
-                    primary: Colors.transparent,
-                  ),
                   onPressed: () {
                     showAppDialog(context, CreateBrandPage());
                   },
                   child: Text(
                     'Brend döret',
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

@@ -16,20 +16,14 @@ import 'package:admin_v2/Presentation/screens/filters/bloc/filter.state.dart';
 import 'package:admin_v2/Presentation/screens/markets/bloc/market.state.dart';
 import 'package:admin_v2/Presentation/screens/products/dialogs/widgets/size-filter-item.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart';
-import 'package:admin_v2/Presentation/shared/components/info.label.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:admin_v2/Presentation/shared/components/row_2_children.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
-import 'package:admin_v2/main.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:native_context_menu/native_context_menu.dart';
 
-import '../../example/widgets/fluent-labeled-input.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../example/widgets/labeled-input.dart';
 import '../../markets/bloc/market.bloc.dart';
 
 class ProductUpdateInfo extends StatefulWidget {
@@ -182,11 +176,11 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                 IconButton(
                   // borderRadius: BorderRadius.circular(20),
                   onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(FluentIcons.remove, color: kBlack),
+                  icon: const Icon(Icons.remove, color: kBlack),
                 ),
                 Text(
                   "Haryt döret".toUpperCase(),
-                  style: FluentTheme.of(context).typography.body?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
                       ),
@@ -203,13 +197,13 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
             ),
             SizedBox(height: 20),
             RowOfTwoChildren(
-              child1: FluentLabeledInput(
+              child1: MaterialLabeledInput(
                 controller: widget.titleController_tm,
                 isEditMode: true,
                 isTapped: false,
                 label: 'Harydyň ady-tm *',
               ),
-              child2: FluentLabeledInput(
+              child2: MaterialLabeledInput(
                 controller: widget.titleController_ru,
                 isEditMode: true,
                 isTapped: isNext,
@@ -218,13 +212,13 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
             ),
             SizedBox(height: 14),
             RowOfTwoChildren(
-              child1: FluentLabeledInput(
+              child1: MaterialLabeledInput(
                 controller: widget.ourPriceController,
                 isEditMode: true,
                 isTapped: isNext,
                 label: 'YES baha *',
               ),
-              child2: FluentLabeledInput(
+              child2: MaterialLabeledInput(
                 controller: widget.marketPriceController,
                 isEditMode: true,
                 isTapped: isNext,
@@ -245,12 +239,11 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                     children: [
                       Text(
                         'Select sizes *',
-                        style:
-                            FluentTheme.of(context).typography.body?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: kGrey1Color,
-                                  fontSize: 18,
-                                ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: kGrey1Color,
+                              fontSize: 18,
+                            ),
                       ),
                       SizedBox(
                         height: 5,
@@ -300,9 +293,9 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
                         },
                         validator: (v) => v!.isEmpty ? 'Bos bolmaly dal' : null,
                         selectedItems: _selectedSizes,
-                        itemAsString: (v) => v.name_tm ?? '',
-                        items: sizes ?? [],
-                        dropdownDecoratorProps: kDropDownDecoratorProps,
+                        itemAsString: (v) => v?.name_tm ?? '',
+                        items: sizes ?? <FilterEntity>[],
+                        dropdownSearchDecoration: kDropDownDecoratorProps,
                       ),
                     ],
                   );
@@ -449,13 +442,13 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
             ),
             SizedBox(height: 14),
             RowOfTwoChildren(
-              child1: FluentLabeledInput(
+              child1: MaterialLabeledInput(
                 controller: widget.descriptionController_tm,
                 isEditMode: true,
                 isTapped: isNext,
                 label: 'Barada-tm',
               ),
-              child2: FluentLabeledInput(
+              child2: MaterialLabeledInput(
                 controller: widget.codeController,
                 isEditMode: true,
                 isTapped: isNext,
@@ -464,7 +457,7 @@ class _ProductUpdateInfoState extends State<ProductUpdateInfo> {
             ),
             SizedBox(height: 14),
             RowOfTwoChildren(
-              child1: FluentLabeledInput(
+              child1: MaterialLabeledInput(
                 controller: widget.descriptionController_ru,
                 isEditMode: true,
                 isTapped: isNext,

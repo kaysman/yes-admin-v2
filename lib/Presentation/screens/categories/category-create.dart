@@ -3,16 +3,11 @@ import 'package:admin_v2/Data/models/category/create-category.model.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category..bloc.dart';
 import 'package:admin_v2/Presentation/screens/categories/bloc/category.state.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
-import 'package:admin_v2/Presentation/shared/components/info.label.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateCategoryPage extends StatefulWidget {
@@ -50,9 +45,7 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
           Navigator.of(context).pop();
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Created successfully'),
-            ),
+            Text('Created successfully'),
           );
         }
       },
@@ -69,17 +62,17 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                 children: [
                   Text(
                     "Kategoriya döret".toUpperCase(),
-                    style: FluentTheme.of(context).typography.body,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   SizedBox(height: 20),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     controller: titleController_tm,
                     label: "Kategoriyanyn ady-tm *",
                     isTapped: isCreate, // !
                     isEditMode: true,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isEditMode: true,
                     isTapped: false,
                     controller: titleController_ru,
@@ -104,14 +97,14 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                     isEditMode: true,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isEditMode: true,
                     controller: descriptionController_tm,
                     label: "Barada-tm",
                     isTapped: false,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     controller: descriptionController_ru,
                     label: "Barada-ru",
                     isEditMode: true,
@@ -123,6 +116,9 @@ class _CreateCategoryPageState extends State<CreateCategoryPage> {
                     children: [
                       f.Button(
                         text: 'Cancel',
+                        hasBorder: true,
+                        borderColor: Theme.of(context).dividerColor,
+                        textColor: Theme.of(context).colorScheme.onSurface,
                         onPressed: () {
                           Navigator.of(context).pop();
                         },

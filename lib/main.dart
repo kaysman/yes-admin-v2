@@ -1,6 +1,8 @@
 import 'package:admin_v2/Data/services/app.service.dart';
 import 'package:admin_v2/Presentation/screens/example/index.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:admin_v2/Presentation/shared/theming.dart';
+import 'package:admin_v2/routes.dart';
+import 'package:flutter/material.dart';
 import 'Data/services/notification.service.dart';
 import 'Presentation/shared/components/app_observer.dart';
 import 'Presentation/shared/components/scrollable.dart';
@@ -27,6 +29,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WidgetsBindingObserver {
   final navigatorKey = GlobalKey<NavigatorState>();
+  ThemeMode _themeMode = ThemeMode.dark;
 
   @override
   void initState() {
@@ -46,18 +49,27 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     AppService.lifecycle.setState(state);
   }
 
+  void _toggleTheme(bool isDark) {
+    setState(() {
+      _themeMode = isDark ? ThemeMode.dark : ThemeMode.light;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FluentApp(
+    return MaterialApp(
       scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
-      // onGenerateRoute: onGenerateRoutes,
-      // initialRoute: RegisterUserPage.routeName,
-      home: Index(),
+      onGenerateRoute: onGenerateRoutes,
+      themeMode: _themeMode,
+      theme: AppTheme.lightTheme(context),
+      darkTheme: AppTheme.darkTheme(context),
       builder: (context, home) => AppObserver(
         navigatorKey: navigatorKey,
         child: home,
+        onThemeChanged: _toggleTheme,
+        isDarkMode: _themeMode == ThemeMode.dark,
       ),
     );
   }

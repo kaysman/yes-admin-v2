@@ -2,13 +2,11 @@ import 'package:admin_v2/Data/enums/gadget-type.dart';
 import 'package:admin_v2/Data/models/gadget/gadget.model.dart';
 import 'package:admin_v2/Data/models/gadget/update-gadget.model.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/screens/home-gadgets/bloc/gadget.bloc.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart' as fl;
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluent_ui/generated/l10n.dart';
+import 'package:flutter/material.dart';
 // import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,9 +57,7 @@ class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
           Navigator.of(context).pop();
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Updated successfully'),
-            ),
+            Text('Updated successfully'),
           );
         } else if (state.deletedStatusForShow ==
             GadgetForDeletedStatus.success) {
@@ -69,12 +65,9 @@ class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
           Navigator.of(context).pop();
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Deleted successfully'),
-            ),
+            Text('Deleted successfully'),
           );
         }
-        ;
       },
       builder: (context, state) {
         return Container(
@@ -88,24 +81,24 @@ class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
                 children: [
                   Text(
                     "Gadget uytget".toUpperCase(),
-                    style: FluentTheme.of(context).typography.subtitle,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   SizedBox(height: 12),
-                  Button(
+                  OutlinedButton(
                     onPressed: () => setState(() => editMode = !editMode),
                     child: Text(
                       editMode ? "Cancel" : "Üýtget",
                     ),
                   ),
                   SizedBox(height: 20),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     controller: titleController,
                     label: "Gadgetin ady",
                     isEditMode: editMode,
                     isTapped: false,
                   ),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isEditMode: editMode,
                     controller: queueController,
                     label: "Gadgetin tertibi",
@@ -151,49 +144,80 @@ class _UpdateGadGetPageState extends State<UpdateGadGetPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      fl.Button(
-                        text: 'Delete',
-                        textColor: Colors.red,
-                        borderColor: Colors.red,
-                        hasBorder: true,
-                        isLoading:
-                            state.deleteStatus == GadgetDeleteStatus.loading,
-                        onPressed: () {
-                          if (widget.gadget.id != null) {
-                            gadgetBloc.deleteGadget(
-                              widget.gadget.id!,
-                              location: getOldLocation,
-                              status: getOldStatus,
-                            );
-                          }
-                        },
+                      OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          side: BorderSide(color: Colors.red),
+                        ),
+                        onPressed:
+                            state.deleteStatus == GadgetDeleteStatus.loading
+                                ? null
+                                : () {
+                                    if (widget.gadget.id != null) {
+                                      gadgetBloc.deleteGadget(
+                                        widget.gadget.id!,
+                                        location: getOldLocation,
+                                        status: getOldStatus,
+                                      );
+                                    }
+                                  },
+                        child: state.deleteStatus == GadgetDeleteStatus.loading
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(Colors.red),
+                                ),
+                              )
+                            : Text('Delete'),
                       ),
                       SizedBox(width: 16),
-                      fl.Button(
-                        text: "Update",
-                        primary: kswPrimaryColor,
-                        textColor: kWhite,
-                        isLoading:
-                            state.updatedStatus == GadgetUpdatedStatus.loading,
-                        onPressed: () async {
-                          UpdateGadgetModel data = UpdateGadgetModel(
-                            id: widget.gadget.id,
-                            location: checkIfChangedAndReturn(
-                                getOldLocation, location),
-                            status:
-                                checkIfChangedAndReturn(getOldStatus, status),
-                            queue: checkIfChangedAndReturn(getOldQueue,
-                                int.tryParse(queueController.text)),
-                            title: checkIfChangedAndReturn(
-                                getOldTitle, titleController.text),
-                            type: checkIfChangedAndReturn(getOldType, type),
-                          );
-                          await gadgetBloc.updateGadget(
-                            data,
-                            status: getOldStatus,
-                            location: getOldLocation,
-                          );
-                        },
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kswPrimaryColor,
+                          foregroundColor: kWhite,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          textStyle: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        onPressed: state.updatedStatus ==
+                                GadgetUpdatedStatus.loading
+                            ? null
+                            : () async {
+                                UpdateGadgetModel data = UpdateGadgetModel(
+                                  id: widget.gadget.id,
+                                  location: checkIfChangedAndReturn(
+                                      getOldLocation, location),
+                                  status: checkIfChangedAndReturn(
+                                      getOldStatus, status),
+                                  queue: checkIfChangedAndReturn(getOldQueue,
+                                      int.tryParse(queueController.text)),
+                                  title: checkIfChangedAndReturn(
+                                      getOldTitle, titleController.text),
+                                  type:
+                                      checkIfChangedAndReturn(getOldType, type),
+                                );
+                                await gadgetBloc.updateGadget(
+                                  data,
+                                  status: getOldStatus,
+                                  location: getOldLocation,
+                                );
+                              },
+                        child:
+                            state.updatedStatus == GadgetUpdatedStatus.loading
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      valueColor:
+                                          AlwaysStoppedAnimation<Color>(kWhite),
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text("Update"),
                       ),
                     ],
                   ),

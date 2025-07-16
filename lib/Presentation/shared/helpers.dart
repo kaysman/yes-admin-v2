@@ -1,7 +1,5 @@
-import 'package:admin_v2/Presentation/screens/home-gadgets/gadget-update.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:fluent_ui/fluent_ui.dart' as f;
 import 'package:flutter/material.dart';
 
 Map<String, String> header() {
@@ -12,15 +10,17 @@ Map<String, String> header() {
 }
 
 final OutlineInputBorder kErrorInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: Colors.red),
+  borderSide: BorderSide(color: AppColors.danger),
   borderRadius: BorderRadius.circular(8),
 );
 final OutlineInputBorder kFocusedInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: kswPrimaryColor),
+  borderSide:
+      BorderSide(color: kswPrimaryColor), // fallback to theme.primary if needed
   borderRadius: BorderRadius.circular(8),
 );
 final OutlineInputBorder kEnabledInputBorder = OutlineInputBorder(
-  borderSide: BorderSide(color: kGrey3Color),
+  borderSide: BorderSide(
+      color: kGrey3Color), // fallback to theme.dividerColor if needed
   borderRadius: BorderRadius.circular(8),
 );
 final OutlineInputBorder kDisabledInputBorder = OutlineInputBorder(
@@ -28,46 +28,44 @@ final OutlineInputBorder kDisabledInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(8),
 );
 final BoxDecoration kDropDownBorder = BoxDecoration(
-  border: Border.all(color: Colors.black45),
+  border: Border.all(
+      color: kGrey2Color), // fallback to theme.dividerColor if needed
   borderRadius: BorderRadius.circular(8),
 );
 
 final RoundedRectangleBorder kCardBorder = RoundedRectangleBorder(
-  side: BorderSide(color: kGrey3Color),
+  side: BorderSide(
+      color: kGrey3Color), // fallback to theme.dividerColor if needed
   borderRadius: BorderRadius.circular(8),
 );
 
-final DropDownDecoratorProps kDropDownDecoratorProps = DropDownDecoratorProps(
-  dropdownSearchDecoration: InputDecoration(
-    enabledBorder: kEnabledInputBorder,
-    focusedBorder: kFocusedInputBorder,
-    errorBorder: kErrorInputBorder,
-    disabledBorder: kDisabledInputBorder,
-  ),
+final InputDecoration kDropDownDecoratorProps = InputDecoration(
+  enabledBorder: kEnabledInputBorder,
+  focusedBorder: kFocusedInputBorder,
+  errorBorder: kErrorInputBorder,
+  disabledBorder: kDisabledInputBorder,
 );
 
 final BoxShadow shadow = BoxShadow(
   blurRadius: 10,
-  color: Colors.black12,
+  color: Colors.grey,
   offset: Offset(1, -1),
   spreadRadius: 1,
 );
 
 /// -------------
 /// [showSnackBar] method shows snackbar.
-/// Context should not be null
 /// -------------
 enum SnackbarType { success, error }
 
-void showSnackBar(
+void showSnackbar(
   BuildContext context,
   Widget child, {
   SnackbarType type = SnackbarType.error,
   Color? backgroundColor,
   double? width = 230,
 }) {
-  f.showSnackbar(
-    context,
+  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       backgroundColor: backgroundColor != null
           ? backgroundColor
@@ -90,7 +88,7 @@ showAppDialog(
     context: context,
     builder: (context) {
       return Dialog(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         child: child,
       );
     },
@@ -107,19 +105,10 @@ Future<T?> showFluentAppDialog<T>(
     context: context,
     // barrierDismissible: true,
     builder: (context) {
-      return f.ContentDialog(
-        constraints: BoxConstraints(maxWidth: 800),
-        title: title,
-        content: content,
+      return AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        title: content,
         actions: actions,
-        // f.Button(
-        //   child: Text('Cancel'),
-        //   onPressed: () => Navigator.of(context).pop(),
-        // ),
-        // f.FilledButton(
-        //   child: Text('Go'),
-        //   onPressed: () => Navigator.of(context).pop(),
-        // ),
       );
     },
   );

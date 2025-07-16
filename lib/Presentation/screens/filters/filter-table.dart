@@ -53,16 +53,12 @@ SidebarItem getFiltersSidebarItem() {
                 width: 14,
               ),
               OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  onSurface: Colors.white,
-                  primary: Colors.transparent,
-                ),
+                
                 onPressed: () {
                   showAppDialog(context, CreateFilterPage());
                 },
                 child: Text(
-                  'Filter döret',
-                  style: TextStyle(color: Colors.white),
+                  'Filter döret'
                 ),
               ),
             ],

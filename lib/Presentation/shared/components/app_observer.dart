@@ -21,7 +21,9 @@ import 'package:in_app_review/in_app_review.dart';
 class AppObserver extends StatefulWidget {
   final GlobalKey<NavigatorState>? navigatorKey;
   final Widget? child;
-  AppObserver({this.navigatorKey, this.child});
+  final void Function(bool isDark)? onThemeChanged;
+  final bool? isDarkMode;
+  AppObserver({this.navigatorKey, this.child, this.onThemeChanged, this.isDarkMode});
 
   @override
   _AppObserverState createState() => _AppObserverState();
@@ -141,7 +143,7 @@ class _AppObserverState extends State<AppObserver> {
           textScaleFactor: mq.textScaleFactor > 1.3 ? 1.3 : mq.textScaleFactor,
         ),
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).colorScheme.background,
           key: _scaffoldKey,
           body: widget.child,
           // connectivityBuilder(
@@ -162,7 +164,7 @@ class _AppObserverState extends State<AppObserver> {
 
   presentError(String message) {
     if (message.isEmpty) return;
-    showSnackBar(
+    showSnackbar(
       context,
       Row(
         children: <Widget>[
@@ -182,7 +184,7 @@ class _AppObserverState extends State<AppObserver> {
 
   presentSuccess(String message) {
     if (message.isEmpty) return;
-    showSnackBar(
+    showSnackbar(
       context,
       SizedBox(
         child: Row(

@@ -27,6 +27,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height * .5),
@@ -34,7 +35,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Multiselect Field'),
+          Text('Multiselect Field', style: Theme.of(context).textTheme.bodyText1),
           SizedBox(
             height: 8,
           ),
@@ -53,9 +54,9 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: kGrey4Color,
+                      color: colorScheme.outline,
                     ),
-                    color: kGrey5Color.withOpacity(.2),
+                    color: colorScheme.surfaceVariant.withOpacity(.2),
                   ),
                   child: Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -70,13 +71,19 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                                   padding: const EdgeInsets.all(4),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: kWhite,
-                                    boxShadow: kBoxShadowLow,
+                                    color: colorScheme.surface,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Theme.of(context).shadowColor.withOpacity(0.1),
+                                        offset: Offset(.2, .3),
+                                        blurRadius: 3,
+                                      ),
+                                    ],
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(e),
+                                      Text(e, style: Theme.of(context).textTheme.bodyText2),
                                       SizedBox(
                                         width: 2,
                                       ),
@@ -85,13 +92,13 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                                         child: Container(
                                           padding: const EdgeInsets.all(2),
                                           decoration: BoxDecoration(
-                                            color: kGrey1Color,
+                                            color: colorScheme.outline,
                                             shape: BoxShape.circle,
                                           ),
                                           child: Icon(
                                             Icons.close,
                                             size: 10,
-                                            color: kWhite,
+                                            color: colorScheme.onSurface,
                                           ),
                                         ),
                                       ),
@@ -104,7 +111,7 @@ class _MultiSelectDropdownState extends State<MultiSelectDropdown> {
                       ),
                       Icon(
                         Icons.arrow_drop_up_rounded,
-                        color: kGrey1Color,
+                        color: colorScheme.outline,
                       ),
                     ],
                   ),
@@ -160,13 +167,20 @@ class _MultiSelectItemsState extends State<MultiSelectItems> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.of(context).size.height * .3),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        boxShadow: kBoxShadowLow,
-        color: kWhite,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withOpacity(0.1),
+            offset: Offset(.2, .3),
+            blurRadius: 3,
+          ),
+        ],
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: SingleChildScrollView(
@@ -179,7 +193,7 @@ class _MultiSelectItemsState extends State<MultiSelectItems> {
                   var item = widget.items[index];
                   return InkWell(
                     onHover: (v) {},
-                    hoverColor: kGrey3Color,
+                    hoverColor: colorScheme.surfaceVariant,
                     onTap: () {
                       setState(() {
                         if (!selectedItems.contains(item)) {
@@ -190,13 +204,15 @@ class _MultiSelectItemsState extends State<MultiSelectItems> {
                       });
                     },
                     child: Container(
-                      color: selectedItems.contains(item) ? kGrey3Color : null,
+                      color: selectedItems.contains(item)
+                          ? colorScheme.surfaceVariant
+                          : Colors.transparent,
                       margin: const EdgeInsets.symmetric(vertical: 4),
                       padding: const EdgeInsets.all(5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(item),
+                          Text(item, style: Theme.of(context).textTheme.bodyText2),
                           Checkbox(
                             value: selectedItems.contains(item),
                             onChanged: (v) {},

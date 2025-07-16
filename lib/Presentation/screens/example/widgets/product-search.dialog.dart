@@ -1,8 +1,7 @@
 import 'package:admin_v2/Data/models/product/product.model.dart';
 import 'package:admin_v2/Presentation/screens/example/widgets/custom-auto-suggested-box.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
+import 'package:flutter/material.dart';
 
 class ProductSearch extends StatelessWidget {
   const ProductSearch(
@@ -32,12 +31,17 @@ class ProductSearch extends StatelessWidget {
           SizedBox(
             height: 14,
           ),
-          f.Button(
-            textColor: kWhite,
-            primary: kswPrimaryColor,
-            isLoading: isSearching,
-            text: 'Gozle',
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             onPressed: onSearch,
+            child: const Text('Gozle'),
           )
         ],
       ),

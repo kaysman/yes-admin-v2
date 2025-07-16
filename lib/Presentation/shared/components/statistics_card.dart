@@ -14,8 +14,9 @@ class StatisticsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Card(
-      color: Colors.grey.shade200,
+      color: colorScheme.surface,
       child: SizedBox(
         width: 100,
         height: 100,
@@ -28,7 +29,7 @@ class StatisticsCard extends StatelessWidget {
             Text(
               content,
               style: Theme.of(context).textTheme.headline1!.copyWith(
-                    color: Colors.deepPurple,
+                    color: colorScheme.primary,
                     fontSize: 38,
                   ),
             ),

@@ -1,8 +1,8 @@
 import 'package:admin_v2/Presentation/screens/index/drawer.dart';
 import 'package:admin_v2/Presentation/screens/index/index.bloc.dart';
-import 'package:admin_v2/Presentation/screens/ready-to-use-widgets/at-search-input.dart';
 import 'package:admin_v2/Presentation/screens/ready-to-use-widgets/multi-select.dropdown.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
+import 'package:admin_v2/Presentation/shared/components/app_observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,6 +52,12 @@ class _IndexScreenState extends State<IndexScreen> {
                   indexBloc.changeItem(v);
                   Navigator.of(context).pop();
                 },
+                onThemeChanged:
+                    (context.findAncestorWidgetOfExactType<AppObserver>())
+                        ?.onThemeChanged,
+                isDarkMode:
+                    (context.findAncestorWidgetOfExactType<AppObserver>())
+                        ?.isDarkMode,
               ),
               body: state.selected?.view == null
                   ? DashBoard()

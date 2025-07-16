@@ -6,7 +6,6 @@ import 'package:admin_v2/Presentation/screens/orders/order.bloc.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/scrollable.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:fluent_ui/fluent_ui.dart' as fl;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,16 +47,11 @@ SidebarItem getOrdersSideBarItem() {
         //         width: 14,
         //       ),
         //       // OutlinedButton(
-        //       //   style: OutlinedButton.styleFrom(
-        //       //     onSurface: Colors.white,
-        //       //     primary: Colors.transparent,
-        //       //   ),
         //       //   onPressed: () {
         //       //     showAppDialog(context, CreateCategoryPage());
         //       //   },
         //       //   child: Text(
         //       //     'Kategoriya döret',
-        //       //     style: TextStyle(color: Colors.white),
         //       //   ),
         //       // ),
         //     ],
@@ -216,18 +210,26 @@ class _OrdersTableState extends State<OrdersTable> {
           cells: [
             DataCell(Text("${order.id ?? '-'} ")),
             DataCell(
-              fl.DropDownButton(
-                leading: fl.Text(order.status ?? '-'),
+              DropdownButton<String>(
+                value: order.status,
                 items: GadgetStatus.values
                     .map(
-                      (e) => fl.MenuFlyoutItem(
-                        text: Text(e.name),
-                        onPressed: () {
-                          
-                        },
+                      (e) => DropdownMenuItem<String>(
+                        value: e.name,
+                        child: Text(e.name),
                       ),
                     )
                     .toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    // Update the order status locally
+                    // order.status = newValue;
+                    // TODO: update order status
+                    // TODO: Call backend to update order status if needed
+                  });
+                },
+                underline: SizedBox(),
+                isExpanded: false,
               ),
             ),
             DataCell(Text("${order.address?.addressLine1 ?? '-'}")),

@@ -1,13 +1,13 @@
 import 'package:admin_v2/Data/models/brand/brand.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
 import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/components/image_select_card.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -89,7 +89,7 @@ class _UpdateBrandPageState extends State<UpdateBrandPage> {
                 children: [
                   Text(
                     "Brand üýtget".toUpperCase(),
-                    style: FluentTheme.of(context).typography.body,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   SizedBox(height: 12),
                   OutlinedButton(
@@ -109,7 +109,7 @@ class _UpdateBrandPageState extends State<UpdateBrandPage> {
                   SizedBox(height: 14),
                   buildVip(context),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     isTapped: false,
                     controller: titleController,
                     isEditMode: editMode,
@@ -186,7 +186,7 @@ class _UpdateBrandPageState extends State<UpdateBrandPage> {
         children: [
           Text(
             'Vip',
-            style: FluentTheme.of(context).typography.body?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: kGrey1Color,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -207,7 +207,7 @@ class _UpdateBrandPageState extends State<UpdateBrandPage> {
               children: [
                 Text('Vip'),
                 Checkbox(
-                  checked: this._isSelected,
+                  value: this._isSelected,
                   onChanged: (v) {
                     setState(() {
                       _isSelected = v!;

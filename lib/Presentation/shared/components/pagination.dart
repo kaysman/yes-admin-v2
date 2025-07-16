@@ -1,6 +1,6 @@
 import 'package:admin_v2/Data/models/meta.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 // import 'package:flutter/material.dart';
 
 class Pagination extends StatelessWidget {
@@ -34,19 +34,13 @@ class Pagination extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-              width: double.infinity,
-              child: Divider(
-                style: DividerThemeData(
-                    decoration: BoxDecoration(
-                  color: kGrey4Color,
-                )),
-              )
-              // Divider(
-              //   style: DividerThemeData(decoration: ),
-              //     // indent: 0,
-              //     // endIndent: 0,
-              //     ),
-              ),
+            width: double.infinity, child: Divider(),
+            // Divider(
+            //   style: DividerThemeData(decoration: ),
+            //     // indent: 0,
+            //     // endIndent: 0,
+            //     ),
+          ),
           SizedBox(
             height: 8,
           ),
@@ -55,14 +49,12 @@ class Pagination extends StatelessWidget {
             children: [
               if (this.goPrevious != null)
                 IconButton(
-                  style: ButtonStyle(
-                      backgroundColor: ButtonState.all(kGrey4Color)),
                   icon: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        FluentIcons.back,
+                        Icons.arrow_back,
                         size: 14,
                       ),
                       SizedBox(
@@ -70,10 +62,9 @@ class Pagination extends StatelessWidget {
                       ),
                       Text(
                         'Previous',
-                        style:
-                            FluentTheme.of(context).typography.body?.copyWith(
-                                  fontSize: 16,
-                                ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 16,
+                            ),
                       ),
                     ],
                   ),
@@ -98,7 +89,7 @@ class Pagination extends StatelessWidget {
                   child: Text(
                     // "${_meta?.currentPage}",,
                     text,
-                    style: FluentTheme.of(context).typography.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
               ),
@@ -111,24 +102,21 @@ class Pagination extends StatelessWidget {
               SizedBox(width: 16),
               if (this.goNext != null)
                 IconButton(
-                  style: ButtonStyle(
-                      backgroundColor: ButtonState.all(kGrey4Color)),
                   icon: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         'Next',
-                        style:
-                            FluentTheme.of(context).typography.body?.copyWith(
-                                  fontSize: 16,
-                                ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontSize: 16,
+                            ),
                       ),
                       SizedBox(
                         width: 8,
                       ),
                       Icon(
-                        FluentIcons.forward,
+                        Icons.forward,
                         size: 14,
                       ),
                     ],
@@ -141,11 +129,11 @@ class Pagination extends StatelessWidget {
               //     children: [
               //       Text(
               //         "Next",
-              //         style: FluentTheme.of(context).typography.bodyLarge,
+              //         style: Theme.of(context).textTheme.bodyLarge,
               //       ),
               //       SizedBox(width: 8),
               //       Icon(
-              //         FluentIcons.forward,
+              //         Icons.forward,
               //         // color: kPrimaryColor,
               //       ),
               //     ],

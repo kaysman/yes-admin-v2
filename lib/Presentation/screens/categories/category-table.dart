@@ -51,16 +51,11 @@ SidebarItem getCategoriesdebarItem() {
                 width: 14,
               ),
               OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  onSurface: Colors.white,
-                  primary: Colors.transparent,
-                ),
                 onPressed: () {
                   showAppDialog(context, CreateCategoryPage());
                 },
                 child: Text(
-                  'Kategoriya döret',
-                  style: TextStyle(color: Colors.white),
+                  'Kategoriya döret'
                 ),
               ),
             ],

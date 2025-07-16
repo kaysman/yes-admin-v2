@@ -1,16 +1,12 @@
 import 'package:admin_v2/Data/models/brand/create-brand.model.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.bloc.dart';
 import 'package:admin_v2/Presentation/screens/brands/bloc/brand.state.dart';
-import 'package:admin_v2/Presentation/screens/example/widgets/fluent-labeled-input.dart';
+import 'package:admin_v2/Presentation/screens/example/widgets/labeled-input.dart';
 import 'package:admin_v2/Presentation/shared/app_colors.dart';
-import 'package:admin_v2/Presentation/shared/components/button.dart' as f;
 import 'package:admin_v2/Presentation/shared/components/image_select_card.dart';
-import 'package:admin_v2/Presentation/shared/components/input_fields.dart';
 import 'package:admin_v2/Presentation/shared/helpers.dart';
-import 'package:admin_v2/Presentation/shared/validators.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,9 +57,7 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
           Navigator.of(context).pop();
           showSnackbar(
             context,
-            Snackbar(
-              content: Text('Created successfully'),
-            ),
+            Text('Created successfully'),
           );
         }
       },
@@ -79,7 +73,7 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
                 children: [
                   Text(
                     "Brand döret".toUpperCase(),
-                    style: FluentTheme.of(context).typography.body?.copyWith(
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 16,
                         ),
@@ -95,7 +89,7 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
                   SizedBox(height: 14),
                   buildVipInput(),
                   SizedBox(height: 14),
-                  FluentLabeledInput(
+                  MaterialLabeledInput(
                     controller: titleController,
                     isEditMode: true,
                     isTapped: false,
@@ -105,19 +99,15 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      f.Button(
-                        text: 'Cancel',
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      SizedBox(width: 16),
-                      f.Button(
-                        isLoading:
-                            state.createStatus == BrandCreateStatus.loading,
-                        text: "Save",
-                        textColor: kWhite,
-                        primary: kswPrimaryColor,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: kswPrimaryColor,
+                          foregroundColor: kWhite,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          textStyle: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
                             if (_selectedLogoImage != null) {
@@ -135,7 +125,18 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
                             }
                           }
                         },
-                      )
+                        child: state.createStatus == BrandCreateStatus.loading
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(kWhite),
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text("Save"),
+                      ),
                     ],
                   ),
                 ],
@@ -179,7 +180,7 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
         children: [
           Text(
             'Vip',
-            style: FluentTheme.of(context).typography.body?.copyWith(
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: kGrey1Color,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -200,12 +201,12 @@ class _CreateBrandPageState extends State<CreateBrandPage> {
               children: [
                 Text('Vip'),
                 Checkbox(
-                  checked: this._isSelected,
                   onChanged: (v) {
                     setState(() {
                       _isSelected = v!;
                     });
                   },
+                  value: this._isSelected,
                 ),
               ],
             ),

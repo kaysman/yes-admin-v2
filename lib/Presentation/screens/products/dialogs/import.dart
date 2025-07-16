@@ -229,7 +229,7 @@ class _ImageSelectViewState extends State<ImageSelectView> {
       listenWhen: (p, c) => p.imageUploadStatus != c.imageUploadStatus,
       listener: (context, state) {
         if (state.imageUploadStatus == ProductImageUploadStatus.success) {
-          showSnackBar(
+          showSnackbar(
             context,
             Text('Images uploaded successfully'),
             type: SnackbarType.success,
@@ -313,7 +313,8 @@ class _ImageSelectViewState extends State<ImageSelectView> {
                   Button(
                     text: 'Cancel',
                     hasBorder: true,
-                    borderColor: kGrey5Color,
+                    borderColor: Theme.of(context).dividerColor,
+                    textColor: Theme.of(context).colorScheme.onSurface,
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -376,7 +377,7 @@ class _ExcelSelectviewState extends State<ExcelSelectview> {
       listenWhen: (p, c) => p.excelUploadStatus != c.excelUploadStatus,
       listener: (context, state) {
         if (state.excelUploadStatus == ProductExcelUploadStatus.success) {
-          showSnackBar(
+          showSnackbar(
             context,
             Text('Excel uploaded successfully'),
             type: SnackbarType.success,
@@ -412,7 +413,8 @@ class _ExcelSelectviewState extends State<ExcelSelectview> {
                   Button(
                     text: 'Cancel',
                     hasBorder: true,
-                    borderColor: kGrey5Color,
+                    borderColor: Theme.of(context).dividerColor,
+                    textColor: Theme.of(context).colorScheme.onSurface,
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
